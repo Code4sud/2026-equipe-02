@@ -43,14 +43,18 @@ a.bouton:hover { border-color: var(--accent); }
 a.principal { background: var(--action); border-color: var(--action); color: var(--action-texte); }
 a.principal:hover { background: var(--action-survol); border-color: var(--action-survol); }
 a:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+.logo-sombre { display: none; }
+@media (prefers-color-scheme: dark) { .logo-clair { display: none; } .logo-sombre { display: inline; } }
 .lueur { animation: lueur 2.4s ease-in-out infinite alternate; transform-origin: 50% 60%; }
 @keyframes lueur { from { opacity: .75; } to { opacity: 1; } }
-@media (prefers-reduced-motion: reduce) { .lueur { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .logo-sombre { display: none; }
+@media (prefers-color-scheme: dark) { .logo-clair { display: none; } .logo-sombre { display: inline; } }
+.lueur { animation: none; } }
 </style>
 </head>
 <body>
 <main>
-  <div class="lueur"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" aria-hidden="true" width="88" height="88">
+  <div class="lueur"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" class="logo-clair" aria-hidden="true" width="88" height="88">
   <!-- Logo de Luciole : une petite luciole dont l'abdomen brille (safran). Couleurs de la palette. -->
   <circle cx="39" cy="40" r="20" fill="#d29a3c" opacity=".22"/>
   <circle cx="39" cy="40" r="13" fill="#d29a3c" opacity=".35"/>
@@ -60,6 +64,18 @@ a:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
   <ellipse cx="28" cy="29" rx="6.5" ry="8" fill="#2f3a15" transform="rotate(-40 28 29)"/>
   <circle cx="20.5" cy="21.5" r="4.5" fill="#2f3a15"/>
   <path d="M18 18c-2-4-5-6-9-6M22 17c0-4 2-7 5-9" fill="none" stroke="#2f3a15" stroke-width="2" stroke-linecap="round"/>
+</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" class="logo-sombre" aria-hidden="true" width="88" height="88">
+  <!-- Variante du logo pour le mode sombre : même dessin, corps et tête cernés de crème
+       pour rester lisibles sur le fond encre (#1d230d). -->
+  <circle cx="39" cy="40" r="20" fill="#d29a3c" opacity=".22"/>
+  <circle cx="39" cy="40" r="13" fill="#d29a3c" opacity=".35"/>
+  <ellipse cx="39" cy="40" rx="8.5" ry="9.5" fill="#d29a3c" transform="rotate(-40 39 40)"/>
+  <ellipse cx="22" cy="31" rx="9" ry="5" fill="#eee5cf" stroke="#4f5f26" stroke-width="2" transform="rotate(-70 22 31)"/>
+  <ellipse cx="33" cy="20" rx="9" ry="5" fill="#eee5cf" stroke="#4f5f26" stroke-width="2" transform="rotate(-20 33 20)"/>
+  <ellipse class="contour" cx="28" cy="29" rx="6.5" ry="8" fill="#2f3a15" stroke="#f7f0df" stroke-width="1.6" transform="rotate(-40 28 29)"/>
+  <circle class="contour" cx="20.5" cy="21.5" r="4.5" fill="#2f3a15" stroke="#f7f0df" stroke-width="1.6"/>
+  <path class="contour" d="M18 18c-2-4-5-6-9-6M22 17c0-4 2-7 5-9" fill="none" stroke="#f7f0df" stroke-width="2" stroke-linecap="round"/>
 </svg>
 </div>
   <div class="code" aria-hidden="true">404</div>

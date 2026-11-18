@@ -6,7 +6,8 @@
   <title>Luciole — Éclaire tes possibles</title>
   <meta name="description" content="Luciole, avec Éclaireur, ton assistant : les métiers de ton Rapport des Possibles expliqués avec les données publiques, sources à l'appui.">
   <link rel="stylesheet" href="css/style.css">
-  <link rel="icon" type="image/svg+xml" href="assets/luciole.svg">
+  <link rel="icon" type="image/svg+xml" href="assets/luciole.svg" media="(prefers-color-scheme: light)">
+  <link rel="icon" type="image/svg+xml" href="assets/luciole-sombre.svg" media="(prefers-color-scheme: dark)">
   <!-- Bandeau commun du hackathon (le numéro d'équipe est déjà renseigné) -->
   <script src="https://orientation.code4sud.fr/bandeau.js" data-equipe="02"></script>
 </head>
@@ -14,7 +15,11 @@
 <main>
   <header>
     <div class="entete">
-      <img class="logo" src="assets/luciole.svg" alt="" width="64" height="64">
+      <picture>
+        <!-- Variante cernée de crème pour le mode sombre (corps lisible sur le fond encre) -->
+        <source srcset="assets/luciole-sombre.svg" media="(prefers-color-scheme: dark)">
+        <img class="logo" src="assets/luciole.svg" alt="" width="64" height="64">
+      </picture>
       <div>
         <h1>Luciole</h1>
         <p class="signature">Éclaire tes possibles</p>
@@ -70,7 +75,7 @@
 
   <footer>
     <p>Les résultats du Rapport des Possibles sont des pistes de réflexion, pas un verdict. Tu restes l'expert de ta propre vie.</p>
-    <p class="pied-nom"><img src="assets/luciole.svg" alt="" width="20" height="20"> Luciole, projet Code4Sud Hackathon Azuréen #3, équipe 02</p>
+    <p class="pied-nom"><picture><source srcset="assets/luciole-sombre.svg" media="(prefers-color-scheme: dark)"><img src="assets/luciole.svg" alt="" width="20" height="20"></picture> Luciole, projet Code4Sud Hackathon Azuréen #3, équipe 02</p>
     <p>Sources : <a href="https://www.onisep.fr/" target="_blank" rel="noopener">ONISEP</a> (licence ODbL) ·
       <a href="https://www.data.gouv.fr/datasets/repertoire-operationnel-des-metiers-et-des-emplois-rome" target="_blank" rel="noopener">ROME 4.0, France Travail</a> (Licence Ouverte) ·
       <a href="https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-parcoursup/" target="_blank" rel="noopener">Parcoursup 2025</a> (Licence Ouverte).

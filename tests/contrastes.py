@@ -35,7 +35,11 @@ PAIRES = [
     ("inconnu", "inconnu-fond", 4.5, "badge « Sans bac : ? »"),
     ("focus", "fond", 3.0, "anneau de focus clavier sur le fond"),
     ("focus", "surface", 3.0, "anneau de focus clavier dans les cartes"),
+    ("icone", "surface-2", 3.0, "cadenas de la promesse de confidentialité"),
 ]
+
+# Contour du corps de la luciole (logo) sur le fond de page, lu dans les fichiers SVG
+LOGOS = {"clair": "luciole.svg", "sombre": "luciole-sombre.svg"}
 
 
 def lire_palettes():
@@ -72,6 +76,16 @@ def mesurer():
             print(f"{'OK ' if ok else 'NON'} {c:5.2f}:1 (min {mini}) {texte} {pal[texte]} sur {fond} {pal[fond]} — {ou}")
             if not ok:
                 echecs.append((mode, texte, fond, round(c, 2)))
+    # Logo : le contour du corps (ou le corps lui-même en clair) doit ressortir du fond (3:1)
+    for mode, fichier in LOGOS.items():
+        svg = (CSS.parent.parent / "assets" / fichier).read_text(encoding="utf-8")
+        fond = lire_palettes()[mode]["fond"]
+        m = re.search(r'class="contour"[^>]*stroke="(#[0-9a-fA-F]{6})"', svg)
+        couleur = m.group(1) if m else re.search(r'<circle cx="20.5"[^>]*fill="(#[0-9a-fA-F]{6})"', svg).group(1)
+        c = contraste(couleur, fond)
+        print(f"{'OK ' if c >= 3 else 'NON'} {c:5.2f}:1 (min 3.0) logo {fichier} {couleur} sur fond {mode} {fond}")
+        if c < 3:
+            echecs.append((mode, "logo", fichier, round(c, 2)))
     return echecs
 
 

@@ -27,6 +27,7 @@
   --lien: #7e3012;
   --lien-survol: #a9441b;
   --focus: #7e3012;
+  --icone: #a9441b;           /* cadenas de la promesse de confidentialité */
   --jeune: #e8d3a3;
   --oui: #2f3a15;  --oui-fond: #d9dcb5;
   --comment: #5e4210; --comment-fond: #f0dbab;
@@ -57,6 +58,7 @@
     --lien: #e2b462;
     --lien-survol: #f7f0df;
     --focus: #d29a3c;
+    --icone: #d29a3c;         /* cadenas en safran */
     --jeune: #4d3f14;
     --oui: #dfe6b0;  --oui-fond: #45541d;
     --comment: #f1cf8b; --comment-fond: #4d3f14;
@@ -85,8 +87,10 @@ main { max-width: 720px; margin: 0 auto; padding: 20px 16px 96px; }
 
 /* ---------- En-tête ---------- */
 .entete { display: flex; gap: 14px; align-items: center; margin: 12px 0 6px; }
+.entete picture { display: flex; flex: none; } /* évite l'espace sous l'image */
 .logo { width: 56px; height: 56px; flex: none; }
 .signature { margin: 4px 0 0; font: 400 1.05rem/1.2 var(--titre); color: var(--lien); }
+.pied-nom picture { display: inline-flex; }
 .pied-nom { display: flex; align-items: center; gap: 8px; font-weight: 700; color: var(--texte); }
 h1 {
   font: 400 2.1rem/1.05 var(--titre);
@@ -123,7 +127,7 @@ a:hover { color: var(--lien-survol); }
   font-weight: 700;
   font-size: .98rem;
 }
-.promesse svg { flex: none; width: 22px; height: 22px; margin-top: 1px; stroke: var(--action); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.promesse svg { flex: none; width: 22px; height: 22px; margin-top: 1px; stroke: var(--icone); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
 /* ---------- Boutons (48 px de haut minimum : taille d'un doigt) ---------- */
 button, .bouton {

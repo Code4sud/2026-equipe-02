@@ -23,7 +23,9 @@ def police_base64(nom):
 
 def main():
     logo = (RACINE / "assets" / "luciole.svg").read_text(encoding="utf-8")
-    logo = logo.replace('role="img" aria-label="Luciole"', 'aria-hidden="true" width="88" height="88"')
+    logo = logo.replace('role="img" aria-label="Luciole"', 'class="logo-clair" aria-hidden="true" width="88" height="88"')
+    logo_sombre = (RACINE / "assets" / "luciole-sombre.svg").read_text(encoding="utf-8")
+    logo_sombre = logo_sombre.replace('role="img" aria-label="Luciole"', 'class="logo-sombre" aria-hidden="true" width="88" height="88"')
     logo_favicon = base64.b64encode((RACINE / "assets" / "luciole.svg").read_bytes()).decode("ascii")
 
     page = f"""<!DOCTYPE html>
@@ -71,14 +73,18 @@ a.bouton:hover {{ border-color: var(--accent); }}
 a.principal {{ background: var(--action); border-color: var(--action); color: var(--action-texte); }}
 a.principal:hover {{ background: var(--action-survol); border-color: var(--action-survol); }}
 a:focus-visible {{ outline: 3px solid var(--focus); outline-offset: 3px; }}
+.logo-sombre {{ display: none; }}
+@media (prefers-color-scheme: dark) {{ .logo-clair {{ display: none; }} .logo-sombre {{ display: inline; }} }}
 .lueur {{ animation: lueur 2.4s ease-in-out infinite alternate; transform-origin: 50% 60%; }}
 @keyframes lueur {{ from {{ opacity: .75; }} to {{ opacity: 1; }} }}
-@media (prefers-reduced-motion: reduce) {{ .lueur {{ animation: none; }} }}
+@media (prefers-reduced-motion: reduce) {{ .logo-sombre {{ display: none; }}
+@media (prefers-color-scheme: dark) {{ .logo-clair {{ display: none; }} .logo-sombre {{ display: inline; }} }}
+.lueur {{ animation: none; }} }}
 </style>
 </head>
 <body>
 <main>
-  <div class="lueur">{logo}</div>
+  <div class="lueur">{logo}{logo_sombre}</div>
   <div class="code" aria-hidden="true">404</div>
   <h1>Cette page est introuvable</h1>
   <p>Comme un métier dont on n'a jamais entendu parler&nbsp;: elle n'existe pas encore, ou elle a changé d'adresse. Pas de souci, on repart ensemble.</p>
