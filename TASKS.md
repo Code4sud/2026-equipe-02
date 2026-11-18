@@ -22,7 +22,7 @@
 - [ ] WebLLM en ligne : codé (bouton), pas encore testé dans un vrai navigateur avec WebGPU
 - [x] Test complet de l'interface (Chrome headless, téléphone et ordinateur, clair et sombre)
 - [x] Nouveau style « lanterne du soir » + animations (GSAP dans vendor/)
-- [ ] Tester la version GitHub Pages après le push (mode sans IA), puis remplir `demo`
+- [x] Version GitHub Pages testée (navigateur propre, téléphone, mode sans IA) : 11/11, `demo` rempli
 - [x] Fiche métier simple + badge sans bac
 - [x] Formations proches (ville / code postal)
 - [x] Comparaison de deux métiers
