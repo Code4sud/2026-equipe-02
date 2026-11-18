@@ -7,8 +7,22 @@ import {
   repondre, chargerPrompt, detecterOllama, activerWebLLM, modele, CONSEILLER,
 } from "./assistant.js";
 
-const PDFJS = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.min.mjs";
-const PDFJS_WORKER = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.worker.min.mjs";
+// pdf.js 4.0.379 copié dans le dépôt (licence Apache 2.0) : la lecture du rapport marche sans internet
+const PDFJS = new URL("../vendor/pdfjs/pdf.min.mjs", import.meta.url).href;
+const PDFJS_WORKER = new URL("../vendor/pdfjs/pdf.worker.min.mjs", import.meta.url).href;
+const anim = (nom, ...args) => window.eclaireurAnim && window.eclaireurAnim[nom](...args);
+
+// Icône étoile dessinée (SVG), pour « Garder »
+function etoile() {
+  const ns = "http://www.w3.org/2000/svg";
+  const svg = document.createElementNS(ns, "svg");
+  svg.setAttribute("viewBox", "0 0 24 24");
+  svg.setAttribute("aria-hidden", "true");
+  const p = document.createElementNS(ns, "path");
+  p.setAttribute("d", "M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z");
+  svg.append(p);
+  return svg;
+}
 
 // Les 5 zones, d'après le guide du Centre des Possibles
 const ZONES = {
@@ -66,6 +80,7 @@ async function chargerRapport(donnees) {
     $("#etat-rapport").textContent =
       `Rapport${r.date ? ` du ${r.date}` : ""} : ${r.total} métiers dans ${Object.values(r.zones).filter((z) => z.length).length} zones. Touche un métier pour le découvrir.`;
     afficherZones();
+    anim("zonesAffichees", $("#zones"));
     suggestions();
   } catch (e) {
     console.error(e);
@@ -96,7 +111,7 @@ function afficherZones() {
 
 // ---------- Fiche métier ----------
 
-function ouvrirFiche(lien) {
+function ouvrirFiche(lien, options = {}) {
   const zone = $("#fiche");
   zone.hidden = false;
   zone.replaceChildren();
@@ -130,20 +145,22 @@ function ouvrirFiche(lien) {
     el("div", { class: "rangee" },
       el("button", { type: "button", onclick: () => demander(`Où me former pour être ${f.nom} ?`) }, "Formations près de chez moi"),
       el("button", { type: "button", onclick: () => demander(`Il faut quel diplôme pour être ${f.nom} ?`) }, "Les études"),
-      el("button", { type: "button", onclick: () => basculerGarde(lien, f) }, garde.has(f.id) ? "★ Gardé" : "☆ Garder")),
+      el("button", { type: "button", class: garde.has(f.id) ? "garde" : "", "aria-pressed": String(garde.has(f.id)), onclick: () => basculerGarde(lien, f) },
+        etoile(), garde.has(f.id) ? "Gardé" : "Garder")),
     el("p", { class: "doux" }, "Source : ",
       el("a", { href: g.source.url, target: "_blank", rel: "noopener" }, `${g.source.nom} (${g.source.licence})`),
       g !== f ? [" · ", el("a", { href: f.source.url, target: "_blank", rel: "noopener" }, f.source.nom)] : null),
   ].filter(Boolean)); // on ne garde que les blocs présents (sinon « null » s'afficherait)
   suggestions();
   zone.scrollIntoView({ block: "start" });
+  if (!options.sansAnimation) anim("ficheOuverte", zone);
 }
 
 function basculerGarde(lien, f) {
   if (garde.has(f.id)) garde.delete(f.id);
   else garde.set(f.id, { titre: lien.titre || f.nom, fiche: f });
   majRecap();
-  ouvrirFiche(lien);
+  ouvrirFiche(lien, { sansAnimation: true });
 }
 
 // ---------- Recherche ----------
@@ -172,7 +189,8 @@ function afficherMessage(qui, contenu) {
   if (typeof contenu === "string") m.textContent = contenu;
   else m.append(contenu);
   $("#fil").append(m);
-  m.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  m.scrollIntoView({ block: "nearest" });
+  anim("message", m);
   return m;
 }
 
@@ -241,7 +259,7 @@ function suggestions() {
 
 function majRecap() {
   const lignes = ["MA PROCHAINE ÉTAPE", ""];
-  if (!garde.size) lignes.push("(Garde des métiers avec « ☆ Garder » pour les voir ici.)");
+  if (!garde.size) lignes.push("(Garde des métiers avec le bouton « Garder » pour les voir ici.)");
   for (const { titre, fiche } of garde.values()) {
     const g = ficheOnisepLiee(fiche) || fiche;
     lignes.push(`• ${titre}`,

@@ -13,15 +13,24 @@
 <body>
 <main>
   <header>
-    <h1>Éclaireur</h1>
-    <p class="doux">Les métiers de ton rapport, expliqués simplement, avec les sources officielles. Sans compte, rien n'est enregistré.</p>
+    <div class="entete">
+      <svg class="lanterne" viewBox="0 0 64 64" aria-hidden="true">
+        <path class="corps" d="M24 14h16M28 8h8v6M22 20h20l-2 30H24z M20 50h24v6H20z"/>
+        <path class="flamme" d="M32 26c4 5 5 9 5 12a5 5 0 0 1-10 0c0-3 1-7 5-12z"/>
+      </svg>
+      <h1>Éclaireur</h1>
+    </div>
+    <p class="accroche">Les métiers de ton rapport, expliqués simplement, avec les sources officielles.</p>
   </header>
 
   <section class="carte" id="bloc-rapport" aria-labelledby="t-rapport">
     <h2 id="t-rapport">Ton rapport</h2>
-    <p class="doux">Ton PDF est lu sur ton appareil. Il n'est envoyé nulle part.</p>
+    <p class="promesse">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+      <span>Ton PDF est lu sur ton appareil. Il n'est envoyé nulle part. Pas de compte, rien n'est enregistré.</span>
+    </p>
     <div class="rangee">
-      <label class="bouton principal" for="fichier" style="background:var(--accent);color:var(--carte);border-color:var(--accent);font-weight:600">Charger mon rapport (PDF)</label>
+      <label class="bouton principal" for="fichier">Charger mon rapport (PDF)</label>
       <input type="file" id="fichier" accept="application/pdf" class="cache">
       <button type="button" id="essai">Essayer avec un rapport fictif</button>
     </div>
@@ -51,7 +60,7 @@
 
   <section class="carte" aria-labelledby="t-recap">
     <h2 id="t-recap">Mon récap</h2>
-    <p class="doux">Ajoute des métiers avec « ☆ Garder ». Tu peux copier ce texte et l'apporter au Centre des Possibles.</p>
+    <p class="doux">Ajoute des métiers avec le bouton « Garder ». Tu peux copier ce texte et l'apporter au Centre des Possibles.</p>
     <textarea id="recap-texte" readonly aria-label="Récapitulatif à copier"></textarea>
     <div class="rangee" style="margin-top:8px">
       <button type="button" id="copier">Copier mon récap</button>
@@ -68,6 +77,9 @@
       Projet de l'équipe 02, Hackathon Azuréen #3 · <a href="https://github.com/Code4sud/2026-equipe-02" target="_blank" rel="noopener">code source</a> (MIT).</p>
   </footer>
 </main>
+<!-- GSAP copié dans le dépôt (licence standard gratuite) : animations sans internet -->
+<script src="vendor/gsap/gsap.min.js" defer></script>
+<script src="js/animations.js" defer></script>
 <script type="module" src="js/app.js"></script>
 </body>
 </html>

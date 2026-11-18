@@ -34,6 +34,8 @@ Détail, URL et dates : [docs/sources.md](docs/sources.md). Qualité des donnée
 * France Travail, ROME 4.0 : Licence Ouverte 2.0
 * Parcoursup 2025 (ministère de l'Enseignement supérieur) : Licence Ouverte 2.0
 
+Bibliothèques copiées dans `vendor/` pour une démo sans internet : pdf.js 4.0.379 (Apache 2.0), GSAP 3.13.0 (licence standard gratuite), polices Young Serif et Atkinson Hyperlegible (OFL).
+
 Les fichiers de `data/index/` dérivés de l'ONISEP restent sous ODbL. Aucun Rapport des Possibles réel n'est dans ce dépôt : les tests et la démo utilisent un rapport fictif.
 
 ## Équipe

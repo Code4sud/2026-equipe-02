@@ -1,94 +1,168 @@
-/* Mobile d'abord : tout est pensé pour un écran de téléphone, puis élargi. */
+/* Éclaireur — « lanterne du soir ».
+   Crème et brun chaud, lumière ambre pour l'action, corail pour les accents.
+   Mobile d'abord. Polices Young Serif et Atkinson Hyperlegible auto-hébergées (vendor/fonts, licence OFL) : marche sans internet. */
+
+@font-face { font-family: "Young Serif"; src: url("../vendor/fonts/young-serif-latin-400-normal.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Atkinson Hyperlegible"; src: url("../vendor/fonts/atkinson-hyperlegible-latin-400-normal.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Atkinson Hyperlegible"; src: url("../vendor/fonts/atkinson-hyperlegible-latin-700-normal.woff2") format("woff2"); font-weight: 700; font-display: swap; }
+
+/* Clair : crème. Les contrastes texte/fond sont tous >= 4.5:1. */
 :root {
-  --fond: #f6f5f1;
-  --carte: #ffffff;
-  --texte: #1d1d1b;
-  --doux: #5c5b57;
-  --bord: #e2e0d9;
-  --accent: #0b6e4f;
-  --accent-fond: #e3f2ec;
-  --oui: #0b6e4f;
-  --oui-fond: #e3f2ec;
-  --comment: #8a5a00;
-  --comment-fond: #fbf0d9;
-  --non: #a3302a;
-  --non-fond: #fbe6e4;
-  --inconnu: #5c5b57;
-  --inconnu-fond: #ecebe7;
-  --rayon: 14px;
-  --ombre: 0 1px 2px rgba(0, 0, 0, .06);
+  --fond: #fbf3e6;
+  --fond-halo: #f8dfb4;
+  --surface: #fffaf2;
+  --surface-2: #f6ead7;
+  --texte: #2b1a12;
+  --doux: #6b4d3b;
+  --trait: #e8d6bd;
+  --ambre: #f2a93b;          /* lumière : fonds de boutons, halo (jamais du texte sur crème) */
+  --ambre-texte: #2b1a12;    /* texte posé sur l'ambre */
+  --lien: #94500a;
+  --corail: #e2634a;
+  --corail-texte: #a83a22;
+  --jeune: #fde3bf;
+  --oui: #3e6420;  --oui-fond: #e6efd6;
+  --comment: #8a4f00; --comment-fond: #fde7c4;
+  --non: #a3341d;  --non-fond: #fbe0d6;
+  --inconnu: #6b4d3b; --inconnu-fond: #efe2cf;
+  --ombre: 0 1px 2px rgba(74, 40, 16, .06), 0 8px 24px -12px rgba(74, 40, 16, .18);
+  --rayon: 18px;
+  --titre: "Young Serif", Georgia, serif;
+  --corps: "Atkinson Hyperlegible", system-ui, sans-serif;
+  color-scheme: light;
 }
+
+/* Sombre : brun profond, le soir. */
 @media (prefers-color-scheme: dark) {
   :root {
-    --fond: #161615;
-    --carte: #21211f;
-    --texte: #f1f0ec;
-    --doux: #b3b1aa;
-    --bord: #34332f;
-    --accent: #5fd0a5;
-    --accent-fond: #183a2f;
-    --oui: #5fd0a5;
-    --oui-fond: #183a2f;
-    --comment: #f0c060;
-    --comment-fond: #3a2f17;
-    --non: #f3958d;
-    --non-fond: #3d1f1c;
-    --inconnu: #b3b1aa;
-    --inconnu-fond: #2c2b28;
+    --fond: #1c120c;
+    --fond-halo: #4a2a10;
+    --surface: #2a1c14;
+    --surface-2: #33231a;
+    --texte: #f7ebdc;
+    --doux: #d3bca6;
+    --trait: #45311f;
+    --ambre: #f4b04a;
+    --ambre-texte: #22140b;
+    --lien: #f6c072;
+    --corail: #f08a6e;
+    --corail-texte: #f6a48d;
+    --jeune: #4a2f16;
+    --oui: #b9dc8f;  --oui-fond: #2c3a1c;
+    --comment: #f6c46e; --comment-fond: #45300f;
+    --non: #f6a48d;  --non-fond: #4a2117;
+    --inconnu: #d3bca6; --inconnu-fond: #3a2a1f;
+    --ombre: 0 1px 2px rgba(0, 0, 0, .3), 0 10px 28px -14px rgba(0, 0, 0, .6);
+    color-scheme: dark;
   }
 }
 
 * { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
 body {
   margin: 0;
-  background: var(--fond);
   color: var(--texte);
-  font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font: 17px/1.55 var(--corps);
+  background-color: var(--fond);
+  /* La lumière de la lanterne : un halo chaud en haut de page, qui s'estompe */
+  background-image: radial-gradient(120% 60% at 50% -10%, var(--fond-halo) 0%, transparent 60%);
+  background-repeat: no-repeat;
+  caret-color: var(--corail);
 }
-main { max-width: 760px; margin: 0 auto; padding: 12px 16px 80px; }
-h1 { font-size: 1.5rem; margin: 8px 0 0; }
-h2 { font-size: 1.15rem; margin: 0 0 8px; }
-h3 { font-size: 1rem; margin: 12px 0 4px; }
-a { color: var(--accent); }
-.doux { color: var(--doux); font-size: .9rem; }
+::selection { background: var(--ambre); color: var(--ambre-texte); }
+
+main { max-width: 720px; margin: 0 auto; padding: 20px 16px 96px; }
+
+/* ---------- En-tête ---------- */
+.entete { display: flex; gap: 14px; align-items: center; margin: 12px 0 6px; }
+.lanterne { width: 52px; height: 52px; flex: none; }
+.lanterne .flamme { fill: var(--ambre); }
+.lanterne .corps { fill: none; stroke: var(--texte); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+h1 {
+  font: 400 2.1rem/1.05 var(--titre);
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+.accroche { color: var(--doux); margin: 10px 0 18px; max-width: 34ch; font-size: 1.05rem; }
+
+h2 { font: 400 1.35rem/1.2 var(--titre); letter-spacing: -0.01em; margin: 0 0 10px; text-wrap: balance; }
+h3 { font-size: 1rem; margin: 14px 0 4px; }
+a { color: var(--lien); text-underline-offset: 3px; text-decoration-thickness: 1.5px; }
+a:hover { color: var(--corail-texte); }
+.doux { color: var(--doux); font-size: .95rem; }
+
+/* ---------- Blocs ---------- */
 .carte {
-  background: var(--carte);
-  border: 1px solid var(--bord);
+  background: var(--surface);
+  border: 1px solid var(--trait);
   border-radius: var(--rayon);
-  padding: 14px;
-  margin: 12px 0;
+  padding: 18px 16px;
+  margin: 16px 0;
   box-shadow: var(--ombre);
-  scroll-margin-top: 72px; /* laisse la place au bandeau du hackathon fixé en haut */
-}
-button, .bouton {
-  font: inherit;
-  border: 1px solid var(--bord);
-  background: var(--carte);
-  color: var(--texte);
-  border-radius: 999px;
-  padding: 8px 14px;
-  cursor: pointer;
-  min-height: 40px;
-}
-button.principal { background: var(--accent); border-color: var(--accent); color: var(--carte); font-weight: 600; }
-button:focus-visible, input:focus-visible, summary:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
-.rangee { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-input[type="text"], input[type="search"], textarea {
-  font: inherit;
-  width: 100%;
-  padding: 10px 12px;
-  border: 1px solid var(--bord);
-  border-radius: 10px;
-  background: var(--carte);
-  color: var(--texte);
+  scroll-margin-top: 72px; /* place pour le bandeau du hackathon fixé en haut */
 }
 
-/* Badges */
+/* La promesse de confidentialité : toujours visible, posée comme une étiquette */
+.promesse {
+  display: flex; gap: 10px; align-items: flex-start;
+  background: var(--surface-2);
+  border-radius: 12px;
+  padding: 10px 12px;
+  margin: 0 0 14px;
+  font-weight: 700;
+  font-size: .98rem;
+}
+.promesse svg { flex: none; width: 22px; height: 22px; margin-top: 1px; stroke: var(--corail-texte); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ---------- Boutons (48 px de haut minimum : taille d'un doigt) ---------- */
+button, .bouton {
+  font: 700 1rem/1.2 var(--corps);
+  color: var(--texte);
+  background: var(--surface);
+  border: 1.5px solid var(--trait);
+  border-radius: 999px;
+  padding: 12px 18px;
+  min-height: 48px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  transition: background-color .2s ease, border-color .2s ease, transform .15s ease;
+}
+button:hover, .bouton:hover { border-color: var(--ambre); background: var(--surface-2); }
+button:active, .bouton:active { transform: translateY(1px); }
+button:disabled { opacity: .6; cursor: progress; }
+button.principal, .bouton.principal {
+  background: var(--ambre);
+  border-color: var(--ambre);
+  color: var(--ambre-texte);
+  box-shadow: 0 2px 4px rgba(43, 26, 18, .18), 0 6px 14px -8px rgba(43, 26, 18, .35);
+}
+button.principal:hover, .bouton.principal:hover { background: #f7b955; border-color: #f7b955; color: var(--ambre-texte); }
+:focus-visible { outline: 3px solid var(--corail); outline-offset: 3px; border-radius: 12px; }
+button svg, .bouton svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linejoin: round; }
+button.garde svg { fill: var(--ambre); stroke: var(--ambre-texte); }
+
+.rangee { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.rangee > .bouton, .rangee > button { flex: 1 1 auto; }
+
+input[type="text"], input[type="search"], textarea {
+  font: 1rem/1.4 var(--corps);
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 14px;
+  border: 1.5px solid var(--trait);
+  border-radius: 14px;
+  background: var(--fond);
+  color: var(--texte);
+}
+input::placeholder, textarea::placeholder { color: var(--doux); opacity: 1; }
+input:focus, textarea:focus { border-color: var(--ambre); }
+
+/* ---------- Badges « sans bac » ---------- */
 .badge {
   display: inline-block;
-  font-size: .78rem;
-  font-weight: 600;
-  padding: 2px 8px;
+  font: 700 .8rem/1.2 var(--corps);
+  padding: 5px 10px;
   border-radius: 999px;
   white-space: nowrap;
 }
@@ -97,51 +171,79 @@ input[type="text"], input[type="search"], textarea {
 .badge.non { color: var(--non); background: var(--non-fond); }
 .badge.inconnu { color: var(--inconnu); background: var(--inconnu-fond); }
 
-/* Zones du rapport */
-details.zone { border-top: 1px solid var(--bord); padding: 8px 0; }
+/* ---------- Zones et métiers du rapport ---------- */
+details.zone { border-top: 1px solid var(--trait); padding: 12px 0 6px; }
 details.zone:first-of-type { border-top: 0; }
-details.zone summary { cursor: pointer; font-weight: 600; list-style: none; display: flex; justify-content: space-between; gap: 8px; }
+details.zone summary {
+  cursor: pointer; list-style: none;
+  display: flex; justify-content: space-between; align-items: baseline; gap: 10px;
+  font: 400 1.08rem/1.3 var(--titre);
+  min-height: 44px; padding-top: 6px;
+}
 details.zone summary::-webkit-details-marker { display: none; }
-.metiers { list-style: none; padding: 0; margin: 8px 0 0; display: grid; gap: 6px; }
+details.zone summary .doux {
+  font: 700 .85rem/1 var(--corps);
+  background: var(--surface-2); color: var(--doux);
+  border-radius: 999px; padding: 6px 10px;
+}
+.metiers { list-style: none; padding: 0; margin: 4px 0 0; }
+.metiers li + li { border-top: 1px dashed var(--trait); }
 .metiers button {
   width: 100%;
+  border: 0; border-radius: 12px;
+  background: transparent;
+  padding: 12px 6px;
   text-align: left;
-  border-radius: 10px;
-  display: flex;
   justify-content: space-between;
-  gap: 8px;
-  align-items: center;
+  font-weight: 700;
 }
-.metiers .confiance { font-size: .75rem; color: var(--doux); }
+.metiers button:hover { background: var(--surface-2); }
+.metiers .confiance { display: block; font-weight: 400; font-size: .85rem; color: var(--doux); margin-top: 2px; }
 
-/* Fiche */
+/* ---------- Fiche ---------- */
 #fiche[hidden] { display: none; }
-.fiche-entete { display: flex; justify-content: space-between; align-items: start; gap: 8px; }
-.infos { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; margin: 10px 0; font-size: .95rem; }
-.infos dt { color: var(--doux); }
-.infos dd { margin: 0; }
+#fiche { border-color: var(--ambre); }
+.fiche-entete { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+.fiche-entete h2 { font-size: 1.6rem; margin-bottom: 6px; }
+#fiche > p { max-width: 65ch; }
+#fiche details summary { cursor: pointer; font-weight: 700; color: var(--lien); min-height: 44px; display: flex; align-items: center; }
+.infos { display: grid; grid-template-columns: max-content 1fr; gap: 8px 14px; margin: 14px 0; padding: 12px; background: var(--surface-2); border-radius: 14px; }
+.infos dt { color: var(--doux); font-size: .92rem; }
+.infos dd { margin: 0; font-weight: 700; font-variant-numeric: tabular-nums; }
 
-/* Chat */
-#fil { display: grid; gap: 10px; margin-bottom: 10px; }
-.message { padding: 10px 12px; border-radius: 12px; white-space: pre-wrap; overflow-wrap: anywhere; }
-.message.jeune { background: var(--accent-fond); justify-self: end; max-width: 85%; }
-.message.assistant { background: var(--carte); border: 1px solid var(--bord); }
-.message .sources { margin-top: 8px; font-size: .85rem; white-space: normal; }
-.message .sources a { display: block; }
-.message .mode { margin-top: 6px; font-size: .75rem; color: var(--doux); white-space: normal; }
-.suggestions { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; }
-.suggestions button { white-space: nowrap; font-size: .9rem; }
-form.question { display: flex; gap: 8px; margin-top: 8px; }
+/* ---------- Recherche ---------- */
+#resultats { list-style: none; padding: 0; margin: 10px 0 0; display: grid; gap: 6px; }
+#resultats button { width: 100%; justify-content: flex-start; text-align: left; border-radius: 14px; font-weight: 700; }
 
-table.comparaison { width: 100%; border-collapse: collapse; font-size: .88rem; margin-top: 8px; white-space: normal; }
-table.comparaison th, table.comparaison td { border-top: 1px solid var(--bord); padding: 6px 4px; text-align: left; vertical-align: top; }
-table.comparaison th { color: var(--doux); font-weight: 500; width: 28%; }
+/* ---------- Chat ---------- */
+#fil { display: grid; gap: 12px; margin-bottom: 12px; }
+.message { padding: 12px 14px; border-radius: 18px; white-space: pre-wrap; overflow-wrap: anywhere; max-width: 100%; }
+.message.jeune { background: var(--jeune); justify-self: end; max-width: 85%; border-bottom-right-radius: 6px; font-weight: 700; }
+.message.assistant { background: var(--fond); border: 1px solid var(--trait); border-bottom-left-radius: 6px; }
+.message .sources { margin-top: 10px; padding-top: 8px; border-top: 1px dashed var(--trait); font-size: .9rem; white-space: normal; }
+.message .sources a { display: block; padding: 4px 0; }
+.message .mode { margin-top: 6px; font-size: .8rem; color: var(--doux); white-space: normal; }
+.suggestions { display: flex; gap: 8px; overflow-x: auto; padding: 2px 2px 8px; scrollbar-width: thin; scrollbar-color: var(--trait) transparent; }
+.suggestions button { white-space: nowrap; font-size: .95rem; font-weight: 400; background: var(--fond); }
+form.question { display: flex; gap: 8px; margin-top: 6px; }
+form.question input { flex: 1; }
+#mode-ia { margin-top: 12px; }
 
-#resultats { list-style: none; padding: 0; margin: 8px 0 0; display: grid; gap: 6px; }
-#recap-texte { min-height: 180px; }
-footer { font-size: .85rem; color: var(--doux); margin-top: 24px; }
+table.comparaison { width: 100%; border-collapse: collapse; font-size: .92rem; margin-top: 10px; white-space: normal; font-variant-numeric: tabular-nums; }
+table.comparaison th, table.comparaison td { border-top: 1px solid var(--trait); padding: 8px 6px; text-align: left; vertical-align: top; }
+table.comparaison tr:first-child th { font-family: var(--titre); font-weight: 400; color: var(--texte); }
+table.comparaison th { color: var(--doux); font-weight: 400; width: 30%; }
+
+/* ---------- Récap ---------- */
+#recap-texte { min-height: 200px; font-size: .95rem; background: var(--surface-2); }
+
+footer { font-size: .9rem; color: var(--doux); margin-top: 32px; max-width: 65ch; }
 .cache { display: none !important; }
+
 @media (min-width: 720px) {
-  main { padding-top: 24px; }
-  h1 { font-size: 1.9rem; }
+  main { padding-top: 40px; }
+  h1 { font-size: 2.8rem; }
+  .lanterne { width: 64px; height: 64px; }
+  .carte { padding: 24px; }
+  .rangee > .bouton, .rangee > button { flex: 0 0 auto; }
 }
