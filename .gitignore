@@ -1,7 +1,26 @@
+# --- Secrets : jamais de clé dans le repo ---
 .env
 .env.*
+
+# --- Données privées : AUCUN Rapport des Possibles dans le repo ---
+# Tous les PDF sont ignorés. Seul le faux rapport fictif est autorisé (exception ci-dessous).
+*.pdf
+!data/sample/rapport_fictif.pdf
+# Dossier de travail local (titres extraits des vrais rapports, essais...)
+data_local/
+
+# --- Téléchargements publics bruts : trop lourds, on les retélécharge avec src/download_data.py ---
+data/raw/*
+!data/raw/.gitkeep
+
+# --- Fichiers intermédiaires : régénérés par src/clean_data.py ---
+data/processed/*
+!data/processed/.gitkeep
+
+# --- Outils ---
 node_modules/
 dist/
 __pycache__/
+.pytest_cache/
 .venv/
 .DS_Store

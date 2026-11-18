@@ -1,0 +1,15 @@
+# Bibliothèques Python du projet. Installer avec :  pip install -r requirements.txt
+# (Python 3.10 ou plus récent)
+
+# Télécharger les données ouvertes (src/download_data.py)
+requests>=2.31
+# Lire les fichiers CSV du ROME et de Parcoursup comme des tableaux (src/clean_data.py)
+pandas>=2.0
+# Lancer les tests (tests/)
+pytest>=8.0
+# Fabriquer le faux Rapport des Possibles en PDF pour les tests et la démo (data/sample/)
+reportlab>=4.0
+
+# Pas de bibliothèque de similarité externe : la formule est écrite à la main dans
+# src/similarite.py pour être IDENTIQUE à js/similarite.js (le site).
+# Outil système optionnel, pour l'extraction locale des titres : pdftotext (brew install poppler)
