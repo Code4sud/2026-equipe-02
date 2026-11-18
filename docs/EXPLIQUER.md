@@ -5,6 +5,8 @@ Il est mis à jour à chaque phase.
 
 ## En une phrase
 
+**Luciole** (signature : *Éclaire tes possibles*) est le nom du projet. **Éclaireur** est le nom de l'assistant : « Luciole, avec Éclaireur, ton assistant ». C'est un nom de projet, pas une entreprise.
+
 Un assistant sur téléphone qui explique les métiers du Rapport des Possibles avec des données publiques, cite toujours sa source, et dit « je ne sais pas » quand il ne sait pas.
 
 ## Schéma d'architecture

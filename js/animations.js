@@ -1,4 +1,4 @@
-// Animations légères d'Éclaireur, avec GSAP (vendor/gsap, copié dans le dépôt).
+// Animations légères de Luciole, avec GSAP (vendor/gsap, copié dans le dépôt).
 // Règles : le contenu est visible même sans animation (on anime DEPUIS un état proche),
 // et rien ne bouge si la personne a demandé « réduire les animations » (prefers-reduced-motion).
 // app.js appelle ces fonctions via window.eclaireurAnim ; si GSAP manque, rien ne casse.
@@ -9,7 +9,7 @@
   const actif = () => gsap && !calme();
 
   window.eclaireurAnim = {
-    // Le moment principal : la fiche « s'allume » comme une lanterne
+    // Le moment principal : la fiche « s'allume » comme une luciole
     ficheOuverte(el) {
       if (!actif()) return;
       gsap.fromTo(el,

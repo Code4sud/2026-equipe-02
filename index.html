@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Éclaireur — tes métiers expliqués</title>
-  <meta name="description" content="Assistant qui explique les métiers du Rapport des Possibles avec des données publiques, sources à l'appui.">
+  <title>Luciole — Éclaire tes possibles</title>
+  <meta name="description" content="Luciole, avec Éclaireur, ton assistant : les métiers de ton Rapport des Possibles expliqués avec les données publiques, sources à l'appui.">
   <link rel="stylesheet" href="css/style.css">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%230b6e4f'/%3E%3Cpath d='M16 6l4 10-4 10-4-10z' fill='white'/%3E%3C/svg%3E">
+  <link rel="icon" type="image/svg+xml" href="assets/luciole.svg">
   <!-- Bandeau commun du hackathon (le numéro d'équipe est déjà renseigné) -->
   <script src="https://orientation.code4sud.fr/bandeau.js" data-equipe="02"></script>
 </head>
@@ -14,13 +14,13 @@
 <main>
   <header>
     <div class="entete">
-      <svg class="lanterne" viewBox="0 0 64 64" aria-hidden="true">
-        <path class="corps" d="M24 14h16M28 8h8v6M22 20h20l-2 30H24z M20 50h24v6H20z"/>
-        <path class="flamme" d="M32 26c4 5 5 9 5 12a5 5 0 0 1-10 0c0-3 1-7 5-12z"/>
-      </svg>
-      <h1>Éclaireur</h1>
+      <img class="logo" src="assets/luciole.svg" alt="" width="64" height="64">
+      <div>
+        <h1>Luciole</h1>
+        <p class="signature">Éclaire tes possibles</p>
+      </div>
     </div>
-    <p class="accroche">Les métiers de ton rapport, expliqués simplement, avec les sources officielles.</p>
+    <p class="accroche">Luciole, avec <strong>Éclaireur</strong>, ton assistant : les métiers de ton rapport, expliqués simplement, avec les sources officielles.</p>
   </header>
 
   <section class="carte" id="bloc-rapport" aria-labelledby="t-rapport">
@@ -47,7 +47,7 @@
   </section>
 
   <section class="carte" aria-labelledby="t-chat">
-    <h2 id="t-chat">Pose ta question</h2>
+    <h2 id="t-chat">Pose ta question à Éclaireur</h2>
     <div id="fil" aria-live="polite"></div>
     <div class="suggestions" id="suggestions"></div>
     <form class="question" id="form-question">
@@ -70,11 +70,12 @@
 
   <footer>
     <p>Les résultats du Rapport des Possibles sont des pistes de réflexion, pas un verdict. Tu restes l'expert de ta propre vie.</p>
-    <p>Sources : <a href="https://www.onisep.fr/" target="_blank" rel="noopener">ONISEP</a> (ODbL),
-      <a href="https://www.data.gouv.fr/datasets/repertoire-operationnel-des-metiers-et-des-emplois-rome" target="_blank" rel="noopener">ROME 4.0, France Travail</a> (Licence Ouverte),
+    <p class="pied-nom"><img src="assets/luciole.svg" alt="" width="20" height="20"> Luciole, projet Code4Sud Hackathon Azuréen #3, équipe 02</p>
+    <p>Sources : <a href="https://www.onisep.fr/" target="_blank" rel="noopener">ONISEP</a> (licence ODbL) ·
+      <a href="https://www.data.gouv.fr/datasets/repertoire-operationnel-des-metiers-et-des-emplois-rome" target="_blank" rel="noopener">ROME 4.0, France Travail</a> (Licence Ouverte) ·
       <a href="https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-parcoursup/" target="_blank" rel="noopener">Parcoursup 2025</a> (Licence Ouverte).
       Pour aller plus loin : <a href="https://www.orientation-regionsud.fr/" target="_blank" rel="noopener">orientation-regionsud.fr</a>.
-      Projet de l'équipe 02, Hackathon Azuréen #3 · <a href="https://github.com/Code4sud/2026-equipe-02" target="_blank" rel="noopener">code source</a> (MIT).</p>
+      <a href="https://github.com/Code4sud/2026-equipe-02" target="_blank" rel="noopener">Code source</a> sous licence MIT.</p>
   </footer>
 </main>
 <!-- GSAP copié dans le dépôt (licence standard gratuite) : animations sans internet -->

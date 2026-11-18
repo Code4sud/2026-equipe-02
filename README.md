@@ -2,9 +2,11 @@
 
 Projet réalisé à Nice les 18, 19 et 20 novembre 2026, sur le thème **« L'orientation et l'employabilité grâce à l'IA »**, organisé par [Code4Sud](https://code4sud.fr). Sujet 2 : assistant IA d'exploration des métiers.
 
+**Luciole** — *Éclaire tes possibles*. Luciole, avec Éclaireur, ton assistant. (Luciole est le nom du projet, pas une entreprise.)
+
 ## Le projet
 
-Après le Centre des Possibles, un jeune repart avec une liste de métiers dont il n'a jamais entendu parler, et personne n'est là à 23 h pour lui dire ce que c'est, quel diplôme il faut, ou s'il peut le faire sans le bac. Notre assistant répond à ces questions en phrases courtes, **uniquement à partir des données publiques** (ONISEP, ROME 4.0 de France Travail, Parcoursup), cite sa source sous chaque réponse et dit « je ne sais pas » quand la donnée n'existe pas. Il fonctionne sur téléphone, sans compte, et le rapport du jeune est lu dans son navigateur : rien n'est envoyé nulle part.
+Après le Centre des Possibles, un jeune repart avec une liste de métiers dont il n'a jamais entendu parler, et personne n'est là à 23 h pour lui dire ce que c'est, quel diplôme il faut, ou s'il peut le faire sans le bac. Luciole et son assistant Éclaireur répondent à ces questions en phrases courtes, **uniquement à partir des données publiques** (ONISEP, ROME 4.0 de France Travail, Parcoursup), citent la source sous chaque réponse et disent « je ne sais pas » quand la donnée n'existe pas. Le site fonctionne sur téléphone, sans compte, et le rapport du jeune est lu dans son navigateur : rien n'est envoyé nulle part.
 
 ## Lancer le projet
 
@@ -22,6 +24,7 @@ Données ouvertes ──> src/download_data.py ──> data/raw/        (non ver
                      src/link_jobs.py     ──> liaison des noms de métiers + docs/qualite.md
                      src/build_index.py   ──> data/index/*.json (chargé par le site)
 Site statique (index.html + js/) : recherche dans l'index, fiches, chat sourcé
+404.html (générée par src/make_404.py) : page autonome, tout est intégré
 ```
 
 Explications détaillées pour le jury : [docs/EXPLIQUER.md](docs/EXPLIQUER.md). Avancement : [TASKS.md](TASKS.md).

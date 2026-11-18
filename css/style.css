@@ -1,57 +1,67 @@
-/* Éclaireur — « lanterne du soir ».
-   Crème et brun chaud, lumière ambre pour l'action, corail pour les accents.
+/* Luciole (avec Éclaireur, l'assistant).
    Mobile d'abord. Polices Young Serif et Atkinson Hyperlegible auto-hébergées (vendor/fonts, licence OFL) : marche sans internet. */
 
 @font-face { font-family: "Young Serif"; src: url("../vendor/fonts/young-serif-latin-400-normal.woff2") format("woff2"); font-weight: 400; font-display: swap; }
 @font-face { font-family: "Atkinson Hyperlegible"; src: url("../vendor/fonts/atkinson-hyperlegible-latin-400-normal.woff2") format("woff2"); font-weight: 400; font-display: swap; }
 @font-face { font-family: "Atkinson Hyperlegible"; src: url("../vendor/fonts/atkinson-hyperlegible-latin-700-normal.woff2") format("woff2"); font-weight: 700; font-display: swap; }
 
-/* Clair : crème. Les contrastes texte/fond sont tous >= 4.5:1. */
+/* Palette olive et terracotta.
+   olive #4f5f26 · olive foncé #2f3a15 · encre #1d230d · terracotta #a9441b · terracotta foncé #7e3012
+   safran #d29a3c · laine crème #eee5cf et #e0d4b4 · texte clair #f7f0df · encre du texte #232714
+   Les contrastes sont MESURÉS par tests/contrastes.py (texte >= 4.5:1, badges et boutons compris). */
+
+/* Clair : fond laine crème, texte encre, boutons terracotta, accents safran */
 :root {
-  --fond: #fbf3e6;
-  --fond-halo: #f8dfb4;
-  --surface: #fffaf2;
-  --surface-2: #f6ead7;
-  --texte: #2b1a12;
-  --doux: #6b4d3b;
-  --trait: #e8d6bd;
-  --ambre: #f2a93b;          /* lumière : fonds de boutons, halo (jamais du texte sur crème) */
-  --ambre-texte: #2b1a12;    /* texte posé sur l'ambre */
-  --lien: #94500a;
-  --corail: #e2634a;
-  --corail-texte: #a83a22;
-  --jeune: #fde3bf;
-  --oui: #3e6420;  --oui-fond: #e6efd6;
-  --comment: #8a4f00; --comment-fond: #fde7c4;
-  --non: #a3341d;  --non-fond: #fbe0d6;
-  --inconnu: #6b4d3b; --inconnu-fond: #efe2cf;
-  --ombre: 0 1px 2px rgba(74, 40, 16, .06), 0 8px 24px -12px rgba(74, 40, 16, .18);
+  --fond: #eee5cf;
+  --fond-halo: #e4cc96;
+  --surface: #f7f0df;
+  --surface-2: #e0d4b4;
+  --texte: #232714;
+  --doux: #4f5f26;
+  --trait: #d3c49d;
+  --action: #a9441b;          /* boutons principaux */
+  --action-texte: #f7f0df;
+  --action-survol: #7e3012;
+  --accent: #d29a3c;          /* safran : halo, lueur, sélection (jamais du texte sur crème) */
+  --accent-texte: #232714;
+  --lien: #7e3012;
+  --lien-survol: #a9441b;
+  --focus: #7e3012;
+  --jeune: #e8d3a3;
+  --oui: #2f3a15;  --oui-fond: #d9dcb5;
+  --comment: #5e4210; --comment-fond: #f0dbab;
+  --non: #7e3012;  --non-fond: #f0d2c0;
+  --inconnu: #3d4224; --inconnu-fond: #e0d4b4;
+  --ombre: 0 1px 2px rgba(29, 35, 13, .08), 0 8px 24px -12px rgba(29, 35, 13, .22);
   --rayon: 18px;
   --titre: "Young Serif", Georgia, serif;
   --corps: "Atkinson Hyperlegible", system-ui, sans-serif;
   color-scheme: light;
 }
 
-/* Sombre : brun profond, le soir. */
+/* Sombre : fond encre, cartes olive foncé, texte crème, accents safran */
 @media (prefers-color-scheme: dark) {
   :root {
-    --fond: #1c120c;
-    --fond-halo: #4a2a10;
-    --surface: #2a1c14;
-    --surface-2: #33231a;
-    --texte: #f7ebdc;
-    --doux: #d3bca6;
-    --trait: #45311f;
-    --ambre: #f4b04a;
-    --ambre-texte: #22140b;
-    --lien: #f6c072;
-    --corail: #f08a6e;
-    --corail-texte: #f6a48d;
-    --jeune: #4a2f16;
-    --oui: #b9dc8f;  --oui-fond: #2c3a1c;
-    --comment: #f6c46e; --comment-fond: #45300f;
-    --non: #f6a48d;  --non-fond: #4a2117;
-    --inconnu: #d3bca6; --inconnu-fond: #3a2a1f;
+    --fond: #1d230d;
+    --fond-halo: #3b3b12;
+    --surface: #2f3a15;
+    --surface-2: #3a4719;
+    --texte: #f7f0df;
+    --doux: #e0d4b4;
+    --trait: #4c5a27;
+    --action: #a9441b;
+    --action-texte: #f7f0df;
+    --action-survol: #7e3012;
+    --accent: #d29a3c;
+    --accent-texte: #1d230d;
+    --lien: #e2b462;
+    --lien-survol: #f7f0df;
+    --focus: #d29a3c;
+    --jeune: #4d3f14;
+    --oui: #dfe6b0;  --oui-fond: #45541d;
+    --comment: #f1cf8b; --comment-fond: #4d3f14;
+    --non: #f3c3ab;  --non-fond: #5a2a12;
+    --inconnu: #e0d4b4; --inconnu-fond: #3a4719;
     --ombre: 0 1px 2px rgba(0, 0, 0, .3), 0 10px 28px -14px rgba(0, 0, 0, .6);
     color-scheme: dark;
   }
@@ -64,31 +74,32 @@ body {
   color: var(--texte);
   font: 17px/1.55 var(--corps);
   background-color: var(--fond);
-  /* La lumière de la lanterne : un halo chaud en haut de page, qui s'estompe */
+  /* La lueur de la luciole : un halo safran en haut de page, qui s'estompe */
   background-image: radial-gradient(120% 60% at 50% -10%, var(--fond-halo) 0%, transparent 60%);
   background-repeat: no-repeat;
-  caret-color: var(--corail);
+  caret-color: var(--action);
 }
-::selection { background: var(--ambre); color: var(--ambre-texte); }
+::selection { background: var(--accent); color: var(--accent-texte); }
 
 main { max-width: 720px; margin: 0 auto; padding: 20px 16px 96px; }
 
 /* ---------- En-tête ---------- */
 .entete { display: flex; gap: 14px; align-items: center; margin: 12px 0 6px; }
-.lanterne { width: 52px; height: 52px; flex: none; }
-.lanterne .flamme { fill: var(--ambre); }
-.lanterne .corps { fill: none; stroke: var(--texte); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.logo { width: 56px; height: 56px; flex: none; }
+.signature { margin: 4px 0 0; font: 400 1.05rem/1.2 var(--titre); color: var(--lien); }
+.pied-nom { display: flex; align-items: center; gap: 8px; font-weight: 700; color: var(--texte); }
 h1 {
   font: 400 2.1rem/1.05 var(--titre);
   letter-spacing: -0.02em;
   margin: 0;
 }
-.accroche { color: var(--doux); margin: 10px 0 18px; max-width: 34ch; font-size: 1.05rem; }
+.accroche { color: var(--doux); margin: 12px 0 18px; max-width: 46ch; font-size: 1.05rem; }
+.accroche strong { color: var(--texte); }
 
 h2 { font: 400 1.35rem/1.2 var(--titre); letter-spacing: -0.01em; margin: 0 0 10px; text-wrap: balance; }
 h3 { font-size: 1rem; margin: 14px 0 4px; }
 a { color: var(--lien); text-underline-offset: 3px; text-decoration-thickness: 1.5px; }
-a:hover { color: var(--corail-texte); }
+a:hover { color: var(--lien-survol); }
 .doux { color: var(--doux); font-size: .95rem; }
 
 /* ---------- Blocs ---------- */
@@ -112,7 +123,7 @@ a:hover { color: var(--corail-texte); }
   font-weight: 700;
   font-size: .98rem;
 }
-.promesse svg { flex: none; width: 22px; height: 22px; margin-top: 1px; stroke: var(--corail-texte); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.promesse svg { flex: none; width: 22px; height: 22px; margin-top: 1px; stroke: var(--action); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
 /* ---------- Boutons (48 px de haut minimum : taille d'un doigt) ---------- */
 button, .bouton {
@@ -128,19 +139,19 @@ button, .bouton {
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
   transition: background-color .2s ease, border-color .2s ease, transform .15s ease;
 }
-button:hover, .bouton:hover { border-color: var(--ambre); background: var(--surface-2); }
+button:hover, .bouton:hover { border-color: var(--accent); background: var(--surface-2); }
 button:active, .bouton:active { transform: translateY(1px); }
 button:disabled { opacity: .6; cursor: progress; }
 button.principal, .bouton.principal {
-  background: var(--ambre);
-  border-color: var(--ambre);
-  color: var(--ambre-texte);
+  background: var(--action);
+  border-color: var(--action);
+  color: var(--action-texte);
   box-shadow: 0 2px 4px rgba(43, 26, 18, .18), 0 6px 14px -8px rgba(43, 26, 18, .35);
 }
-button.principal:hover, .bouton.principal:hover { background: #f7b955; border-color: #f7b955; color: var(--ambre-texte); }
-:focus-visible { outline: 3px solid var(--corail); outline-offset: 3px; border-radius: 12px; }
+button.principal:hover, .bouton.principal:hover { background: var(--action-survol); border-color: var(--action-survol); color: var(--action-texte); }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; border-radius: 12px; }
 button svg, .bouton svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linejoin: round; }
-button.garde svg { fill: var(--ambre); stroke: var(--ambre-texte); }
+button.garde svg { fill: var(--accent); stroke: var(--texte); }
 
 .rangee { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
 .rangee > .bouton, .rangee > button { flex: 1 1 auto; }
@@ -156,7 +167,7 @@ input[type="text"], input[type="search"], textarea {
   color: var(--texte);
 }
 input::placeholder, textarea::placeholder { color: var(--doux); opacity: 1; }
-input:focus, textarea:focus { border-color: var(--ambre); }
+input:focus, textarea:focus { border-color: var(--accent); }
 
 /* ---------- Badges « sans bac » ---------- */
 .badge {
@@ -202,7 +213,7 @@ details.zone summary .doux {
 
 /* ---------- Fiche ---------- */
 #fiche[hidden] { display: none; }
-#fiche { border-color: var(--ambre); }
+#fiche { border-color: var(--accent); }
 .fiche-entete { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
 .fiche-entete h2 { font-size: 1.6rem; margin-bottom: 6px; }
 #fiche > p { max-width: 65ch; }
@@ -243,7 +254,7 @@ footer { font-size: .9rem; color: var(--doux); margin-top: 32px; max-width: 65ch
 @media (min-width: 720px) {
   main { padding-top: 40px; }
   h1 { font-size: 2.8rem; }
-  .lanterne { width: 64px; height: 64px; }
+  .logo { width: 68px; height: 68px; }
   .carte { padding: 24px; }
   .rangee > .bouton, .rangee > button { flex: 0 0 auto; }
 }

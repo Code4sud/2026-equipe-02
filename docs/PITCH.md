@@ -1,4 +1,6 @@
-# Pitch — Éclaireur (équipe 02)
+# Pitch — Luciole (équipe 02)
+
+*Éclaire tes possibles.* Luciole est le nom du projet ; Éclaireur est le nom de l'assistant (« Luciole, avec Éclaireur, ton assistant »).
 
 ## Le pitch en 2 minutes : « Lina, 23 h »
 
@@ -6,7 +8,7 @@
 > Il est 23 h. Lina a 17 ans. Cet après-midi, elle était au Centre des Possibles. Elle est repartie avec son rapport : 25 métiers, rangés en 5 zones. « Psychomotricien », « fauconnier de spectacle »… elle n'en connaît pas la moitié. Ses questions sont simples : c'est quoi concrètement ? Il faut quel diplôme ? Je peux le faire sans le bac ? Le rapport ne le dit pas. Et à 23 h, personne n'est là pour lui répondre.
 
 > **(0:20 – 0:50) La solution.**
-> Éclaireur, c'est un assistant sur son téléphone. Lina charge son rapport. Il est lu **sur son téléphone** : il n'est envoyé nulle part, il n'y a pas de compte. Ses métiers apparaissent par zone, avec un badge « sans bac : oui ou non ». Elle touche un métier : 4 lignes pour comprendre, le niveau minimum, le salaire d'un débutant, et la source officielle juste en dessous.
+> Luciole, c'est un site sur son téléphone, avec Éclaireur, son assistant. Lina charge son rapport. Il est lu **sur son téléphone** : il n'est envoyé nulle part, il n'y a pas de compte. Ses métiers apparaissent par zone, avec un badge « sans bac : oui ou non ». Elle touche un métier : 4 lignes pour comprendre, le niveau minimum, le salaire d'un débutant, et la source officielle juste en dessous.
 
 > **(0:50 – 1:20) Ce qui nous rend fiables.**
 > Chaque réponse vient des données publiques : ONISEP, le ROME 4.0 de France Travail, Parcoursup. Chaque réponse cite sa source, cliquable. Et quand on ne sait pas, on le dit. Le coût d'une formation ? Aucune donnée ouverte : « je ne sais pas, parles-en à un conseiller du Centre ». C'est le code qui construit la réponse. Le modèle d'IA, open weight, ne fait que la reformuler, et s'il invente un chiffre, sa version est rejetée.
@@ -15,7 +17,7 @@
 > Les métiers du rapport viennent d'une base américaine, sans code français. Nous les relions aux référentiels français par leur nom, avec un score de confiance. Sur les 20 questions types du Centre : bon type de réponse, source citée, rien d'inventé, 20 sur 20.
 
 > **(1:45 – 2:00) La fin.**
-> Éclaireur ne dit jamais à Lina ce qu'elle doit faire, et n'interprète jamais sa personnalité. Il éclaire les métiers. Le choix reste le sien, et le lendemain, elle pousse la porte du Centre avec son récap.
+> Éclaireur, l'assistant de Luciole, ne dit jamais à Lina ce qu'elle doit faire, et n'interprète jamais sa personnalité. Il éclaire les métiers. Le choix reste le sien, et le lendemain, elle pousse la porte du Centre avec son récap.
 
 ## Plan de la démo live (3 minutes maximum)
 
@@ -37,7 +39,7 @@ Fichier `equipe-02.mp4`, enregistrement d'écran au format téléphone, **rappor
 
 | Temps | À l'écran | Sous-titre |
 |---|---|---|
-| 0:00 – 0:06 | Page d'accueil, lanterne | Lina, 17 ans, 23 h. Son rapport du Centre des Possibles liste 25 métiers. |
+| 0:00 – 0:06 | Page d'accueil, logo luciole | Lina, 17 ans, 23 h. Son rapport du Centre des Possibles liste 25 métiers. |
 | 0:06 – 0:12 | Zoom sur le message de confidentialité | Son PDF est lu sur son téléphone. Rien n'est envoyé. |
 | 0:12 – 0:20 | Clic « Essayer avec un rapport fictif », zones qui apparaissent | Ses métiers, rangés en 5 zones, avec un badge « sans bac ». |
 | 0:20 – 0:32 | Ouverture de la fiche Boulanger | C'est quoi ? Quel niveau ? Quel salaire au début ? Avec la source officielle. |
@@ -45,7 +47,7 @@ Fichier `equipe-02.mp4`, enregistrement d'écran au format téléphone, **rappor
 | 0:45 – 0:55 | « Où me former près de Nice ? » | Les formations les plus proches. Coût : inconnu, on ne l'invente pas. |
 | 0:55 – 1:08 | Question sur le toiletteur de chevaux, « Je ne sais pas » | Quand il ne sait pas, il le dit, et renvoie vers un conseiller. |
 | 1:08 – 1:18 | « Je suis fait pour quel métier ? », refus poli | Il n'interprète jamais la personnalité du jeune. Le choix reste le sien. |
-| 1:18 – 1:30 | Récap copié, logo | Éclaireur : des pistes éclairées, des sources vérifiables. Équipe 02. |
+| 1:18 – 1:30 | Récap copié, logo luciole | Luciole : éclaire tes possibles. Des sources vérifiables. Équipe 02. |
 
 ## 10 questions probables du jury
 

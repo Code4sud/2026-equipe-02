@@ -30,6 +30,10 @@
 - [x] `tests/questions.json` (20 questions) + score dans EXPLIQUER.md
 - [ ] Gel de la version stable jeudi soir
 
+- [x] Palette olive et terracotta, contrastes mesurés par tests/contrastes.py (40/40 conformes)
+- [x] Page 404 autonome (src/make_404.py)
+- [x] Nom de projet « Luciole » (signature « Éclaire tes possibles »), assistant « Éclaireur », logo SVG, pied de page
+
 ## Vendredi 20/11
 
 - [x] projet.json complet, au moins 2 captures

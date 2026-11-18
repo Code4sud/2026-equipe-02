@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Luciole">
+  <!-- Logo de Luciole : une petite luciole dont l'abdomen brille (safran). Couleurs de la palette. -->
+  <circle cx="39" cy="40" r="20" fill="#d29a3c" opacity=".22"/>
+  <circle cx="39" cy="40" r="13" fill="#d29a3c" opacity=".35"/>
+  <ellipse cx="39" cy="40" rx="8.5" ry="9.5" fill="#d29a3c" transform="rotate(-40 39 40)"/>
+  <ellipse cx="22" cy="31" rx="9" ry="5" fill="#eee5cf" stroke="#4f5f26" stroke-width="2" transform="rotate(-70 22 31)"/>
+  <ellipse cx="33" cy="20" rx="9" ry="5" fill="#eee5cf" stroke="#4f5f26" stroke-width="2" transform="rotate(-20 33 20)"/>
+  <ellipse cx="28" cy="29" rx="6.5" ry="8" fill="#2f3a15" transform="rotate(-40 28 29)"/>
+  <circle cx="20.5" cy="21.5" r="4.5" fill="#2f3a15"/>
+  <path d="M18 18c-2-4-5-6-9-6M22 17c0-4 2-7 5-9" fill="none" stroke="#2f3a15" stroke-width="2" stroke-linecap="round"/>
+</svg>
