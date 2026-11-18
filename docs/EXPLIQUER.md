@@ -60,6 +60,7 @@ Confiance : **sûr** (score ≥ 0,9 ou exact ou confirmé), **à vérifier** (0,
 ## Limites (à dire honnêtement au jury)
 
 * **Coût des formations** : aucune donnée ouverte. On affiche « inconnu » et seulement « établissement public / privé ».
+* **Apprentissage** : les formations en CFA ne sont pas dans le fichier ONISEP Région Sud (depuis 2022). L'assistant le dit et renvoie vers le Carif-Oref.
 * **Sélection** : connue uniquement pour les formations post-bac présentes sur Parcoursup, pas pour les CAP ni les bacs pro.
 * **Salaires** : un seul chiffre (débutant), publié par l'ONISEP, sans détail par région.
 * **Liaison des noms** : environ 4 métiers des rapports sur 10 ne sont pas reliés avec certitude. Certains métiers américains (O*NET) n'ont pas d'équivalent exact en France.

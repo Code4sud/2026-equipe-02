@@ -15,6 +15,7 @@ Le téléchargement se refait avec `python src/download_data.py`.
 
 * **Coût des formations** : aucune source ouverte. Le site affiche « inconnu » et le statut public / privé de l'établissement, qui n'est pas un coût.
 * **Salaire** : seulement le « salaire du débutant » publié par l'ONISEP, pour 78 % des fiches. Sinon, l'assistant répond « je ne sais pas ».
+* **Apprentissage** : depuis 2022, le fichier ONISEP des lieux de formation de la Région Sud ne contient plus les formations en apprentissage (CFA). L'assistant le signale et renvoie vers le Carif-Oref.
 * **Sélection** : seulement pour les formations post-bac présentes sur Parcoursup (672 lieux de formation en Région Sud). Les CAP et bacs pro n'y sont pas.
 * **Les Carif-Oref** : le réseau publie sur data.gouv.fr le Référentiel national des certifications, mais nous n'avons pas trouvé d'export ouvert de l'offre de formation de la Région Sud (Carif-Oref PACA). Les lieux de formation viennent donc de l'ONISEP. Le site renvoie vers [intercariforef.org](https://www.intercariforef.org/formations/recherche-formations.html) par un lien, sans en extraire le contenu.
 * **orientation-regionsud.fr** : consulté et cité par des liens uniquement, jamais extrait.

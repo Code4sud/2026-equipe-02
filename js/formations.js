@@ -31,11 +31,14 @@ export function localiser(lieu, formations) {
   return { lat, lon, nom: cp ? `${cp}` : points[0].ville };
 }
 
-// Formations qui mènent au métier : même code ROME, ou formation citée par la fiche ONISEP
+// Formations qui mènent au métier. En priorité celles que la fiche ONISEP cite elle-même ;
+// s'il n'y en a aucune en Région Sud, celles qui partagent un code ROME (lien plus large).
 export function formationsDuMetier(f, formations) {
-  const codes = new Set(codesRome(f));
   const ids = new Set((f.formations || []).map((x) => x.id));
-  return formations.filter((x) => ids.has(x.id) || x.romes.some((c) => codes.has(c)));
+  const citees = formations.filter((x) => ids.has(x.id));
+  if (citees.length) return citees;
+  const codes = new Set(codesRome(f));
+  return formations.filter((x) => x.romes.some((c) => codes.has(c)));
 }
 
 export function formationsProches(f, formations, lieu, n = 5) {

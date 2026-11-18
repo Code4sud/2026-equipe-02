@@ -188,7 +188,8 @@ export function repondreDepuisDonnees(type, f, ctx = {}) {
         return `• ${x.intitule} — ${x.etablissement}, ${x.ville} (${x.km} km) · ${x.statut || "statut inconnu"}${sel} · coût : inconnu`;
       });
       return {
-        texte: `Les ${r.liste.length} formations les plus proches de ${ctx.lieu} (sur ${r.total} en Région Sud) :\n${lignes.join("\n")}`,
+        texte: `Les ${r.liste.length} formations les plus proches de ${ctx.lieu} (sur ${r.total} en Région Sud) :\n${lignes.join("\n")}` +
+          "\nAttention : les formations en apprentissage (CFA) ne sont pas dans ces données. Regarde aussi le Carif-Oref.",
         sources: [...new Map(r.liste.map((x) => [x.source.url, { nom: `ONISEP : ${x.intitule}`, url: x.source.url }])).values()].slice(0, 3).concat([LIEN_CARIF]),
         extraits: "", sansModele: true, formations: r.liste,
       };
@@ -205,11 +206,15 @@ export function comparer(f1, f2, formations) {
   const ligne = (f) => {
     const g = enrichie(f);
     const sel = formations && selectionParcoursup(g, formations);
-    const courte = (g.formations || []).filter((x) => x.duree).sort((a, b) => parseInt(a.duree) - parseInt(b.duree))[0];
+    // Diplôme d'entrée : le niveau de sortie le plus bas, sans les formations complémentaires
+    // (CS, MC : elles se font APRÈS un premier diplôme), puis la plus courte
+    const rangNiveau = (n) => (!n ? 99 : /CAP|BEP/i.test(n) ? 0 : /^bac( ou|$)/.test(n) ? 1 : parseInt((n.match(/\+ ?(\d+)/) || [0, 9])[1]) + 1);
+    const courte = (g.formations || []).filter((x) => x.duree && !/^(CS|MC|FCIL)\b/.test(x.libelle))
+      .sort((a, b) => rangNiveau(a.niveau_sortie) - rangNiveau(b.niveau_sortie) || parseInt(a.duree) - parseInt(b.duree))[0];
     return {
       nom: f.nom,
       niveau: g.niveau_min ? lisible(g.niveau_min) : "inconnu",
-      sansBac: { oui: "oui", non: "non", comment: "avec le bac", inconnu: "inconnu" }[g.sans_bac || "inconnu"],
+      sansBac: { oui: "oui", non: "non", comment: "non, bac requis", inconnu: "inconnu" }[g.sans_bac || "inconnu"],
       duree: courte ? `${courte.duree} (${courte.libelle})` : "inconnu",
       salaire: g.salaire_debutant ? g.salaire_debutant.replace(/^A partir/, "À partir") : "inconnu",
       selection: sel ? (sel.min === sel.max ? `${sel.min} %` : `${sel.min} à ${sel.max} %`) + " (Parcoursup, Région Sud)" : "inconnu",

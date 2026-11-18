@@ -20,7 +20,7 @@ const ZONES = {
 };
 const BADGE = {
   oui: ["oui", "Sans bac : oui"],
-  comment: ["comment", "Sans bac : avec un bac pro"],
+  comment: ["comment", "Sans bac : non, bac requis"],
   non: ["non", "Sans bac : non"],
   inconnu: ["inconnu", "Sans bac : ?"],
 };
@@ -108,7 +108,7 @@ function ouvrirFiche(lien) {
         "Il vient peut-être d'une base étrangère et n'a pas d'équivalent exact en France. " + CONSEILLER),
       el("a", { href: "https://www.orientation-regionsud.fr/", target: "_blank", rel: "noopener" }, "Chercher sur orientation-regionsud.fr"),
     );
-    zone.scrollIntoView({ behavior: "smooth", block: "start" });
+    zone.scrollIntoView({ block: "start" });
     ctx.metierCourant = null;
     return;
   }
@@ -116,7 +116,7 @@ function ouvrirFiche(lien) {
   const g = ficheOnisepLiee(f) || f;
   const resume = (f.resume || "").split(/(?<=\.)\s/).slice(0, 3).join(" ");
   const jour = (g.journee || "").split("\n").find((l) => l.length > 40 && !/:\s*$/.test(l));
-  zone.append(
+  zone.append(...[
     el("div", { class: "fiche-entete" }, el("h2", {}, lien.titre || f.nom), badgeSansBac(f)),
     lien.titre && lien.confiance === "à vérifier"
       ? el("p", { class: "doux" }, `Fiche la plus proche trouvée : « ${f.nom} ». Vérifie que c'est bien le même métier.`)
@@ -134,9 +134,9 @@ function ouvrirFiche(lien) {
     el("p", { class: "doux" }, "Source : ",
       el("a", { href: g.source.url, target: "_blank", rel: "noopener" }, `${g.source.nom} (${g.source.licence})`),
       g !== f ? [" · ", el("a", { href: f.source.url, target: "_blank", rel: "noopener" }, f.source.nom)] : null),
-  );
+  ].filter(Boolean)); // on ne garde que les blocs présents (sinon « null » s'afficherait)
   suggestions();
-  zone.scrollIntoView({ behavior: "smooth", block: "start" });
+  zone.scrollIntoView({ block: "start" });
 }
 
 function basculerGarde(lien, f) {
@@ -180,7 +180,7 @@ function rendreReponse(r) {
   const bloc = el("div", {}, r.texte);
   if (r.comparaison) {
     const [a, b] = r.comparaison;
-    const lignes = [["Niveau minimum", "niveau"], ["Sans bac", "sansBac"], ["Formation la plus courte", "duree"],
+    const lignes = [["Niveau minimum", "niveau"], ["Sans bac", "sansBac"], ["Diplôme d'entrée (ONISEP)", "duree"],
       ["Salaire débutant", "salaire"], ["Sélection", "selection"], ["Coût", "cout"]];
     bloc.append(el("table", { class: "comparaison" },
       el("tr", {}, el("th", {}, ""), el("th", {}, a.nom), el("th", {}, b.nom)),
