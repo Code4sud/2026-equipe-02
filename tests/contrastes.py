@@ -14,6 +14,7 @@ from pathlib import Path
 CSS = Path(__file__).resolve().parent.parent / "css" / "style.css"
 
 # (couleur du texte, couleur du fond, minimum, où on le voit)
+# Le texte des boutons secondaires et des suggestions est « texte » sur « surface » ou « fond ».
 PAIRES = [
     ("texte", "fond", 4.5, "texte courant sur le fond de page"),
     ("texte", "surface", 4.5, "texte dans les cartes"),
@@ -36,23 +37,43 @@ PAIRES = [
     ("focus", "fond", 3.0, "anneau de focus clavier sur le fond"),
     ("focus", "surface", 3.0, "anneau de focus clavier dans les cartes"),
     ("icone", "surface-2", 3.0, "cadenas de la promesse de confidentialité"),
+    ("texte", "surface", 3.0, "icône soleil / lune du bouton de thème"),
 ]
 
 # Contour du corps de la luciole (logo) sur le fond de page, lu dans les fichiers SVG
 LOGOS = {"clair": "luciole.svg", "sombre": "luciole-sombre.svg"}
 
 
+def _bloc(css, debut):
+    """Texte d'un bloc CSS { ... } qui commence à l'index debut (accolades équilibrées)."""
+    i = css.index("{", debut)
+    profondeur = 0
+    for j in range(i, len(css)):
+        profondeur += {"{": 1, "}": -1}.get(css[j], 0)
+        if profondeur == 0:
+            return css[i:j + 1]
+    raise ValueError("bloc CSS non fermé")
+
+
+def _couleurs(texte):
+    return dict(re.findall(r"--([\w-]+):\s*(#[0-9a-fA-F]{6})", texte))
+
+
 def lire_palettes():
-    """Renvoie {"clair": {nom: #hex}, "sombre": {...}} à partir des blocs :root du CSS."""
+    """Renvoie {"clair": {nom: #hex}, "sombre": {...}} à partir de css/style.css.
+
+    clair  : le premier bloc :root (fond blanc)
+    sombre : le bloc :root[data-theme="dark"] (choisi avec le bouton). On vérifie qu'il est
+             IDENTIQUE au bloc sombre du réglage système (@media prefers-color-scheme: dark).
+    """
     css = CSS.read_text(encoding="utf-8")
-    sombre_debut = css.index("@media (prefers-color-scheme: dark)")
-    blocs = {"clair": css[:sombre_debut], "sombre": css[sombre_debut:css.index("}", css.index("color-scheme: dark"))]}
-    palettes = {}
-    for mode, texte in blocs.items():
-        palettes[mode] = dict(re.findall(r"--([\w-]+):\s*(#[0-9a-fA-F]{6})", texte))
-    # Le mode sombre hérite des valeurs du clair qu'il ne redéfinit pas
-    palettes["sombre"] = {**palettes["clair"], **palettes["sombre"]}
-    return palettes
+    clair = _couleurs(_bloc(css, css.index(":root {")))
+    sombre_bouton = _couleurs(_bloc(css, css.index(':root[data-theme="dark"] {')))
+    sombre_systeme = _couleurs(_bloc(css, css.index("@media (prefers-color-scheme: dark)")))
+    if sombre_bouton != sombre_systeme:
+        diff = {k for k in set(sombre_bouton) | set(sombre_systeme) if sombre_bouton.get(k) != sombre_systeme.get(k)}
+        raise AssertionError(f"Les deux blocs du mode sombre diffèrent : {sorted(diff)}")
+    return {"clair": clair, "sombre": {**clair, **sombre_bouton}}
 
 
 def luminance(hexa):

@@ -312,6 +312,31 @@ $("#activer-webllm").addEventListener("click", async () => {
   majModeIA();
 });
 
+// ---------- Thème clair / sombre (bouton soleil / lune) ----------
+// Sans choix enregistré, on suit le système. Le choix est mémorisé dans ce navigateur seulement.
+
+function themeActuel() {
+  const force = document.documentElement.getAttribute("data-theme");
+  if (force === "light" || force === "dark") return force;
+  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+}
+
+function majBoutonTheme() {
+  const sombre = themeActuel() === "dark";
+  const b = $("#theme");
+  b.setAttribute("aria-label", sombre ? "Passer en mode clair" : "Passer en mode sombre");
+  b.title = sombre ? "Mode clair" : "Mode sombre";
+}
+
+$("#theme").addEventListener("click", () => {
+  const nouveau = themeActuel() === "dark" ? "light" : "dark";
+  document.documentElement.setAttribute("data-theme", nouveau);
+  try { localStorage.setItem("luciole-theme", nouveau); } catch { /* stockage indisponible : le choix vaut pour cette visite */ }
+  majBoutonTheme();
+});
+window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", majBoutonTheme);
+majBoutonTheme();
+
 // ---------- Démarrage ----------
 
 $("#fichier").addEventListener("change", async (e) => {

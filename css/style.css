@@ -8,41 +8,45 @@
 /* Palette olive et terracotta.
    olive #4f5f26 · olive foncé #2f3a15 · encre #1d230d · terracotta #a9441b · terracotta foncé #7e3012
    safran #d29a3c · laine crème #eee5cf et #e0d4b4 · texte clair #f7f0df · encre du texte #232714
-   Les contrastes sont MESURÉS par tests/contrastes.py (texte >= 4.5:1, badges et boutons compris). */
+   Les contrastes sont MESURÉS par tests/contrastes.py (texte >= 4.5:1, badges et boutons compris).
 
-/* Clair : fond laine crème, texte encre, boutons terracotta, accents safran */
+   Thème : clair par défaut ; sombre si le système le demande ; le bouton soleil/lune pose
+   data-theme="light" ou "dark" sur <html> (choix mémorisé), ce qui l'emporte sur le système.
+   Les deux blocs du mode sombre ci-dessous doivent rester IDENTIQUES (vérifié par tests/contrastes.py). */
+
+/* Clair : fond blanc, cartes blanc cassé, texte encre, boutons terracotta, liens olive, détails safran */
 :root {
-  --fond: #eee5cf;
-  --fond-halo: #e4cc96;
-  --surface: #f7f0df;
-  --surface-2: #e0d4b4;
+  --fond: #ffffff;
+  --fond-halo: #fbf1de;
+  --surface: #f7f5ee;
+  --surface-2: #eeeadc;
   --texte: #232714;
   --doux: #4f5f26;
-  --trait: #d3c49d;
+  --trait: #e0dccb;
   --action: #a9441b;          /* boutons principaux */
-  --action-texte: #f7f0df;
+  --action-texte: #fbf8f0;
   --action-survol: #7e3012;
-  --accent: #d29a3c;          /* safran : halo, lueur, sélection (jamais du texte sur crème) */
+  --accent: #d29a3c;          /* safran : halo, lueur, sélection (jamais du texte sur blanc) */
   --accent-texte: #232714;
-  --lien: #7e3012;
-  --lien-survol: #a9441b;
-  --focus: #7e3012;
+  --lien: #4f5f26;
+  --lien-survol: #2f3a15;
+  --focus: #4f5f26;
   --icone: #a9441b;           /* cadenas de la promesse de confidentialité */
-  --jeune: #e8d3a3;
-  --oui: #2f3a15;  --oui-fond: #d9dcb5;
-  --comment: #5e4210; --comment-fond: #f0dbab;
-  --non: #7e3012;  --non-fond: #f0d2c0;
-  --inconnu: #3d4224; --inconnu-fond: #e0d4b4;
-  --ombre: 0 1px 2px rgba(29, 35, 13, .08), 0 8px 24px -12px rgba(29, 35, 13, .22);
+  --jeune: #f5e6c6;
+  --oui: #2f3a15;  --oui-fond: #e4e8cf;
+  --comment: #5e4210; --comment-fond: #f5e6c6;
+  --non: #7e3012;  --non-fond: #f6dfd2;
+  --inconnu: #3d4224; --inconnu-fond: #eeeadc;
+  --ombre: 0 1px 2px rgba(29, 35, 13, .06), 0 8px 24px -14px rgba(29, 35, 13, .18);
   --rayon: 18px;
   --titre: "Young Serif", Georgia, serif;
   --corps: "Atkinson Hyperlegible", system-ui, sans-serif;
   color-scheme: light;
 }
 
-/* Sombre : fond encre, cartes olive foncé, texte crème, accents safran */
+/* Sombre (réglage du système), sauf si la personne a choisi le clair avec le bouton */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --fond: #1d230d;
     --fond-halo: #3b3b12;
     --surface: #2f3a15;
@@ -69,6 +73,33 @@
   }
 }
 
+/* Sombre choisi avec le bouton soleil/lune (même valeurs que ci-dessus) */
+:root[data-theme="dark"] {
+  --fond: #1d230d;
+  --fond-halo: #3b3b12;
+  --surface: #2f3a15;
+  --surface-2: #3a4719;
+  --texte: #f7f0df;
+  --doux: #e0d4b4;
+  --trait: #4c5a27;
+  --action: #a9441b;
+  --action-texte: #f7f0df;
+  --action-survol: #7e3012;
+  --accent: #d29a3c;
+  --accent-texte: #1d230d;
+  --lien: #e2b462;
+  --lien-survol: #f7f0df;
+  --focus: #d29a3c;
+  --icone: #d29a3c;         /* cadenas en safran */
+  --jeune: #4d3f14;
+  --oui: #dfe6b0;  --oui-fond: #45541d;
+  --comment: #f1cf8b; --comment-fond: #4d3f14;
+  --non: #f3c3ab;  --non-fond: #5a2a12;
+  --inconnu: #e0d4b4; --inconnu-fond: #3a4719;
+  --ombre: 0 1px 2px rgba(0, 0, 0, .3), 0 10px 28px -14px rgba(0, 0, 0, .6);
+  color-scheme: dark;
+}
+
 * { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
 body {
@@ -87,10 +118,34 @@ main { max-width: 720px; margin: 0 auto; padding: 20px 16px 96px; }
 
 /* ---------- En-tête ---------- */
 .entete { display: flex; gap: 14px; align-items: center; margin: 12px 0 6px; }
-.entete picture { display: flex; flex: none; } /* évite l'espace sous l'image */
 .logo { width: 56px; height: 56px; flex: none; }
+
+/* Variantes du logo : la claire par défaut, la sombre (cernée de crème) en mode sombre */
+.logo-sombre { display: none; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .logo-clair { display: none; }
+  :root:not([data-theme="light"]) .logo-sombre { display: block; }
+}
+:root[data-theme="dark"] .logo-clair { display: none; }
+:root[data-theme="dark"] .logo-sombre { display: block; }
+
+/* Bouton soleil / lune, en haut à droite (48 px : taille d'un doigt) */
+header { position: relative; }
+.bouton-theme {
+  position: absolute; top: 4px; right: 0;
+  width: 48px; height: 48px; min-height: 48px; padding: 0; border-radius: 50%;
+}
+.bouton-theme svg { width: 22px; height: 22px; stroke: var(--texte); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.bouton-theme .icone-lune { fill: var(--texte); stroke: none; }
+.icone-soleil { display: none; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .icone-soleil { display: block; }
+  :root:not([data-theme="light"]) .icone-lune { display: none; }
+}
+:root[data-theme="dark"] .icone-soleil { display: block; }
+:root[data-theme="dark"] .icone-lune { display: none; }
+.entete { padding-right: 56px; } /* le titre ne passe jamais sous le bouton */
 .signature { margin: 4px 0 0; font: 400 1.05rem/1.2 var(--titre); color: var(--lien); }
-.pied-nom picture { display: inline-flex; }
 .pied-nom { display: flex; align-items: center; gap: 8px; font-weight: 700; color: var(--texte); }
 h1 {
   font: 400 2.1rem/1.05 var(--titre);

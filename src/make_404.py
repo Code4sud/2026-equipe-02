@@ -37,6 +37,13 @@ def main():
 <meta name="robots" content="noindex">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,{logo_favicon}">
 <!-- Page générée par src/make_404.py : tout est intégré, aucune ressource externe -->
+<script>
+  // Même choix de thème que sur le site (bouton soleil/lune), appliqué avant l'affichage
+  try {{
+    var t = localStorage.getItem("luciole-theme");
+    if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t);
+  }} catch (e) {{}}
+</script>
 <style>
 @font-face {{ font-family: "Young Serif"; font-weight: 400; font-display: swap;
   src: url(data:font/woff2;base64,{police_base64("young-serif-latin-400-normal.woff2")}) format("woff2"); }}
@@ -45,14 +52,16 @@ def main():
 @font-face {{ font-family: "Atkinson Hyperlegible"; font-weight: 700; font-display: swap;
   src: url(data:font/woff2;base64,{police_base64("atkinson-hyperlegible-latin-700-normal.woff2")}) format("woff2"); }}
 :root {{
-  --fond: #eee5cf; --fond-halo: #e4cc96; --surface: #f7f0df; --texte: #232714; --doux: #4f5f26;
-  --trait: #d3c49d; --action: #a9441b; --action-texte: #f7f0df; --action-survol: #7e3012;
-  --accent: #d29a3c; --focus: #7e3012; color-scheme: light;
+  --fond: #ffffff; --fond-halo: #fbf1de; --surface: #f7f5ee; --texte: #232714; --doux: #4f5f26;
+  --trait: #e0dccb; --action: #a9441b; --action-texte: #fbf8f0; --action-survol: #7e3012;
+  --accent: #d29a3c; --focus: #4f5f26; color-scheme: light;
 }}
 @media (prefers-color-scheme: dark) {{
-  :root {{ --fond: #1d230d; --fond-halo: #3b3b12; --surface: #2f3a15; --texte: #f7f0df; --doux: #e0d4b4;
-    --trait: #4c5a27; --focus: #d29a3c; color-scheme: dark; }}
+  :root:not([data-theme="light"]) {{ --fond: #1d230d; --fond-halo: #3b3b12; --surface: #2f3a15; --texte: #f7f0df;
+    --doux: #e0d4b4; --trait: #4c5a27; --action-texte: #f7f0df; --focus: #d29a3c; color-scheme: dark; }}
 }}
+:root[data-theme="dark"] {{ --fond: #1d230d; --fond-halo: #3b3b12; --surface: #2f3a15; --texte: #f7f0df;
+  --doux: #e0d4b4; --trait: #4c5a27; --action-texte: #f7f0df; --focus: #d29a3c; color-scheme: dark; }}
 * {{ box-sizing: border-box; }}
 body {{
   margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 24px 16px;
@@ -74,11 +83,21 @@ a.principal {{ background: var(--action); border-color: var(--action); color: va
 a.principal:hover {{ background: var(--action-survol); border-color: var(--action-survol); }}
 a:focus-visible {{ outline: 3px solid var(--focus); outline-offset: 3px; }}
 .logo-sombre {{ display: none; }}
-@media (prefers-color-scheme: dark) {{ .logo-clair {{ display: none; }} .logo-sombre {{ display: inline; }} }}
+@media (prefers-color-scheme: dark) {{
+  :root:not([data-theme="light"]) .logo-clair {{ display: none; }}
+  :root:not([data-theme="light"]) .logo-sombre {{ display: inline; }}
+}}
+:root[data-theme="dark"] .logo-clair {{ display: none; }}
+:root[data-theme="dark"] .logo-sombre {{ display: inline; }}
 .lueur {{ animation: lueur 2.4s ease-in-out infinite alternate; transform-origin: 50% 60%; }}
 @keyframes lueur {{ from {{ opacity: .75; }} to {{ opacity: 1; }} }}
 @media (prefers-reduced-motion: reduce) {{ .logo-sombre {{ display: none; }}
-@media (prefers-color-scheme: dark) {{ .logo-clair {{ display: none; }} .logo-sombre {{ display: inline; }} }}
+@media (prefers-color-scheme: dark) {{
+  :root:not([data-theme="light"]) .logo-clair {{ display: none; }}
+  :root:not([data-theme="light"]) .logo-sombre {{ display: inline; }}
+}}
+:root[data-theme="dark"] .logo-clair {{ display: none; }}
+:root[data-theme="dark"] .logo-sombre {{ display: inline; }}
 .lueur {{ animation: none; }} }}
 </style>
 </head>
