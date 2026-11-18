@@ -1,0 +1,43 @@
+{
+  "_avertissement": "Rapport ENTIÈREMENT FICTIF, écrit par l'équipe pour les tests et la démo. Aucune donnée réelle.",
+  "rdv": "9999",
+  "date": "18/11/2026",
+  "prenom": "Lina",
+  "zones": {
+    "1": [
+      {"titre": "Employé polyvalent de restauration", "description": "Prépare des plats simples, sert les clients au comptoir et garde la salle propre. Travail en équipe, souvent le soir et le week-end."},
+      {"titre": "Agent de propreté", "description": "Nettoie et entretient des bureaux, des écoles ou des espaces publics avec des machines et des produits adaptés. Horaires souvent tôt le matin."},
+      {"titre": "Vendeur en magasin", "description": "Accueille les clients, les conseille, range les rayons et passe en caisse. Il faut aimer le contact et rester debout longtemps."},
+      {"titre": "Livreur", "description": "Charge, transporte et remet des colis ou des repas à domicile, à vélo, en scooter ou en camionnette. Bon sens de l'orientation utile."},
+      {"titre": "Ouvrier viticole", "description": "Taille la vigne, entretient les rangs et participe aux vendanges. Travail dehors, physique, qui suit le rythme des saisons."}
+    ],
+    "2": [
+      {"titre": "Boulanger", "description": "Pétrit, façonne et cuit le pain et les viennoiseries, très tôt le matin. Métier manuel où la précision compte."},
+      {"titre": "Fleuriste", "description": "Compose des bouquets, conseille les clients et prend soin des plantes. Demande du goût pour les couleurs et un peu de résistance au froid."},
+      {"titre": "Peintre en bâtiment", "description": "Prépare les murs, pose les enduits et applique la peinture dans les logements ou les bureaux. Travail soigné, souvent sur chantier."},
+      {"titre": "Électricien", "description": "Installe et répare les câbles, prises et tableaux électriques dans les bâtiments. Respect strict des règles de sécurité."},
+      {"titre": "Assistant dentaire", "description": "Prépare le matériel, accueille les patients et aide le dentiste pendant les soins. Mélange de travail administratif et de soin."}
+    ],
+    "3": [
+      {"titre": "Technicien de laboratoire", "description": "Réalise des analyses et des expériences en suivant des protocoles précis. Travail minutieux, en blouse, avec des appareils de mesure."},
+      {"titre": "Développeur web", "description": "Écrit le code de sites et d'applications, les teste et corrige les erreurs. Travail sur ordinateur, souvent en équipe projet."},
+      {"titre": "Comptable", "description": "Enregistre les dépenses et les recettes d'une entreprise et prépare les bilans. Il faut aimer les chiffres et l'organisation."},
+      {"titre": "Éducateur spécialisé", "description": "Accompagne des enfants ou des adultes en difficulté dans leur vie de tous les jours. Métier de relation, en foyer ou en association."},
+      {"titre": "Technicien en énergies renouvelables", "description": "Installe et entretient des panneaux solaires, des pompes à chaleur ou des éoliennes. Déplacements fréquents chez les clients."}
+    ],
+    "4": [
+      {"titre": "Orthophoniste", "description": "Aide des enfants et des adultes à mieux parler, lire ou avaler, par des exercices adaptés. Travail en cabinet ou à l'hôpital."},
+      {"titre": "Ingénieur en environnement", "description": "Étudie l'impact des projets sur la nature et propose des solutions pour réduire la pollution. Travail entre bureau et terrain."},
+      {"titre": "Journaliste", "description": "Enquête, interroge des personnes et écrit ou filme des sujets d'actualité. Rythme rapide et horaires variables."},
+      {"titre": "Urbaniste", "description": "Imagine l'aménagement des quartiers et des villes avec les élus et les habitants. Travail de dossiers, de cartes et de réunions."},
+      {"titre": "Psychomotricien", "description": "Aide des personnes à mieux maîtriser leur corps et leurs mouvements grâce au jeu, à la relaxation ou au sport."}
+    ],
+    "5": [
+      {"titre": "Chercheur en biologie", "description": "Mène des expériences pour mieux comprendre le vivant et publie ses résultats. Longues études et travail en laboratoire."},
+      {"titre": "Médecin urgentiste", "description": "Soigne les patients qui arrivent aux urgences et prend des décisions rapides. Gardes de nuit et de week-end."},
+      {"titre": "Astrophysicien", "description": "Étudie les étoiles et les galaxies à partir d'observations et de calculs sur ordinateur. Métier de recherche."},
+      {"titre": "Fauconnier de spectacle", "description": "Dresse des rapaces et présente des démonstrations de vol au public. Métier rare, lié aux parcs et aux sites touristiques."},
+      {"titre": "Toiletteur de chevaux de course", "description": "Prend soin de l'apparence et de l'hygiène des chevaux avant les courses. Métier très spécialisé, proche du monde des écuries."}
+    ]
+  }
+}

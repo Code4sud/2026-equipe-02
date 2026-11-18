@@ -3,12 +3,70 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Équipe 02 — Hackathon Azuréen #3</title>
+  <title>Éclaireur — tes métiers expliqués</title>
+  <meta name="description" content="Assistant qui explique les métiers du Rapport des Possibles avec des données publiques, sources à l'appui.">
+  <link rel="stylesheet" href="css/style.css">
   <!-- Bandeau commun du hackathon (le numéro d'équipe est déjà renseigné) -->
   <script src="https://orientation.code4sud.fr/bandeau.js" data-equipe="02"></script>
 </head>
 <body>
-  <h1>Page de départ de l'équipe 02</h1>
-  <p>Remplacez cette page par votre projet. Elle est publiée automatiquement sur GitHub Pages.</p>
+<main>
+  <header>
+    <h1>Éclaireur</h1>
+    <p class="doux">Les métiers de ton rapport, expliqués simplement, avec les sources officielles. Sans compte, rien n'est enregistré.</p>
+  </header>
+
+  <section class="carte" id="bloc-rapport" aria-labelledby="t-rapport">
+    <h2 id="t-rapport">Ton rapport</h2>
+    <p class="doux">Ton PDF est lu sur ton appareil. Il n'est envoyé nulle part.</p>
+    <div class="rangee">
+      <label class="bouton principal" for="fichier" style="background:var(--accent);color:var(--carte);border-color:var(--accent);font-weight:600">Charger mon rapport (PDF)</label>
+      <input type="file" id="fichier" accept="application/pdf" class="cache">
+      <button type="button" id="essai">Essayer avec un rapport fictif</button>
+    </div>
+    <p id="etat-rapport" class="doux" role="status"></p>
+    <div id="zones"></div>
+  </section>
+
+  <section class="carte" aria-labelledby="t-recherche">
+    <h2 id="t-recherche">Chercher un métier</h2>
+    <input type="search" id="recherche" placeholder="Ex. : boulanger, urbaniste, développeur web" autocomplete="off" aria-label="Nom d'un métier">
+    <ul id="resultats"></ul>
+  </section>
+
+  <section class="carte" id="fiche" hidden aria-live="polite"></section>
+
+  <section class="carte" aria-labelledby="t-chat">
+    <h2 id="t-chat">Pose ta question</h2>
+    <div id="fil" aria-live="polite"></div>
+    <div class="suggestions" id="suggestions"></div>
+    <form class="question" id="form-question">
+      <input type="text" id="question" placeholder="Ex. : je peux le faire sans le bac ?" aria-label="Ta question" autocomplete="off">
+      <button class="principal" type="submit">Envoyer</button>
+    </form>
+    <p class="doux" id="mode-ia"></p>
+    <button type="button" id="activer-webllm" class="cache">Activer l'IA dans le navigateur (téléchargement d'environ 1 Go, ordinateur conseillé)</button>
+  </section>
+
+  <section class="carte" aria-labelledby="t-recap">
+    <h2 id="t-recap">Mon récap</h2>
+    <p class="doux">Ajoute des métiers avec « ☆ Garder ». Tu peux copier ce texte et l'apporter au Centre des Possibles.</p>
+    <textarea id="recap-texte" readonly aria-label="Récapitulatif à copier"></textarea>
+    <div class="rangee" style="margin-top:8px">
+      <button type="button" id="copier">Copier mon récap</button>
+      <a class="bouton" href="https://centredespossibles.org/" target="_blank" rel="noopener">Centre des Possibles</a>
+    </div>
+  </section>
+
+  <footer>
+    <p>Les résultats du Rapport des Possibles sont des pistes de réflexion, pas un verdict. Tu restes l'expert de ta propre vie.</p>
+    <p>Sources : <a href="https://www.onisep.fr/" target="_blank" rel="noopener">ONISEP</a> (ODbL),
+      <a href="https://www.data.gouv.fr/datasets/repertoire-operationnel-des-metiers-et-des-emplois-rome" target="_blank" rel="noopener">ROME 4.0, France Travail</a> (Licence Ouverte),
+      <a href="https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-parcoursup/" target="_blank" rel="noopener">Parcoursup 2025</a> (Licence Ouverte).
+      Pour aller plus loin : <a href="https://www.orientation-regionsud.fr/" target="_blank" rel="noopener">orientation-regionsud.fr</a>.
+      Projet de l'équipe 02, Hackathon Azuréen #3 · <a href="https://github.com/Code4sud/2026-equipe-02" target="_blank" rel="noopener">code source</a> (MIT).</p>
+  </footer>
+</main>
+<script type="module" src="js/app.js"></script>
 </body>
 </html>

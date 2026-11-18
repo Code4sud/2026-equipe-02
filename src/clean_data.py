@@ -124,6 +124,9 @@ def nettoyer_rome():
         apps = appel[appel["code_rome"] == code]["libelle_appellation_court"].dropna().tolist()
         fiches.append({
             "code": code,
+            # Code « parent » publié par France Travail : l'ancien code (ROME v3) dont ce métier
+            # est issu. Il permet de relier les nouveaux codes ROME 4.0 aux fiches ONISEP.
+            "parent": ligne["code_rome_parent"] if pd.notna(ligne["code_rome_parent"]) else code,
             "nom": ligne["libelle_rome"].replace("''", "'"),
             "appellations": sorted(set(apps)),
             "definition": definition[:900],

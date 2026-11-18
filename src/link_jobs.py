@@ -109,16 +109,17 @@ def verifier_accord(resultat, romes_onisep):
 
 
 def liaison_rome_onisep(onisep, rome):
-    """Relie chaque code ROME aux fiches ONISEP qui le citent (lien par code, donc sûr)."""
+    """Relie chaque code ROME aux fiches ONISEP qui citent ce code, ou à défaut son code
+    parent (l'ancien code ROME v3 publié par France Travail). Lien par code, sans similarité."""
     par_code = defaultdict(list)
     for f in onisep:
         for code in f["romes"]:
             par_code[code].append(f["id"])
-    return {f["code"]: par_code.get(f["code"], []) for f in rome}
+    return {f["code"]: par_code.get(f["code"]) or par_code.get(f.get("parent"), []) for f in rome}
 
 
 def rapport_qualite(onisep, rome, liaison, stats_rapports):
-    codes_rome = {f["code"] for f in rome}
+    codes_rome = {f["code"] for f in rome} | {f.get("parent") for f in rome}
     onisep_avec_rome = [f for f in onisep if f["romes"]]
     onisep_rome_valide = [f for f in onisep if any(c in codes_rome for c in f["romes"])]
     rome_avec_onisep = sum(1 for ids in liaison.values() if ids)
@@ -142,7 +143,7 @@ def rapport_qualite(onisep, rome, liaison, stats_rapports):
         f"* Fiches métiers ONISEP : {n_o}",
         f"* Fiches métiers ROME 4.0 : {n_r}",
         "",
-        "## Liaison ROME ↔ ONISEP (par code ROME)",
+        "## Liaison ROME ↔ ONISEP (par code ROME, ou code parent ROME v3 publié par France Travail)",
         "",
         f"* Fiches ONISEP qui citent un code ROME : {len(onisep_avec_rome)} ({pct(len(onisep_avec_rome), n_o)})",
         f"* … dont le code existe dans le ROME 4.0 actuel : {len(onisep_rome_valide)} ({pct(len(onisep_rome_valide), n_o)})",

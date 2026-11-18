@@ -7,11 +7,11 @@ Généré automatiquement par `src/link_jobs.py`. Aucun chiffre n'est saisi à l
 * Fiches métiers ONISEP : 1138
 * Fiches métiers ROME 4.0 : 1923
 
-## Liaison ROME ↔ ONISEP (par code ROME)
+## Liaison ROME ↔ ONISEP (par code ROME, ou code parent ROME v3 publié par France Travail)
 
 * Fiches ONISEP qui citent un code ROME : 931 (82 %)
 * … dont le code existe dans le ROME 4.0 actuel : 928 (82 %)
-* Codes ROME qui ont au moins une fiche ONISEP : 407 (21 %)
+* Codes ROME qui ont au moins une fiche ONISEP : 1622 (84 %)
 
 ## Doublons (même nom après normalisation)
 
