@@ -77,6 +77,7 @@ def construire_metiers():
     for f in rome:
         fiches_rome.append({
             "id": f["code"],
+            "parent": f.get("parent", f["code"]),  # ancien code ROME v3, utilisé par l'ONISEP
             "nom": f["nom"],
             "noms": [f["nom"]] + f["appellations"],
             "resume": f["definition"] or None,

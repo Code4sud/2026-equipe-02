@@ -17,8 +17,9 @@ export const LIEN_CARIF = { nom: "Carif-Oref (recherche de formations)", url: "h
 
 const INTENTIONS = [
   // L'ordre compte : la première qui correspond gagne
-  ["perso", /\b(suis[- ]je|je suis (fait|faite|bon|bonne|nul|nulle)|mon profil|ma personnalite|mes resultats|mes aptitudes|quel metier (choisir|pour moi|me correspond)|dois[- ]je|tu me conseilles|que me conseilles|fait pour moi)\b/],
-  ["comparer", /\b(compar\w*|differences?|lequel|plutot)\b/],
+  ["liste_sans_bac", /\b(metiers? de ma liste|ma liste|mon rapport|mes metiers)\b.*\b(sans (le )?bac|pas (le|de) bac|possibles?)\b|\b(pas (le|de) bac|sans (le )?bac)\b.*\b(ma liste|mon rapport|mes metiers)\b/],
+  ["perso", /\b(quoi choisir|que choisir|par ou commencer|suis[- ]je|je suis (fait|faite|bon|bonne|nul|nulle)|mon profil|ma personnalite|mes resultats|mes aptitudes|quel metier (choisir|pour moi|me correspond)|dois[- ]je|tu me conseilles|que me conseilles|fait pour moi)\b/],
+  ["comparer", /\b(compar\w*|differences?|lequel|plutot|departager|qu.?est.?ce qui change|qu.?est.?ce qui les differencie)\b/],
   ["cout", /\b(cout|coute|prix|cher|payant|payante|frais|gratuit|gratuite)\b/],
   ["salaire", /\b(salaire|salaires|gagne|gagner|gagnent|paye|paie|payes|remuneration|euros|smic|combien.*gagn)\b/],
   ["sans_bac", /\bsans (le |mon |un )?bac\b|\bpas (le|de|mon) bac\b|\bsans diplome\b|\bsans le brevet\b/],
@@ -42,7 +43,7 @@ const MOTS_QUESTION = new Set(("c est quoi concretement comment combien gagne ga
   "entre difference selection selectif cout prix ecole niveau acceder fait quoi travail travailler me se mon ma " +
   "mes tu il elle dans du de des au aux a en par sur qui son sa ses fais bien bon beaucoup ca cela vraiment " +
   "aussi plus moins tres trop alors donc mais quand comment pourquoi peut veux voudrais aimerais apres avant " +
-  "selectif selective couter coute cher paye paie payes gagnent dure combien temps annees ans region sud").split(" "));
+  "entre departager choisir differencie change changent selectif selective couter coute cher paye paie payes gagnent dure combien temps annees ans region sud").split(" "));
 
 // Trouve le métier dont parle la question (ou null). Essaie les titres du rapport en premier.
 export function metierDansQuestion(question, titresRapport = []) {
@@ -66,12 +67,23 @@ export function metierDansQuestion(question, titresRapport = []) {
   let r = null;
   for (let i = 0; i < mots.length; i++) {
     for (let j = i + 1; j <= Math.min(mots.length, i + 5); j++) {
+      // Un mot générique seul (« directeur ») ne suffit pas quand la question en dit plus
+      if (j - i === 1 && mots.length > 1 && GENERIQUES.has(mots[i])) continue;
       const c = rechercher(mots.slice(i, j).join(" "), 1)[0];
-      if (c && (!r || c.s > r.s + 1e-9 || (Math.abs(c.s - r.s) < 1e-9 && j - i > r.n))) r = { ...c, n: j - i };
+      // Seuil 0.78 si le groupe couvre tous les mots (« serveur »), sinon 0.85 : un morceau
+      // du nom (« toiletteur » dans « toiletteur de chevaux ») ne doit pas suffire.
+      const seuil = j - i === mots.length ? 0.78 : 0.85;
+      if (!c || c.s < seuil) continue;
+      if (!r || c.s > r.s + 1e-9 || (Math.abs(c.s - r.s) < 1e-9 && j - i > r.n)) r = { ...c, n: j - i };
     }
   }
-  return r && r.s >= 0.85 ? r.fiche : null;
+  return r ? r.fiche : null;
 }
+
+// Mots de tête trop généraux pour désigner un métier à eux seuls
+const GENERIQUES = new Set(("directeur responsable agent technicien conseiller chef assistant ouvrier employe " +
+  "operateur charge animateur professeur enseignant ingenieur educateur conducteur aide gestionnaire " +
+  "coordinateur superviseur manager inspecteur").split(" "));
 
 // La question cite-t-elle un nom de métier que l'on ne connaît pas ?
 // (mots restants qui ressemblent à un nom de métier : « toiletteur », « fauconnier »...)
@@ -79,17 +91,18 @@ const RE_NOM_METIER = /(eur|euse|ier|iere|iste|ien|ienne|aire|ogue|ant|ante|ste|
 export function metierInconnuCite(question) {
   const mots = normaliser(question.replace(/'/g, " ")).split(" ")
     .filter((m) => m.length > 3 && !MOTS_QUESTION.has(m) && !/^\d+$/.test(m));
-  return mots.find((m) => RE_NOM_METIER.test(m)) || null;
+  const i = mots.findIndex((m) => RE_NOM_METIER.test(m));
+  return i < 0 ? null : mots.slice(i, i + 4).join(" "); // le nom et ce qui le suit (« directeur pompes funebres »)
 }
 
 // Deux métiers pour une comparaison : « boulanger ou fleuriste », « entre X et Y »
 export function deuxMetiers(question, titresRapport = []) {
-  const q = question.replace(/^.*?(compar\w*|diff[ée]rences?|entre|plut[ôo]t)\s*/i, "");
+  const q = question.replace(/^.*?(compar\w*|diff[ée]rences?|entre|plut[ôo]t|d[ée]partager)\s+(entre\s+)?/i, "");
   const morceaux = q.split(/\s+(?:et|ou|avec|vs|contre)\s+|,/i).filter((x) => x.trim());
   if (morceaux.length < 2) return null;
   const a = metierDansQuestion(morceaux[0], titresRapport);
   const b = metierDansQuestion(morceaux.slice(1).join(" "), titresRapport);
-  return a && b && a.id !== b.id ? [a, b] : null;
+  return a && b ? [a, b] : null;
 }
 
 // ---------- 2. Construire la réponse à partir des fiches ----------
@@ -154,13 +167,17 @@ export function repondreDepuisDonnees(type, f, ctx = {}) {
     }
     case "diplome": {
       const g = enrichie(f);
-      const niv = g.niveau_min && `Niveau minimum (ONISEP${via(f, g)}) : ${lisible(g.niveau_min)}.`;
+      const niv = g.niveau_min && `Niveau minimum, d'après l'ONISEP${via(f, g)} : ${lisible(g.niveau_min)}.`;
       const liste = (g.formations || []).slice(0, 4)
         .map((x) => `• ${x.libelle}${x.duree ? ` (${x.duree})` : ""}`).join("\n");
       const acces = couper(g.acces, 280);
       if (!niv && !liste && !acces) return jeNeSaisPas(`je n'ai pas d'information sur les études pour « ${nom} ».`, src(g));
-      const t = [niv, liste && `Formations possibles :\n${liste}`, acces].filter(Boolean).join("\n\n");
-      return { texte: t, sources: src(g), extraits: t };
+      let t = [niv, liste && `Formations possibles :\n${liste}`, acces].filter(Boolean).join("\n\n");
+      if (ctx.alternance) {
+        t += "\n\nAlternance : mes données ne disent pas quelles formations se font en apprentissage. " +
+          "Le Carif-Oref recense les formations en alternance.";
+      }
+      return { texte: t, sources: ctx.alternance ? [...src(g), LIEN_CARIF] : src(g), extraits: t };
     }
     case "selection": {
       if (!ctx.formations) return null;
@@ -290,6 +307,10 @@ export async function reformuler(question, reponse, metier) {
     if (!sortie) return reponse;
     const inventes = nombresInventes(sortie, extraits);
     if (inventes.length) return { ...reponse, controle: `Reformulation refusée (chiffre absent des sources : ${inventes.join(", ")}).` };
+    // Le modèle ne doit pas oublier une information clé : niveau, durée, montant
+    const cles = (t) => (t.match(/bac ?\+ ?\d+|\d+ ans?\b|\d+ euros/gi) || []).map((x) => x.replace(/\s/g, "").toLowerCase());
+    const oubliees = cles(reponse.texte).filter((c) => !cles(sortie).includes(c));
+    if (oubliees.length) return { ...reponse, controle: `Reformulation ignorée (information oubliée : ${oubliees.join(", ")}).` };
     // Un « je ne sais pas » du modèle ne doit jamais effacer une réponse trouvée dans les sources
     if (/je ne sais pas/i.test(sortie)) return { ...reponse, controle: "Reformulation ignorée (le modèle n'a pas su répondre)." };
     return { ...reponse, texte: sortie.trim(), reformule: modele.nom };
@@ -306,6 +327,18 @@ export async function repondre(question, ctx) {
   // Les formations (3 Mo) ne sont chargées qu'au premier besoin
   if (["pres", "selection", "comparer"].includes(type) && !ctx.formations) ctx.formations = await chargerFormations(ctx.base);
 
+  if (type === "liste_sans_bac") {
+    const liens = titres.filter((t) => t.fiche);
+    if (!liens.length) return { texte: "Charge d'abord ton rapport : je pourrai alors te dire, pour chaque métier, si mes sources indiquent qu'il est accessible sans le bac.", sources: [], sansModele: true };
+    const groupe = (cle) => liens.filter((t) => ((ficheOnisepLiee(t.fiche) || t.fiche).sans_bac || "inconnu") === cle).map((t) => t.titre);
+    const oui = groupe("oui"), inconnus = groupe("inconnu").concat(titres.filter((t) => !t.fiche).map((t) => t.titre));
+    const texte = [
+      oui.length ? `D'après l'ONISEP, ces métiers de ta liste ont un niveau minimum avant le bac :\n${oui.map((x) => "• " + x).join("\n")}` : "D'après l'ONISEP, aucun métier de ta liste n'a un niveau minimum avant le bac.",
+      inconnus.length ? `Pour ceux-ci, je ne sais pas (pas de niveau dans mes sources) : ${inconnus.join(", ")}.` : "",
+      "Les autres demandent au moins le bac. Le bac peut aussi se préparer plus tard. " + CONSEILLER,
+    ].filter(Boolean).join("\n\n");
+    return { texte, sources: [{ nom: "ONISEP, Idéo-Fiches métiers", url: "https://www.onisep.fr/" }, LIEN_CENTRE], sansModele: true, liste: oui };
+  }
   if (type === "perso") {
     return {
       texte: "Je ne peux pas te dire quel métier est fait pour toi, ni interpréter tes résultats : tu restes l'expert de ta propre vie. " +
@@ -315,6 +348,11 @@ export async function repondre(question, ctx) {
   }
   if (type === "comparer") {
     const deux = deuxMetiers(question, titres);
+    if (deux && deux[0].id === deux[1].id) {
+      const f = deux[0];
+      return { texte: `D'après mes sources, ces deux noms désignent le même métier : la fiche « ${f.nom} » les regroupe. ` + CONSEILLER,
+        sources: src(f), memeMetier: true, sansModele: true };
+    }
     if (deux) return { comparaison: comparer(deux[0], deux[1], ctx.formations), texte: `Comparaison : ${deux[0].nom} / ${deux[1].nom}`, sources: [deux[0].source, deux[1].source] };
     return { texte: "Dis-moi les deux métiers à comparer, par exemple « compare boulanger et fleuriste ».", sources: [] };
   }
@@ -337,9 +375,10 @@ export async function repondre(question, ctx) {
   }
   ctx.metierCourant = f;
   const lieu = (question.match(/\b\d{5}\b/) || [])[0] ||
-    (question.match(/(?:pr[èe]s de|autour de|vers|sur|à)\s+([A-ZÀ-Ý][\w\-' ]+?)(?:\s*\?|$)/) || [])[1] || ctx.lieu;
+    (question.match(/(?:pr[èe]s de|autour de|vers|sur|à)\s+([A-ZÀ-Ý][\wÀ-ÿ'-]*(?:[ -](?:sur|en|de|la|le|[A-ZÀ-Ý][\wÀ-ÿ'-]*))*)/) || [])[1] || ctx.lieu;
   if (lieu && type === "pres") ctx.lieu = lieu.trim();
-  const r = repondreDepuisDonnees(type, f, { ...ctx, lieu: type === "pres" ? lieu && lieu.trim() : ctx.lieu });
+  const alternance = /altern|apprenti/i.test(question);
+  const r = repondreDepuisDonnees(type, f, { ...ctx, alternance, lieu: type === "pres" ? lieu && lieu.trim() : ctx.lieu });
   return { ...(await reformuler(question, r, f)), metier: f };
 }
 

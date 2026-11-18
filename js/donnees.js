@@ -99,7 +99,8 @@ export function rechercher(texte, n = 6) {
 
 // Codes ROME d'une fiche (ONISEP : ceux qu'elle cite ; ROME : le sien)
 export function codesRome(f) {
-  return f.ref === "rome" ? [f.id] : f.romes.map((r) => r.code);
+  // Pour une fiche ROME 4.0, on ajoute le code parent (ancien code v3) que l'ONISEP utilise encore
+  return f.ref === "rome" ? [...new Set([f.id, f.parent].filter(Boolean))] : f.romes.map((r) => r.code);
 }
 
 // Fiche ONISEP liée à une fiche ROME (même code ROME), pour avoir niveau, salaire, formations.

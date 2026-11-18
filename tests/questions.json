@@ -1,0 +1,25 @@
+{
+  "_info": "20 questions de jeunes, sur le modèle des 20 questions proposées par le Centre, mais avec les métiers du rapport FICTIF (aucun métier ni texte des vrais rapports). attendu : reponse | je_ne_sais_pas | comparaison | formations | refus_conseil | liste. mots : mots qui doivent apparaître dans la réponse.",
+  "questions": [
+    {"id": 1, "question": "Boulanger, c'est quoi concrètement ?", "attendu": "reponse"},
+    {"id": 2, "question": "Quel diplôme faut-il pour être orthophoniste ?", "attendu": "reponse", "mots": ["bac + 5"]},
+    {"id": 3, "question": "Je peux devenir fleuriste sans le bac ?", "attendu": "reponse", "mots": ["CAP"]},
+    {"id": 4, "question": "Combien gagne un fauconnier ?", "attendu": "je_ne_sais_pas", "note": "pas de salaire dans les sources"},
+    {"id": 5, "question": "Quelle formation pour devenir électricien près de Nice ?", "attendu": "formations"},
+    {"id": 6, "question": "C'est quoi la différence entre un boulanger et un fleuriste ?", "attendu": "comparaison"},
+    {"id": 7, "question": "Comptable ou technicien de laboratoire, lequel demande le moins de temps de formation ?", "attendu": "comparaison"},
+    {"id": 8, "question": "Le métier d'assistant dentaire est-il accessible sans le bac ?", "attendu": "reponse", "mots": ["bac"]},
+    {"id": 9, "question": "Combien de temps dure la formation d'orthophoniste ?", "attendu": "reponse", "mots": ["5 ans"]},
+    {"id": 10, "question": "Quelles formations mènent au métier d'éducateur spécialisé ?", "attendu": "reponse", "mots": ["DE"]},
+    {"id": 11, "question": "Est-ce que je peux devenir médecin urgentiste avec un CAP ?", "attendu": "reponse", "mots": ["bac +"], "note": "réponse attendue : non, avec la source"},
+    {"id": 12, "question": "Quel est le salaire d'un toiletteur de chevaux de course ?", "attendu": "je_ne_sais_pas", "note": "métier absent des référentiels"},
+    {"id": 13, "question": "Où se former à Marseille pour être comptable ?", "attendu": "formations"},
+    {"id": 14, "question": "Ouvrier viticole : quelles formations en alternance ?", "attendu": "reponse", "mots": ["Carif-Oref"]},
+    {"id": 15, "question": "Journaliste ou urbaniste, qu'est-ce qui change ?", "attendu": "comparaison"},
+    {"id": 16, "question": "Je n'ai pas le bac, quels métiers de ma liste restent possibles ?", "attendu": "liste", "mots": ["Boulanger"]},
+    {"id": 17, "question": "Combien coûte la formation d'orthophoniste ?", "attendu": "je_ne_sais_pas", "note": "aucune source ouverte sur le coût"},
+    {"id": 18, "question": "Fauconnier, est-ce un métier reconnu et comment y arriver ?", "attendu": "reponse", "mots": ["certificat de capacité"]},
+    {"id": 19, "question": "Comment départager boulanger et fleuriste ?", "attendu": "comparaison"},
+    {"id": 20, "question": "Je ne sais pas quoi choisir parmi mes métiers, par où commencer ?", "attendu": "refus_conseil", "mots": ["Centre des Possibles"]}
+  ]
+}
