@@ -208,9 +208,12 @@ function rendreReponse(r) {
     bloc.append(el("div", { class: "sources" }, "Sources :",
       r.sources.map((s) => el("a", { href: s.url, target: "_blank", rel: "noopener" }, s.nom))));
   }
-  bloc.append(el("div", { class: "mode" },
+  // Le détail technique du contrôle reste disponible au survol (attribut title), pas dans le texte
+  const mode = el("div", { class: "mode" },
     r.reformule ? `Reformulé par ${r.reformule} (modèle open weight) à partir des sources.` : "Réponse tirée directement des sources.",
-    r.controle ? ` ${r.controle}` : ""));
+    r.controle ? " La version reformulée par l'IA a été écartée par un contrôle de fiabilité." : "");
+  if (r.controle) mode.title = r.controle;
+  bloc.append(mode);
   return bloc;
 }
 

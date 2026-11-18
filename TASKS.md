@@ -19,19 +19,21 @@
 - [x] `prompts/systeme.txt`
 - [x] Chat sourcé + mode de secours sans modèle
 - [x] Ollama (qwen2.5:7b) en démo locale, testé depuis Node
-- [ ] WebLLM en ligne : codé (bouton), à tester dans le navigateur
-- [ ] Test complet de l'interface dans le navigateur (serveur local à lancer)
+- [ ] WebLLM en ligne : codé (bouton), pas encore testé dans un vrai navigateur avec WebGPU
+- [x] Test complet de l'interface (Chrome headless, téléphone et ordinateur, clair et sombre)
+- [x] Nouveau style « lanterne du soir » + animations (GSAP dans vendor/)
+- [ ] Tester la version GitHub Pages après le push (mode sans IA), puis remplir `demo`
 - [x] Fiche métier simple + badge sans bac
 - [x] Formations proches (ville / code postal)
 - [x] Comparaison de deux métiers
 - [x] Récap à copier
-- [ ] `tests/questions.json` (20 questions) + score dans EXPLIQUER.md
+- [x] `tests/questions.json` (20 questions) + score dans EXPLIQUER.md
 - [ ] Gel de la version stable jeudi soir
 
 ## Vendredi 20/11
 
-- [ ] projet.json complet, au moins 2 captures
-- [ ] docs/PITCH.md
+- [x] projet.json complet, au moins 2 captures
+- [x] docs/PITCH.md
 - [ ] Vidéo equipe-02.mp4 sur la clé USB avant 12h30
 - [ ] Tout sur main avant 11h30, fiche vérifiée avec le lien d'aperçu
 

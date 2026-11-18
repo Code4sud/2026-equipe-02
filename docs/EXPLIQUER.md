@@ -24,8 +24,10 @@ Un assistant sur téléphone qui explique les métiers du Rapport des Possibles 
  ┌──────────────────────────────────────────────────────────────────────────────┐
  │ Rapport PDF du jeune ──> lu DANS le navigateur (rien n'est envoyé)           │
  │ Recherche dans l'index (js/similarite.js) ──> fiches trouvées + sources      │
- │ Modèle open weight (dans le navigateur, ou Ollama en local) reformule        │
- │ UNIQUEMENT à partir des fiches trouvées. Sans modèle : on affiche les fiches. │
+ │ 1. La réponse est construite par le code, à partir des fiches + sources.     │
+ │ 2. Facultatif : un modèle open weight (Ollama en local, WebLLM en ligne)     │
+ │    la reformule. Contrôles : pas de chiffre inventé, pas d'info oubliée,     │
+ │    sinon on garde la réponse du code. Sans modèle, tout marche quand même.   │
  └──────────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -35,11 +37,12 @@ Un assistant sur téléphone qui explique les métiers du Rapport des Possibles 
 |---|---|
 | Données ONISEP + ROME + Parcoursup | Ce sont les référentiels publics demandés par le sujet. L'ONISEP donne en plus le niveau d'accès, les formations et un salaire débutant. |
 | Site 100 % statique | Gratuit (GitHub Pages), rien à héberger, et aucune donnée du jeune ne quitte son téléphone. |
-| Index JSON préparé à l'avance | Le navigateur cherche dans un fichier, sans serveur. 1,2 Mo une fois compressé. |
+| Index JSON préparé à l'avance | Le navigateur cherche dans un fichier, sans serveur. Environ 1,2 Mo une fois compressé (métiers), 0,3 Mo (formations, chargé seulement si besoin). |
 | Liaison par le nom du métier | Les métiers du rapport viennent de la base américaine O*NET, sans code ROME. Il faut donc les rapprocher par leur nom. |
 | Notre propre formule de similarité | Elle est écrite deux fois, en Python et en JavaScript, et un test vérifie qu'elles donnent le même score. Le taux mesuré est donc celui du site. |
 | Formations limitées à la Région Sud | Le Centre est à Nice, et le fichier reste léger sur téléphone. |
-| Un modèle open weight | C'est un bonus du sujet, et rien n'est envoyé à une entreprise. |
+| Un modèle open weight, mais pas indispensable | Bonus du sujet, rien n'est envoyé à une entreprise. Le code construit la réponse ; le modèle ne fait que la dire plus simplement, sous contrôle. Sans modèle, le site marche quand même. |
+| Bibliothèques copiées dans le dépôt (`vendor/`) | pdf.js, GSAP et les polices marchent sans internet pendant la démo. |
 
 ## Comment on relie un métier du rapport à une fiche officielle
 
@@ -56,6 +59,23 @@ Confiance : **sûr** (score ≥ 0,9 ou exact ou confirmé), **à vérifier** (0,
 * Métiers des rapports : 58 % reliés « sûr », 31 % « à vérifier », 11 % non reliés.
 * Sur 21 liaisons « sûr » par similarité relues à la main, 19 sont justes et 2 pointent vers une spécialité voisine.
 * Salaire débutant publié par l'ONISEP pour 78 % des fiches. Pour les autres, l'assistant répond « je ne sais pas ».
+* 84 % des codes ROME 4.0 sont reliés à au moins une fiche ONISEP, grâce au « code parent » publié par France Travail (l'ONISEP utilise encore les anciens codes).
+
+## Score de l'assistant (phase 5, 18/11/2026)
+
+Script : `node tests/evaluer.mjs` (ajouter `--ollama` pour tester avec le modèle). Quatre critères par question : bon type de réponse (réponse, « je ne sais pas », comparaison, formations, refus de conseil), source cliquable, rien d'inventé (chaque nombre de la réponse finale existe dans les données), mots attendus présents.
+
+| Jeu de questions | Sans modèle | Avec qwen2.5:7b (Ollama) |
+|---|---|---|
+| `tests/questions.json` : 20 questions sur les métiers du rapport fictif | 20/20 | 20/20 |
+| Les 20 questions proposées par le Centre (testées en local, car elles citent des métiers des vrais rapports) | 20/20 | 20/20 |
+
+À dire honnêtement :
+* Les 20 questions du rapport fictif ont été écrites après le code : ce score est optimiste. Le score qui compte est celui des 20 questions du Centre, écrites avant le code.
+* Pour atteindre 20/20 sur ces questions, nous avons corrigé de vrais défauts : un mot générique seul (« directeur ») qui désignait le mauvais métier, les comparaisons « entre X et Y » et « départager », la recherche de formations pour les nouveaux codes ROME 4.0.
+* Premier passage sur les questions du Centre : 17/20. Dernier : 20/20.
+* Avec le modèle, une reformulation oubliait le niveau « bac + 5 ». Un contrôle dans le code refuse maintenant toute reformulation qui oublie un niveau, une durée ou un montant.
+* « Je ne sais pas » bien déclenché sur : salaire non publié, coût des formations, métier absent des référentiels, question hors sujet.
 
 ## Limites (à dire honnêtement au jury)
 
@@ -73,7 +93,7 @@ Confiance : **sûr** (score ≥ 0,9 ou exact ou confirmé), **à vérifier** (0,
 * Dans l'appli, le rapport du jeune est lu par son navigateur. Rien n'est envoyé ni stocké.
 * L'assistant n'interprète jamais la personnalité ou les aptitudes du jeune. Il explique des métiers et des formations, c'est tout.
 
-## Questions probables du jury (à compléter en phase 5)
+## Questions probables du jury (les 10 avec réponses : docs/PITCH.md)
 
 * **D'où viennent vos chiffres ?** De sources publiques officielles, toutes listées dans docs/sources.md avec leur URL et leur date. Chaque réponse du site affiche sa source.
 * **Que se passe-t-il si la donnée n'existe pas ?** L'assistant dit « je ne sais pas » et propose d'en parler à un conseiller du Centre des Possibles.

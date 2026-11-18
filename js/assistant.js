@@ -91,8 +91,12 @@ const RE_NOM_METIER = /(eur|euse|ier|iere|iste|ien|ienne|aire|ogue|ant|ante|ste|
 export function metierInconnuCite(question) {
   const mots = normaliser(question.replace(/'/g, " ")).split(" ")
     .filter((m) => m.length > 3 && !MOTS_QUESTION.has(m) && !/^\d+$/.test(m));
-  const i = mots.findIndex((m) => RE_NOM_METIER.test(m));
-  return i < 0 ? null : mots.slice(i, i + 4).join(" "); // le nom et ce qui le suit (« directeur pompes funebres »)
+  const mot = mots.find((m) => RE_NOM_METIER.test(m));
+  if (!mot) return null;
+  // On cite le nom tel que le jeune l'a écrit : « toiletteur de chevaux de course »
+  const tokens = question.replace(/[?!.]+/g, " ").split(/\s+/).filter(Boolean);
+  const i = tokens.findIndex((t) => normaliser(t.replace(/^\w+'/, "")) === mot);
+  return i < 0 ? mot : tokens.slice(i, i + 5).join(" ").replace(/\s+(et|ou|pour|sans|avec)\b.*$/i, "");
 }
 
 // Deux métiers pour une comparaison : « boulanger ou fleuriste », « entre X et Y »
