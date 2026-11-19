@@ -547,3 +547,26 @@ body.etat-accueil :focus-visible { outline-color: var(--lien-nuit); }
 footer { font-size: .8rem; }
 footer p { margin: 8px 0; }
 .titre-sources { font-size: .95rem; }
+
+/* ================= Changer de rapport ================= */
+.barre-rapport {
+  position: sticky; top: var(--haut-bandeau, 0px); z-index: 7;
+  margin: 0 -16px; padding: 8px 16px;
+  background: var(--fond); border-bottom: 1px solid var(--trait);
+}
+.changer-rapport { min-height: 48px; font-weight: 700; }
+.changer-rapport svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.changer-rapport.discret { border-color: transparent; background: transparent; text-decoration: underline; text-underline-offset: 4px; color: var(--lien); padding: 0 8px; }
+.feuille-haut .poignee { margin-left: 0; }
+.logo-bouton { min-height: 48px; padding: 0; border: 0; background: none; border-radius: 50%; display: inline-flex; flex: none; }
+.logo-bouton:hover { background: none; border: 0; }
+body.etat-accueil .logo-bouton { cursor: default; }
+.confirmer {
+  max-width: min(92vw, 420px); border: 1px solid var(--trait); border-radius: 20px;
+  background: var(--surface); color: var(--texte); padding: 22px 20px 18px;
+  box-shadow: var(--ombre);
+}
+.confirmer::backdrop { background: var(--voile, rgba(29, 35, 13, .55)); }
+.confirmer h2 { font-size: 1.3rem; margin: 0 0 8px; }
+.confirmer p { margin: 0 0 18px; }
+.confirmer-actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-end; }

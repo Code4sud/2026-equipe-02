@@ -32,8 +32,11 @@
       </button>
       <div class="entete">
         <!-- Deux variantes du logo : le CSS affiche celle du thème en cours (et la sombre sur la nuit de l'accueil) -->
-        <img class="logo logo-clair" src="assets/luciole.svg" alt="" width="64" height="64">
-        <img class="logo logo-sombre" src="assets/luciole-sombre.svg" alt="" width="64" height="64">
+        <!-- Le logo ramène à l'accueil (comme « Changer de rapport ») -->
+        <button type="button" id="logo-accueil" class="logo-bouton" aria-label="Luciole : revenir à l'accueil">
+          <img class="logo logo-clair" src="assets/luciole.svg" alt="" width="64" height="64">
+          <img class="logo logo-sombre" src="assets/luciole-sombre.svg" alt="" width="64" height="64">
+        </button>
         <div>
           <h1>Luciole</h1>
           <p class="signature">Éclaire tes possibles</p>
@@ -67,6 +70,13 @@
 </div>
 
 <main>
+  <!-- Toujours visible en haut de l'écran du rapport (collée sous le bandeau du hackathon) -->
+  <div class="barre-rapport" id="barre-rapport" hidden>
+    <button type="button" id="changer-rapport" class="changer-rapport" aria-label="Changer de rapport : revenir à l'accueil">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+      Changer de rapport
+    </button>
+  </div>
   <!-- APRÈS LE CHARGEMENT -->
   <section class="carte" id="vue-rapport" hidden aria-labelledby="t-vue">
     <h2 id="t-vue" tabindex="-1">Ton ciel de métiers</h2>
@@ -91,7 +101,6 @@
       <p class="doux petite">Plus une luciole est proche du centre, plus le métier est rapide à atteindre. Une luciole grise : je ne sais pas, pas de fiche fiable.</p>
     </div>
     <div id="zones" hidden></div>
-    <p class="changer"><label for="fichier" class="lien-bouton">Changer de rapport</label></p>
   </section>
 
   <section class="carte" id="bloc-chat" hidden aria-labelledby="t-chat">
@@ -138,6 +147,7 @@
 <div id="voile" class="voile" hidden></div>
 <section id="fiche" class="feuille" role="dialog" aria-modal="true" aria-labelledby="fiche-titre" hidden>
   <div class="feuille-haut">
+    <button type="button" id="changer-rapport-fiche" class="changer-rapport discret" aria-label="Changer de rapport : revenir à l'accueil">Changer de rapport</button>
     <span class="poignee" aria-hidden="true"></span>
     <button type="button" id="fermer-fiche" class="fermer">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
@@ -146,6 +156,16 @@
   </div>
   <div id="fiche-contenu"></div>
 </section>
+
+<!-- Confirmation légère, seulement si une conversation est en cours -->
+<dialog id="confirmer" class="confirmer" aria-labelledby="confirmer-titre" aria-describedby="confirmer-texte">
+  <h2 id="confirmer-titre">Tu veux vraiment changer de rapport ?</h2>
+  <p id="confirmer-texte">Ta conversation sera effacée.</p>
+  <div class="confirmer-actions">
+    <button type="button" id="confirmer-non">Non, rester</button>
+    <button type="button" id="confirmer-oui" class="principal">Oui, changer</button>
+  </div>
+</dialog>
 
 <!-- GSAP copié dans le dépôt (licence standard gratuite) : animations sans internet -->
 <script src="vendor/gsap/gsap.min.js" defer></script>

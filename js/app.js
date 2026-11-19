@@ -105,7 +105,7 @@ function afficherVueRapport(r) {
   // L'écran de nuit de l'accueil redevient un en-tête simple ; ses animations s'arrêtent
   document.body.classList.remove("etat-accueil");
   if (window.lucioleAccueil) window.lucioleAccueil.arreter();
-  for (const id of ["#vue-rapport", "#bloc-chat", "#bloc-recherche", "#bloc-recap"]) $(id).hidden = false;
+  for (const id of ["#barre-rapport", "#vue-rapport", "#bloc-chat", "#bloc-recherche", "#bloc-recap"]) $(id).hidden = false;
   const nbZones = Object.values(r.zones).filter((z) => z.length).length;
   $("#resume-rapport").textContent = `${r.total} métiers dans ${nbZones} zones${r.date ? `, rapport du ${r.date}` : ""}.`;
   dessiner();
@@ -115,9 +115,56 @@ function afficherVueRapport(r) {
   // on commence par la liste (le ciel reste accessible avec le bouton « Ciel »)
   if ($("#ciel").clientWidth < 328) choisirVue("liste");
   suggestions();
+  mesurerBandeau();
   $("#t-vue").focus({ preventScroll: true });
   $("#vue-rapport").scrollIntoView({ block: "start" });
 }
+
+// ---------- Changer de rapport : retour à l'accueil, sans recharger la page ----------
+
+// Vide tout ce qui vient du rapport : métiers, filtres, fiche, chat, recherche, récap
+function revenirAccueil() {
+  retourFocus = null;                 // la luciole d'origine va disparaître
+  fermerPanneau();
+  ctx.titresRapport = []; ctx.metierCourant = null; ctx.lieu = null;
+  garde.clear();
+  ciel = null;
+  filtreActuel = "tous";
+  for (const b of document.querySelectorAll(".filtres button")) b.setAttribute("aria-pressed", String(b.dataset.filtre === "tous"));
+  // Vue « Ciel » par défaut, sans redessiner (il n'y a plus de métiers)
+  $("#bloc-ciel").hidden = false; $("#zones").hidden = true;
+  $("#vue-ciel").setAttribute("aria-pressed", "true"); $("#vue-liste").setAttribute("aria-pressed", "false");
+  $("#t-vue").textContent = "Ton ciel de métiers";
+  largeurCiel = 0;
+  for (const id of ["#ciel", "#zones", "#fil", "#resultats"]) $(id).replaceChildren();
+  for (const id of ["#filtre-info", "#resume-rapport", "#etat-rapport"]) $(id).textContent = "";
+  $("#question").value = ""; $("#recherche").value = "";
+  $("#fichier").value = "";          // pour pouvoir recharger le même fichier
+  majRecap();
+  suggestions();
+  for (const id of ["#barre-rapport", "#vue-rapport", "#bloc-chat", "#bloc-recherche", "#bloc-recap"]) $(id).hidden = true;
+  $("#accueil").hidden = false;
+  document.body.classList.add("etat-accueil");
+  if (window.lucioleAccueil) window.lucioleAccueil.reprendre();
+  window.scrollTo(0, 0);
+  const titre = $("#t-accueil");
+  titre.setAttribute("tabindex", "-1");
+  titre.focus({ preventScroll: true });
+}
+
+// Confirmation seulement si une conversation est en cours
+function demanderChangement() {
+  if (document.body.classList.contains("etat-accueil")) return; // déjà à l'accueil
+  if ($("#fil").children.length) {
+    $("#confirmer").showModal();
+    $("#confirmer-non").focus();
+  } else {
+    revenirAccueil();
+  }
+}
+for (const id of ["#changer-rapport", "#changer-rapport-fiche", "#logo-accueil"]) $(id).addEventListener("click", demanderChangement);
+$("#confirmer-non").addEventListener("click", () => $("#confirmer").close());
+$("#confirmer-oui").addEventListener("click", () => { $("#confirmer").close(); revenirAccueil(); });
 
 // ---------- Le ciel ----------
 
@@ -139,6 +186,14 @@ function dessiner() {
   });
   anim("cielAffiche", $("#ciel"));
 }
+
+// Le bandeau du hackathon reste en haut (sticky) : la barre « Changer de rapport » se colle dessous
+function mesurerBandeau() {
+  const b = document.getElementById("c4s-bandeau");
+  const colle = b && ["sticky", "fixed"].includes(getComputedStyle(b).position);
+  document.documentElement.style.setProperty("--haut-bandeau", colle ? `${Math.round(b.getBoundingClientRect().height)}px` : "0px");
+}
+window.addEventListener("resize", mesurerBandeau);
 
 let largeurCiel = 0;
 window.addEventListener("resize", () => {
@@ -247,7 +302,7 @@ $("#fermer-fiche").addEventListener("click", fermerPanneau);
 $("#voile").addEventListener("click", fermerPanneau);
 document.addEventListener("keydown", (e) => {
   const p = $("#fiche");
-  if (p.hidden) return;
+  if (p.hidden || $("#confirmer").open) return; // la confirmation gère elle-même Échap
   if (e.key === "Escape") { e.preventDefault(); fermerPanneau(); return; }
   if (e.key === "Tab") { // le focus reste dans le panneau tant qu'il est ouvert
     const f = [...p.querySelectorAll("button, a[href], input, summary, [tabindex='0']")].filter((x) => x.offsetParent !== null);
