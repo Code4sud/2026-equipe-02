@@ -108,7 +108,7 @@ function afficherVueRapport(r) {
   $("#place-theme").append($("#theme")); // le bouton soleil/lune passe dans la barre fine
   for (const id of ["#barre-rapport", "#vue-rapport", "#bloc-chat", "#bloc-recherche", "#bloc-recap"]) $(id).hidden = false;
   const nbZones = Object.values(r.zones).filter((z) => z.length).length;
-  $("#resume-rapport").textContent = `${r.total} métiers dans ${nbZones} zones${r.date ? `, rapport du ${r.date}` : ""}.`;
+  $("#resume-rapport").textContent = `${r.total} métiers dans ${nbZones} zones.`;
   dessiner();
   afficherZones();
   appliquerFiltre(filtreActuel);
@@ -547,8 +547,9 @@ function suggestions() {
     const nom = f.nom.replace(/\s*\/.*$/, "").replace(/\(.*\)/, "").trim();
     liste = [`C'est quoi concrètement, ${nom} ?`, "Je peux le faire sans le bac ?", "Combien on gagne au début ?"];
   } else {
+    // Jamais le texte lu dans le PDF : on suggère avec le nom de la fiche officielle
     const t = ctx.titresRapport.find((x) => x.fiche);
-    const nom = t ? t.titre : "boulanger";
+    const nom = t ? t.fiche.nom.replace(/\s*\/.*$/, "").replace(/\(.*\)/, "").trim() : "boulanger";
     liste = [`C'est quoi concrètement, ${nom} ?`, `Je peux être ${nom} sans le bac ?`, "Quels métiers de ma liste sont possibles sans le bac ?"];
   }
   for (const q of liste.slice(0, 3)) bloc.append(el("button", { type: "button", onclick: () => demander(q) }, q));

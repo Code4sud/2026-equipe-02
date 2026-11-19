@@ -103,7 +103,7 @@ ok("lucioles libres (pas de carte autour)", forme.fond === "rgba(0, 0, 0, 0)" &&
 ok("étages en bandes pleine largeur", forme.etage >= forme.ecran - 2, `${forme.etage}px pour ${forme.ecran}px`);
 ok("barre fine (une seule barre collée)", forme.barre <= (L >= 900 ? 72 : 124), `${forme.barre}px de haut`);
 ok("cadenas en pastille au pied de la montée, nombre de métiers calculé", forme.pastille && /^25 métiers/.test(forme.toiTexte), forme.toiTexte);
-ok("luciole grise = je ne sais pas", c.grises.length === 1 && /Je ne sais pas/.test(c.grises[0]), c.grises[0]);
+ok("lucioles grises = je ne sais pas (titres inconnus ou ambigus)", c.grises.length >= 1 && c.grises.every((g) => /Je ne sais pas/.test(g)) && c.grises.some((g) => g.startsWith("Toiletteur")), c.grises.join(" | "));
 ok("chat et recherche apparaissent après le chargement", c.chatVisible);
 ok("pas de défilement horizontal", !c.debordement);
 ok("après chargement : accueil de nuit arrêté", await p.evaluate(() => !document.body.classList.contains("etat-accueil")
@@ -120,8 +120,9 @@ const barre = await p.evaluate(() => {
 ok("barre fine (Changer, Ciel/Liste, filtres) collée en haut en montant", barre.visible && Math.abs(barre.haut - barre.attendu) <= 2, `haut ${barre.haut}px (bandeau ${barre.attendu}px)`);
 
 // 3) Clavier : focus sur une luciole, flèche, Entrée -> panneau ; Échap -> retour du focus
-await p.focus(".luciole");
+await p.focus(".luciole:not(.incertaine)");
 await p.keyboard.press("ArrowRight");
+if (await p.evaluate(() => document.activeElement.classList.contains("incertaine"))) await p.keyboard.press("ArrowRight");
 const cible = await p.evaluate(() => document.activeElement.getAttribute("aria-label"));
 await p.keyboard.press("Enter");
 await p.waitForFunction(() => !document.querySelector("#fiche").hidden, { timeout: 5000 });

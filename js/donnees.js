@@ -45,23 +45,31 @@ export function confiance(score) {
   return "non relié";
 }
 
-// Meilleure fiche ONISEP et meilleure fiche ROME pour un nom de métier
-export function relier(titre) {
+const RANG = { "sûr": 2, "à vérifier": 1, "non relié": 0 };
+export const ECART_AMBIGU = 0.02; // deux fiches différentes presque à égalité : on ne choisit pas
+
+// Meilleure (et deuxième meilleure) fiche ONISEP et ROME pour un nom de métier
+function relierBrut(titre) {
   const titreMin = titre.trim().toLowerCase();
   const titreNorm = normaliser(titre);
-  const res = {};
+  const res = {}, scores = {};
   for (const ref of ["onisep", "rome"]) {
     let m = { id: null, nom: null, score: 0, methode: null };
+    const parFiche = new Map(); // meilleur score de chaque fiche (pour repérer l'ambiguïté)
     for (const c of catalogue) {
       if (c.ref !== ref) continue;
-      if (c.nom.trim().toLowerCase() === titreMin) { m = { id: c.id, nom: c.nom, score: 1, methode: "exact" }; break; }
-      const s = c.norm === titreNorm ? 1 : similarite(titreNorm, c.norm);
+      if (c.nom.trim().toLowerCase() === titreMin) { m = { id: c.id, nom: c.nom, score: 1, methode: "exact" }; parFiche.clear(); break; }
+      // Même forme normalisée, mais seulement après avoir retiré une précision entre parenthèses
+      // (« Conseiller (IARD) ») : ce n'est qu'une correspondance approchée
+      const perdu = c.norm === titreNorm && c.nom.includes("(") && !titre.includes("(");
+      const s = c.norm === titreNorm ? (perdu ? 0.85 : 1) : similarite(titreNorm, c.norm);
+      if (s > (parFiche.get(c.id) || 0)) parFiche.set(c.id, s);
       if (s > m.score || (s === m.score && m.nom && c.nom.length < m.nom.length)) {
-        m = { id: c.id, nom: c.nom, score: s, methode: c.norm === titreNorm ? "normalisé" : "similarité" };
+        m = { id: c.id, nom: c.nom, score: s, methode: c.norm === titreNorm && !perdu ? "normalisé" : "similarité" };
       }
     }
     m.confiance = confiance(m.score);
-    res[ref] = m;
+    res[ref] = m; scores[ref] = parFiche;
   }
   // Vérification croisée : la fiche ONISEP cite le même code ROME -> « sûr »
   const o = res.onisep, r = res.rome;
@@ -71,15 +79,41 @@ export function relier(titre) {
     for (const x of [o, r]) if (x.confiance !== "sûr") { x.confiance = "sûr"; x.methode += " + accord ONISEP/ROME"; }
   }
   // Fiche principale : ONISEP (plus complète) sauf si le ROME est nettement plus sûr
-  const rang = { "sûr": 2, "à vérifier": 1, "non relié": 0 };
-  const principal = rang[o.confiance] >= rang[r.confiance] ? o : r;
+  const refPrincipale = RANG[o.confiance] >= RANG[r.confiance] ? "onisep" : "rome";
+  const principal = res[refPrincipale];
+  let confiancePrincipale = principal.confiance, ambigu = false;
+  // Ambiguïté : une correspondance seulement approchée, et une AUTRE fiche presque aussi proche,
+  // sans lien avec elle (pas le même code ROME) -> on ne choisit pas au hasard : « je ne sais pas »
+  if (confiancePrincipale === "à vérifier") {
+    const codes = (id) => { const f = fiches.get(id); return f ? (f.ref === "rome" ? [f.id, f.parent] : f.romes.map((x) => x.code)) : []; };
+    const miens = codes(principal.id);
+    // Concurrentes : les fiches presque aussi proches du même référentiel, et le meilleur de l'autre
+    const autreRef = refPrincipale === "onisep" ? "rome" : "onisep";
+    const concurrentes = [...scores[refPrincipale]];
+    if (res[autreRef].id) concurrentes.push([res[autreRef].id, res[autreRef].score]);
+    for (const [id, sc] of concurrentes) {
+      if (id === principal.id || sc < principal.score - ECART_AMBIGU) continue;
+      // Une autre fiche presque aussi proche, d'une autre famille de métiers : on ne choisit pas
+      if (!codes(id).some((c) => c && miens.includes(c))) { ambigu = true; confiancePrincipale = "non relié"; break; }
+    }
+  }
   return {
     titre,
-    confiance: principal.confiance,
+    confiance: confiancePrincipale,
     score: principal.score,
-    fiche: principal.confiance === "non relié" ? null : fiches.get(principal.id),
+    ambigu,
+    fiche: confiancePrincipale === "non relié" ? null : fiches.get(principal.id),
     onisep: o, rome: r,
   };
+}
+
+// Relie un titre ; si le titre contient un mot coupé par une césure (« Électri-cien »),
+// on essaie aussi sans le trait d'union et on garde la meilleure correspondance
+export function relier(titre) {
+  const brut = relierBrut(titre);
+  if (brut.confiance === "sûr" || !/\p{L}-\p{L}/u.test(titre)) return brut;
+  const recolle = relierBrut(titre.replace(/(\p{L})-(\p{L})/gu, "$1$2"));
+  return RANG[recolle.confiance] > RANG[brut.confiance] ? { ...recolle, titre } : brut;
 }
 
 // Recherche libre (barre de recherche) : les N métiers les plus proches, sans doublon de fiche

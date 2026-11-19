@@ -69,7 +69,7 @@ Confiance : **sûr** (score ≥ 0,9 ou exact ou confirmé), **à vérifier** (0,
 ## Chiffres clés (détail : docs/qualite.md)
 
 * 1 138 fiches ONISEP, 1 923 fiches ROME 4.0, 5 845 lieux de formation en Région Sud, dont 672 avec un taux d'accès Parcoursup.
-* Métiers des rapports : 58 % reliés « sûr », 31 % « à vérifier », 11 % non reliés.
+* Métiers des rapports : 57 % reliés « sûr », 19 % « à vérifier », 24 % non reliés (« je ne sais pas »), dont une partie volontairement : quand plusieurs fiches de familles différentes sont presque à égalité (titre ambigu, comme un mot seul), on ne choisit pas. Avant cette règle (19/11) : 58 %, 31 % et 11 %, mais certains « à vérifier » pointaient vers une fiche prise presque au hasard.
 * Sur 21 liaisons « sûr » par similarité relues à la main, 19 sont justes et 2 pointent vers une spécialité voisine.
 * Salaire débutant publié par l'ONISEP pour 78 % des fiches. Pour les autres, l'assistant répond « je ne sais pas ».
 * 84 % des codes ROME 4.0 sont reliés à au moins une fiche ONISEP, grâce au « code parent » publié par France Travail (l'ONISEP utilise encore les anciens codes).

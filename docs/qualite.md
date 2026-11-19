@@ -30,6 +30,15 @@ Valeurs manquantes (fiches ROME) :
 * Sans texte d'accès au métier : 0 (0 %)
 * Sans définition : 0 (0 %)
 
+## Contrôle du chargement d'un rapport
+
+Le lecteur de PDF ne garde que les titres de métiers et leur zone : ni prénom, ni nom, ni numéro de
+rendez-vous, ni date, ni adresse, ni e-mail, ni scores (intérêts, aptitudes, personnalité). Le modèle
+ne reçoit jamais le texte du PDF : seulement la consigne fixe, la fiche officielle et la question.
+Les titres ambigus ou non reconnus restent affichés tels quels avec « je ne sais pas ».
+Ces points sont vérifiés par tests/test_chargement.mjs et tests/navigateur/test_chargement.mjs,
+avec des PDF fictifs piégés (données personnelles, injection, mises en page invalides).
+
 Coût des formations : **aucune source ouverte ne le publie**. Le site affiche « inconnu » et le statut
 public / privé de l'établissement (qui n'est pas un coût).
 
@@ -39,12 +48,12 @@ Mesurée en local sur les titres extraits des rapports réels. Seuls les chiffre
 sont publiés ici : aucun titre, aucun texte de rapport n'est dans le dépôt.
 
 * Titres distincts : 171
-* Reliés à une fiche ONISEP « sûr » : 71 (42 %)
+* Reliés à une fiche ONISEP « sûr » : 69 (40 %)
 * Reliés à une fiche ROME « sûr » : 86 (50 %)
-* Reliés à au moins un référentiel « sûr » : 99 (58 %)
-* Seulement « à vérifier » : 53 (31 %)
-* Non reliés : 19 (11 %) → « je ne sais pas »
-* Méthodes (meilleur des deux référentiels) : {'exact': 62, 'similarité': 81, 'normalisé': 28}
+* Reliés à au moins un référentiel « sûr » : 98 (57 %)
+* Seulement « à vérifier » : 32 (19 %)
+* Non reliés : 41 (24 %) → « je ne sais pas », dont 22 ambigus (plusieurs fiches de familles différentes presque à égalité : on ne choisit pas)
+* Méthodes (meilleur des deux référentiels) : {'exact': 62, 'similarité': 82, 'normalisé': 27}
 
 Vérification manuelle du 18/11/2026 : les 21 liaisons « sûr » obtenues par similarité
 (ni exactes, ni normalisées) ont été relues une par une. 19 sont correctes, 2 pointent

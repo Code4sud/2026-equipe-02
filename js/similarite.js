@@ -9,7 +9,10 @@ const MOTS_VIDES = new Set([
 
 export function normaliser(nom) {
   if (!nom) return "";
-  let texte = nom.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, ""); // sans accents
+  // Caractères invisibles venus des PDF : trait d'union conditionnel, espaces de largeur nulle
+  nom = nom.replace(/[\u00ad\u200b\u200c\u200d\u2060\ufeff]/g, "");
+  // NFKD : décompose aussi les ligatures (« ﬁ » -> « fi ») et l'espace insécable ; puis sans accents
+  let texte = nom.toLowerCase().normalize("NFKD").replace(/[\u0300-\u036f]/g, "");
   texte = texte.replace(/œ/g, "oe").replace(/æ/g, "ae");
   const sansParentheses = texte.replace(/\([^)]*\)?/g, " ");
   // Cas d'un sigle : « ASH (Agent de service hospitalier) » -> on garde le texte entre parenthèses
@@ -19,6 +22,7 @@ export function normaliser(nom) {
     texte = sansParentheses;
   }
   texte = texte.replace(/(\w)\/\w{1,5}\b/g, "$1"); // serveur/euse -> serveur
+  texte = texte.replace(/(\w)[·•]\w{1,6}\b/g, "$1"); // boulanger·ère -> boulanger (point médian)
   if (texte.includes(" / ")) {
     const i = texte.indexOf(" / ");
     const avant = texte.slice(0, i).split(/\s+/).filter(Boolean);
@@ -52,6 +56,7 @@ export function similarite(a, b) {
   if (petit.size > grand.size) [petit, grand] = [grand, petit];
   const motsCommuns = [...petit].filter((m) => grand.has(m)).length;
   if (motsCommuns === 0) dice = Math.min(dice, 0.7); // aucun mot entier en commun
+  if (petit.size === 1 && grand.size > 1) dice = Math.min(dice, 0.74); // un mot seul face à un nom plus long
   const inclus = motsCommuns === petit.size ? 0.6 + (0.35 * petit.size) / grand.size : 0;
   return Math.round(Math.max(dice, inclus) * 1000) / 1000;
 }

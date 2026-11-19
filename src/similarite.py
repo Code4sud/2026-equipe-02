@@ -30,7 +30,10 @@ def normaliser(nom):
     """
     if not nom:
         return ""
-    texte = unicodedata.normalize("NFD", nom.lower())
+    # Caractères invisibles venus des PDF : trait d'union conditionnel, espaces de largeur nulle
+    nom = re.sub("[\u00ad\u200b\u200c\u200d\u2060\ufeff]", "", nom)
+    # NFKD : décompose aussi les ligatures (« ﬁ » -> « fi ») et l'espace insécable
+    texte = unicodedata.normalize("NFKD", nom.lower())
     texte = "".join(c for c in texte if unicodedata.category(c) != "Mn")  # enlève les accents
     texte = texte.replace("œ", "oe").replace("æ", "ae")
     sans_parentheses = re.sub(r"\([^)]*\)?", " ", texte)
@@ -40,6 +43,7 @@ def normaliser(nom):
     else:
         texte = sans_parentheses                          # contenu entre parenthèses enlevé
     texte = re.sub(r"(\w)/\w{1,5}\b", r"\1", texte)       # serveur/euse -> serveur
+    texte = re.sub(r"(\w)[·•]\w{1,6}\b", r"\1", texte)    # boulanger·ère -> boulanger (point médian)
     if " / " in texte:
         avant, apres = texte.split(" / ", 1)
         if avant.split() and apres.split() and avant.split()[0][:3] == apres.split()[0][:3]:
@@ -78,5 +82,9 @@ def similarite(a, b):
     if not (petit & grand):
         # Aucun mot entier en commun (« charcutier » / « chaudronnier ») : jamais plus de 0.7
         dice = min(dice, 0.7)
+    if len(petit) == 1 and len(grand) > 1:
+        # Un mot seul face à un nom plus long (« technicien » / « technicien r d ») : les paires de
+        # lettres du début gonflent le score ; seule l'inclusion du mot compte (« à vérifier » au mieux)
+        dice = min(dice, 0.74)
     inclus = 0.6 + 0.35 * len(petit) / len(grand) if petit <= grand else 0.0
     return round(max(dice, inclus), 3)

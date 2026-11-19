@@ -29,6 +29,10 @@ EXEMPLES = [
     "Hôte / Hôtesse d'accueil",
     "Œnologue",
     "",
+    # Variantes réelles rencontrées dans des PDF
+    "BOULANGÈRE", "Boulanger·ère", "Boulanger(ère)", "Boulanger / Boulangère",
+    "Électri\u00adcien", "Électri\u200bcien", "Agent  de   propreté", "Agent\u00a0de propreté",
+    "Agent de\npropreté", "O\ufb03cier de marine", "Infirmier·e", "Peintre en bâtiment ",
 ]
 
 
@@ -73,3 +77,23 @@ def test_python_et_javascript_identiques():
     js = json.loads(sortie)
     py = [[normaliser(a), similarite(normaliser(a), normaliser(b))] for a, b in paires]
     assert js == py
+
+
+# Toutes ces écritures d'un même métier doivent donner la même forme normalisée
+VARIANTES = {
+    "boulanger": ["Boulanger", "BOULANGER", "boulanger", "Boulanger·ère", "Boulanger(ère)",
+                  "Boulanger / Boulangère", " Boulanger  "],
+    "electricien": ["Électricien", "ÉLECTRICIEN", "Electricien", "Électri\u00adcien", "Électri\u200bcien",
+                    "Électricien\ufeff"],
+    "agent proprete": ["Agent de propreté", "Agent  de   propreté", "Agent\u00a0de propreté",
+                       "Agent de\npropreté", "AGENT DE PROPRETÉ"],
+    "officier marine": ["Officier de marine", "O\ufb03cier de marine"],   # ligature « ﬃ »
+    "oenologue": ["Œnologue", "oenologue"],
+    "infirmier": ["Infirmier·e", "Infirmier(ère)", "Infirmier/ère"],
+}
+
+
+@pytest.mark.parametrize("attendu", list(VARIANTES))
+def test_variantes_reelles(attendu):
+    for ecriture in VARIANTES[attendu]:
+        assert normaliser(ecriture) == attendu, ecriture

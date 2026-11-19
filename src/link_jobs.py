@@ -70,23 +70,57 @@ def relier(titre, catalogue):
     resultat = {}
     for ref in ("onisep", "rome"):
         meilleur = {"id": None, "nom": None, "score": 0.0, "methode": None}
+        par_fiche = {}  # meilleur score de chaque fiche (pour repérer l'ambiguïté)
         for norm, nom, r, ident in catalogue:
             if r != ref:
                 continue
             if nom.strip().lower() == titre_min:
                 meilleur = {"id": ident, "nom": nom, "score": 1.0, "methode": "exact"}
+                par_fiche = {}
                 break
+            # Même forme seulement après avoir retiré une précision entre parenthèses : approché
+            perdu = norm == titre_norm and "(" in nom and "(" not in titre
             if norm == titre_norm:
-                s, methode = 1.0, "normalisé"
+                s, methode = (0.85, "similarité") if perdu else (1.0, "normalisé")
             else:
                 s, methode = similarite(titre_norm, norm), "similarité"
+            par_fiche[ident] = max(par_fiche.get(ident, 0.0), s)
             # À score égal, on préfère le nom le plus court (le plus générique)
             if s > meilleur["score"] or (s == meilleur["score"] and meilleur["nom"]
                                          and len(nom) < len(meilleur["nom"])):
                 meilleur = {"id": ident, "nom": nom, "score": s, "methode": methode}
         meilleur["confiance"] = confiance(meilleur["score"])
+        meilleur["_scores"] = par_fiche
         resultat[ref] = meilleur
     return resultat
+
+
+ECART_AMBIGU = 0.02
+
+
+def decider(resultat, codes):
+    """Même règle que le site (js/donnees.js) : fiche principale, puis ambiguïté.
+
+    Si la correspondance n'est qu'approchée (« à vérifier ») et qu'une AUTRE fiche, d'une autre
+    famille de métiers (aucun code ROME commun), est presque aussi proche : « non relié » (ambigu).
+    codes : identifiant de fiche -> ensemble de codes ROME
+    """
+    rang = {"sûr": 2, "à vérifier": 1, "non relié": 0}
+    o, r = resultat["onisep"], resultat["rome"]
+    ref = "onisep" if rang[o["confiance"]] >= rang[r["confiance"]] else "rome"
+    principal, autre = resultat[ref], resultat["rome" if ref == "onisep" else "onisep"]
+    if principal["confiance"] != "à vérifier":
+        return principal["confiance"], False
+    concurrentes = list(principal["_scores"].items())
+    if autre["id"]:
+        concurrentes.append((autre["id"], autre["score"]))
+    miens = codes.get(principal["id"], set())
+    for ident, sc in concurrentes:
+        if ident == principal["id"] or sc < principal["score"] - ECART_AMBIGU:
+            continue
+        if not (codes.get(ident, set()) & miens):
+            return "non relié", True
+    return "à vérifier", False
 
 
 def verifier_accord(resultat, romes_onisep):
@@ -167,6 +201,15 @@ def rapport_qualite(onisep, rome, liaison, stats_rapports):
         f"* Sans texte d'accès au métier : {manquants(rome, 'acces')} ({pct(manquants(rome, 'acces'), n_r)})",
         f"* Sans définition : {manquants(rome, 'definition')} ({pct(manquants(rome, 'definition'), n_r)})",
         "",
+        "## Contrôle du chargement d'un rapport",
+        "",
+        "Le lecteur de PDF ne garde que les titres de métiers et leur zone : ni prénom, ni nom, ni numéro de",
+        "rendez-vous, ni date, ni adresse, ni e-mail, ni scores (intérêts, aptitudes, personnalité). Le modèle",
+        "ne reçoit jamais le texte du PDF : seulement la consigne fixe, la fiche officielle et la question.",
+        "Les titres ambigus ou non reconnus restent affichés tels quels avec « je ne sais pas ».",
+        "Ces points sont vérifiés par tests/test_chargement.mjs et tests/navigateur/test_chargement.mjs,",
+        "avec des PDF fictifs piégés (données personnelles, injection, mises en page invalides).",
+        "",
         "Coût des formations : **aucune source ouverte ne le publie**. Le site affiche « inconnu » et le statut",
         "public / privé de l'établissement (qui n'est pas un coût).",
         "",
@@ -184,7 +227,8 @@ def rapport_qualite(onisep, rome, liaison, stats_rapports):
             f"* Reliés à une fiche ROME « sûr » : {s['rome_sur']} ({pct(s['rome_sur'], s['total'])})",
             f"* Reliés à au moins un référentiel « sûr » : {s['un_sur']} ({pct(s['un_sur'], s['total'])})",
             f"* Seulement « à vérifier » : {s['a_verifier']} ({pct(s['a_verifier'], s['total'])})",
-            f"* Non reliés : {s['non_relie']} ({pct(s['non_relie'], s['total'])}) → « je ne sais pas »",
+            f"* Non reliés : {s['non_relie']} ({pct(s['non_relie'], s['total'])}) → « je ne sais pas », "
+            f"dont {s['ambigus']} ambigus (plusieurs fiches de familles différentes presque à égalité : on ne choisit pas)",
             f"* Méthodes (meilleur des deux référentiels) : {s['methodes']}",
             "",
             "Vérification manuelle du 18/11/2026 : les 21 liaisons « sûr » obtenues par similarité",
@@ -196,7 +240,7 @@ def rapport_qualite(onisep, rome, liaison, stats_rapports):
     (RACINE / "docs" / "qualite.md").write_text("\n".join(lignes), encoding="utf-8")
 
 
-def relier_titres_rapports(catalogue, romes_onisep):
+def relier_titres_rapports(catalogue, romes_onisep, codes):
     """Relie les titres extraits des vrais rapports (fichier local). Renvoie des stats agrégées."""
     source = LOCAL / "titres_rapports.json"
     if not source.exists():
@@ -206,7 +250,10 @@ def relier_titres_rapports(catalogue, romes_onisep):
     resultats = []
     for t in titres:
         r = verifier_accord(relier(t["titre"], catalogue), romes_onisep)
-        resultats.append({"titre": t["titre"], "nb_rapports": t["nb_rapports"], **r})
+        conf, ambigu = decider(r, codes)
+        for ref in ("onisep", "rome"):
+            r[ref].pop("_scores", None)
+        resultats.append({"titre": t["titre"], "nb_rapports": t["nb_rapports"], "decision": conf, "ambigu": ambigu, **r})
     (LOCAL / "liaison_titres_rapports.json").write_text(
         json.dumps(resultats, ensure_ascii=False, indent=1), encoding="utf-8")
 
@@ -217,9 +264,10 @@ def relier_titres_rapports(catalogue, romes_onisep):
         "total": len(resultats),
         "onisep_sur": sum(r["onisep"]["confiance"] == "sûr" for r in resultats),
         "rome_sur": sum(r["rome"]["confiance"] == "sûr" for r in resultats),
-        "un_sur": sum(meilleur(r)["confiance"] == "sûr" for r in resultats),
-        "a_verifier": sum(meilleur(r)["confiance"] == "à vérifier" for r in resultats),
-        "non_relie": sum(meilleur(r)["confiance"] == "non relié" for r in resultats),
+        "un_sur": sum(r["decision"] == "sûr" for r in resultats),
+        "a_verifier": sum(r["decision"] == "à vérifier" for r in resultats),
+        "non_relie": sum(r["decision"] == "non relié" for r in resultats),
+        "ambigus": sum(r["ambigu"] for r in resultats),
         "methodes": dict(Counter(meilleur(r)["methode"] for r in resultats)),
     }
     print("Titres des rapports :", stats)
@@ -234,6 +282,8 @@ if __name__ == "__main__":
     (PROC / "liaison_rome_onisep.json").write_text(
         json.dumps(liaison, ensure_ascii=False), encoding="utf-8")
     romes_onisep = {f["id"]: f["romes"] for f in onisep}
-    stats = relier_titres_rapports(catalogue, romes_onisep)
+    codes = {f["id"]: set(f["romes"]) for f in onisep}
+    codes.update({f["code"]: {f["code"], f.get("parent", f["code"])} for f in rome})
+    stats = relier_titres_rapports(catalogue, romes_onisep, codes)
     rapport_qualite(onisep, rome, liaison, stats)
     print("Rapport qualité : docs/qualite.md")

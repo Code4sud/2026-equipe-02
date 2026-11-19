@@ -1,6 +1,7 @@
 // Lecture du Rapport des Possibles DANS le navigateur.
 // Le fichier PDF ne quitte jamais le téléphone : pdf.js le lit localement,
-// on garde en mémoire le numéro de rendez-vous, les zones et les titres de métiers.
+// on ne garde que les titres de métiers et leur zone : ni prénom, ni nom, ni numéro de
+// rendez-vous, ni date, ni description.
 // Rien n'est envoyé, rien n'est stocké. On ne lit PAS les pages de profil
 // (intérêts, aptitudes, personnalité) : l'assistant ne les interprète jamais.
 
@@ -14,9 +15,6 @@ const RE_PAGE = /^\s*\d+\s*\/\s*\d+\s*$/;
 // pages : liste de pages ; chaque page est une liste d'éléments { str, x, y, h }
 // (c'est ce que renvoie pdf.js, simplifié par lirePDF ci-dessous)
 export function analyserPages(pages) {
-  const premiere = (pages[0] || []).map((it) => it.str).join(" ");
-  const rdv = (premiere.match(/Rdv\s*(\d+)/i) || [])[1] || null;
-  const date = (premiere.match(/(\d{2}\/\d{2}\/\d{4})/) || [])[1] || null;
 
   const zones = { 1: [], 2: [], 3: [], 4: [], 5: [] };
   let zone = null;
@@ -57,20 +55,19 @@ export function analyserPages(pages) {
       const estTitre = l.h >= HAUTEUR_TITRE_MIN && l.h <= HAUTEUR_TITRE_MAX;
       if (estTitre) {
         // Un titre trop long continue parfois sur la ligne suivante : on recolle
+        // (césure en fin de ligne « Électri- » + « cien » : on recolle sans espace)
         if (precedente && precedente.estTitre && precedente.y - l.y < 1.8 * l.h && dernier) {
-          dernier.titre += " " + l.texte;
+          dernier.titre += (dernier.titre.endsWith("-") ? "" : " ") + l.texte;
         } else {
-          dernier = { titre: l.texte, description: "" };
+          dernier = { titre: l.texte };
           zones[zone].push(dernier);
         }
-      } else if (dernier && l.h < HAUTEUR_TITRE_MIN && l.texte !== "ère" && l.texte !== "ème") {
-        dernier.description = (dernier.description + " " + l.texte).trim();
       }
       precedente = { ...l, estTitre };
     }
   }
   const total = Object.values(zones).reduce((n, z) => n + z.length, 0);
-  return { rdv, date, zones, total };
+  return { zones, total };
 }
 
 // Lit un fichier PDF (objet File du navigateur, ou tableau d'octets) avec pdf.js

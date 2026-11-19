@@ -63,7 +63,7 @@ Fichier `equipe-02.mp4`, enregistrement d'écran au format téléphone, **rappor
    L'assistant dit « je ne sais pas » et renvoie vers un conseiller du Centre. C'est le cas pour le coût des formations (aucune source ouverte), pour un salaire non publié par l'ONISEP (environ 22 % des fiches) et pour un métier absent des référentiels français.
 
 4. **Comment reliez-vous les métiers du rapport aux référentiels ?**
-   Ils viennent de la base américaine O*NET, sans code ROME. Nous les relions par le nom, en trois étapes : exact, normalisé, puis similarité. Chaque lien a un score de confiance, et une vérification croisée confirme le lien quand la fiche ONISEP et la fiche ROME pointent vers le même code. Sur les métiers des rapports : 58 % de liens sûrs, 31 % proches (présentés comme tels), 11 % non reliés (« je ne sais pas »).
+   Ils viennent de la base américaine O*NET, sans code ROME. Nous les relions par le nom, en trois étapes : exact, normalisé, puis similarité. Chaque lien a un score de confiance, et une vérification croisée confirme le lien quand la fiche ONISEP et la fiche ROME pointent vers le même code. Sur les métiers des rapports : 57 % de liens sûrs, 19 % proches (présentés comme tels), 24 % sans lien (« je ne sais pas »), dont les titres ambigus : on ne choisit jamais une fiche au hasard.
 
 5. **Les données personnelles du jeune ?**
    Le PDF est lu par le navigateur, sur le téléphone : rien n'est envoyé ni stocké, il n'y a pas de compte. Aucun vrai rapport n'est dans notre dépôt, notre démo ou notre vidéo : nous avons fabriqué un rapport fictif.
