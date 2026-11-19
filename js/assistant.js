@@ -341,6 +341,17 @@ export function nombresInventes(reponse, extraits) {
   return nombres(reponse).filter((n) => !connus.has(n));
 }
 
+// Avant d'envoyer une question au modèle, on retire ce qui ressemble à une donnée personnelle
+export function nettoyerQuestion(q) {
+  return q
+    .replace(/\b(je m'appelle|je m’appelle|mon nom est|mon prénom est|moi c'est|moi c’est)\s+\p{Lu}[\p{L}'’-]*(?:\s+\p{Lu}[\p{L}'’-]*)?/giu, "$1 [nom retiré]")
+    .replace(/[^\s@]+@[^\s@]+\.[^\s@]+/g, "[e-mail retiré]")
+    .replace(/(?:\+33\s?|\b0)[1-9](?:[\s.-]?\d{2}){4}\b/g, "[numéro retiré]")
+    .replace(/\b\d{1,2}[\/.-]\d{1,2}[\/.-]\d{2,4}\b/g, "[date retirée]")
+    .replace(/\brdv\s*\d+/gi, "[rendez-vous retiré]")
+    .replace(/\b\d{4,}\b/g, "[nombre retiré]");
+}
+
 export async function reformuler(question, reponse, metier) {
   if (modele.mode === "aucun" || reponse.inconnu || reponse.sansModele || !reponse.extraits) return reponse;
   // Le modèle reçoit la réponse complète déjà tirée des fiches, avec le nom du métier :
@@ -349,7 +360,7 @@ export async function reformuler(question, reponse, metier) {
   try {
     const sortie = await appelerModele([
       { role: "system", content: promptSysteme },
-      { role: "user", content: `EXTRAITS :\n${extraits}\n\nQUESTION DU JEUNE : ${question}` },
+      { role: "user", content: `EXTRAITS :\n${extraits}\n\nQUESTION DU JEUNE : ${nettoyerQuestion(question)}` },
     ]);
     if (!sortie) return reponse;
     const inventes = nombresInventes(sortie, extraits);
@@ -358,6 +369,11 @@ export async function reformuler(question, reponse, metier) {
     const cles = (t) => (t.match(/bac ?\+ ?\d+|\d+ ans?\b|\d+ euros/gi) || []).map((x) => x.replace(/\s/g, "").toLowerCase());
     const oubliees = cles(reponse.texte).filter((c) => !cles(sortie).includes(c));
     if (oubliees.length) return { ...reponse, controle: `Reformulation ignorée (information oubliée : ${oubliees.join(", ")}).` };
+    // Pas de jugement ni de conseil directif absent des fiches (« facile », « tu dois »…),
+    // même si la question (ou un texte recopié) le demande
+    const jugement = /\b(facile|difficile|simple|dur|tu dois|tu devrais|il faut que tu|fait pour toi|faite pour toi)\b/i;
+    const j = sortie.match(jugement);
+    if (j && !jugement.test(reponse.texte)) return { ...reponse, controle: `Reformulation refusée (jugement absent des sources : « ${j[0]} »).` };
     // Un « je ne sais pas » du modèle ne doit jamais effacer une réponse trouvée dans les sources
     if (/je ne sais pas/i.test(sortie)) return { ...reponse, controle: "Reformulation ignorée (le modèle n'a pas su répondre)." };
     // On garde aussi la réponse complète tirée des fiches (affichée par « En savoir plus »)
