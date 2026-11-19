@@ -8,7 +8,8 @@
 //   1. bon type de réponse (réponse, « je ne sais pas », comparaison, formations, refus de conseil, liste)
 //   2. source citée (au moins un lien cliquable)
 //   3. rien d'inventé : chaque nombre de la réponse finale existe dans la réponse tirée des fiches
-//   4. mots attendus présents (ex. « bac + 5 » pour orthophoniste)
+//   4. mots attendus présents (ex. « bac + 5 » pour orthophoniste), et aucun mot interdit (réponse hors sujet)
+// Champ facultatif « contexte » : la fiche déjà ouverte au moment de la question.
 // Le contexte est celui de la démo : le rapport FICTIF est chargé (data/sample/rapport_fictif.json).
 
 import fs from "fs";
@@ -53,12 +54,14 @@ const lignes = [];
 let total = { type: 0, source: 0, invente: 0, mots: 0 };
 for (const q of questions) {
   // Chaque question est posée dans une conversation neuve (pas de métier « en cours »)
-  const ctx = { base: ".", titresRapport, metierCourant: null, formations: null };
+  // « contexte » : la fiche déjà ouverte quand la question est posée (ex. « la formation prend combien de temps »)
+  const metierOuvert = q.contexte ? relier(q.contexte).fiche : null;
+  const ctx = { base: ".", titresRapport, metierCourant: metierOuvert, formations: null };
   const r = await A.repondre(q.question, ctx);
   // Référence pour « rien d'inventé » : la même réponse SANS modèle (tirée des fiches)
   const mode = A.modele.mode;
   A.modele.mode = "aucun";
-  const ref = await A.repondre(q.question, { base: ".", titresRapport, metierCourant: null, formations: ctx.formations });
+  const ref = await A.repondre(q.question, { base: ".", titresRapport, metierCourant: metierOuvert, formations: ctx.formations });
   A.modele.mode = mode;
   const texteComplet = r.texte + (r.comparaison ? JSON.stringify(r.comparaison) : "");
   const refComplet = ref.texte + (ref.comparaison ? JSON.stringify(ref.comparaison) : "");
@@ -67,7 +70,9 @@ for (const q of questions) {
     type: typeObtenu(r) === q.attendu,
     source: (r.sources || []).some((s) => s && /^https?:\/\//.test(s.url)),
     invente: nombres(texteComplet).every((n) => nombres(refComplet).includes(n)),
-    mots: (q.mots || []).every((m) => texteComplet.toLowerCase().includes(m.toLowerCase())),
+    // mots attendus présents, et aucun mot « hors sujet » (ex. « certificat de capacité » pour une question de durée)
+    mots: (q.mots || []).every((m) => texteComplet.toLowerCase().includes(m.toLowerCase()))
+      && !(q.interdits || []).some((m) => texteComplet.toLowerCase().includes(m.toLowerCase())),
   };
   for (const k of Object.keys(total)) total[k] += ok[k] ? 1 : 0;
   lignes.push({ id: q.id, attendu: q.attendu, obtenu: typeObtenu(r), ...ok, reformule: !!r.reformule, extrait: r.texte.slice(0, 90).replace(/\n/g, " ") });

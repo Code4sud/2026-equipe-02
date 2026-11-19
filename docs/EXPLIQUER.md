@@ -79,7 +79,7 @@ Script : `node tests/evaluer.mjs` (ajouter `--ollama` pour tester avec le modèl
 
 | Jeu de questions | Sans modèle | Avec qwen2.5:7b (Ollama) |
 |---|---|---|
-| `tests/questions.json` : 20 questions sur les métiers du rapport fictif | 20/20 | 20/20 |
+| `tests/questions.json` : 30 questions sur les métiers du rapport fictif (dont 10 sur la durée des études) | 30/30 | 30/30 |
 | Les 20 questions proposées par le Centre (testées en local, car elles citent des métiers des vrais rapports) | 20/20 | 20/20 |
 
 À dire honnêtement :
@@ -87,7 +87,9 @@ Script : `node tests/evaluer.mjs` (ajouter `--ollama` pour tester avec le modèl
 * Pour atteindre 20/20 sur ces questions, nous avons corrigé de vrais défauts : un mot générique seul (« directeur ») qui désignait le mauvais métier, les comparaisons « entre X et Y » et « départager », la recherche de formations pour les nouveaux codes ROME 4.0.
 * Premier passage sur les questions du Centre : 17/20. Dernier : 20/20.
 * Avec le modèle, une reformulation oubliait le niveau « bac + 5 ». Un contrôle dans le code refuse maintenant toute reformulation qui oublie un niveau, une durée ou un montant.
-* « Je ne sais pas » bien déclenché sur : salaire non publié, coût des formations, métier absent des référentiels, question hors sujet.
+* « Je ne sais pas » bien déclenché sur : salaire non publié, coût des formations, métier absent des référentiels, question hors sujet, durée absente de la fiche.
+* **Contrôle de pertinence** (19/11) : une réponse doit contenir ce que la question demande (une durée en ans ou en mois, un montant en euros, un niveau pour « sans bac »…). Sinon : « je ne sais pas » avec la source. Le même contrôle s'applique à la reformulation de l'IA. Ce contrôle est né d'un bug : « la formation prend combien de temps » renvoyait le texte d'accès au métier (« certificat de capacité »).
+* **Durée des études** : niveau « bac + N » → N ans après le bac ; sinon la durée du premier diplôme de l'école (CAP, bac pro, BTS…), jamais une spécialisation ni un titre pour adultes ; sinon « je ne sais pas, cette fiche ne donne pas la durée ».
 
 ## Limites (à dire honnêtement au jury)
 

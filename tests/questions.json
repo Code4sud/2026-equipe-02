@@ -1,25 +1,241 @@
 {
-  "_info": "20 questions de jeunes, sur le modèle des 20 questions proposées par le Centre, mais avec les métiers du rapport FICTIF (aucun métier ni texte des vrais rapports). attendu : reponse | je_ne_sais_pas | comparaison | formations | refus_conseil | liste. mots : mots qui doivent apparaître dans la réponse.",
-  "questions": [
-    {"id": 1, "question": "Boulanger, c'est quoi concrètement ?", "attendu": "reponse"},
-    {"id": 2, "question": "Quel diplôme faut-il pour être orthophoniste ?", "attendu": "reponse", "mots": ["bac + 5"]},
-    {"id": 3, "question": "Je peux devenir fleuriste sans le bac ?", "attendu": "reponse", "mots": ["CAP"]},
-    {"id": 4, "question": "Combien gagne un fauconnier ?", "attendu": "je_ne_sais_pas", "note": "pas de salaire dans les sources"},
-    {"id": 5, "question": "Quelle formation pour devenir électricien près de Nice ?", "attendu": "formations"},
-    {"id": 6, "question": "C'est quoi la différence entre un boulanger et un fleuriste ?", "attendu": "comparaison"},
-    {"id": 7, "question": "Comptable ou technicien de laboratoire, lequel demande le moins de temps de formation ?", "attendu": "comparaison"},
-    {"id": 8, "question": "Le métier d'assistant dentaire est-il accessible sans le bac ?", "attendu": "reponse", "mots": ["bac"]},
-    {"id": 9, "question": "Combien de temps dure la formation d'orthophoniste ?", "attendu": "reponse", "mots": ["5 ans"]},
-    {"id": 10, "question": "Quelles formations mènent au métier d'éducateur spécialisé ?", "attendu": "reponse", "mots": ["DE"]},
-    {"id": 11, "question": "Est-ce que je peux devenir médecin urgentiste avec un CAP ?", "attendu": "reponse", "mots": ["bac +"], "note": "réponse attendue : non, avec la source"},
-    {"id": 12, "question": "Quel est le salaire d'un toiletteur de chevaux de course ?", "attendu": "je_ne_sais_pas", "note": "métier absent des référentiels"},
-    {"id": 13, "question": "Où se former à Marseille pour être comptable ?", "attendu": "formations"},
-    {"id": 14, "question": "Ouvrier viticole : quelles formations en alternance ?", "attendu": "reponse", "mots": ["Carif-Oref"]},
-    {"id": 15, "question": "Journaliste ou urbaniste, qu'est-ce qui change ?", "attendu": "comparaison"},
-    {"id": 16, "question": "Je n'ai pas le bac, quels métiers de ma liste restent possibles ?", "attendu": "liste", "mots": ["Boulanger"]},
-    {"id": 17, "question": "Combien coûte la formation d'orthophoniste ?", "attendu": "je_ne_sais_pas", "note": "aucune source ouverte sur le coût"},
-    {"id": 18, "question": "Fauconnier, est-ce un métier reconnu et comment y arriver ?", "attendu": "reponse", "mots": ["certificat de capacité"]},
-    {"id": 19, "question": "Comment départager boulanger et fleuriste ?", "attendu": "comparaison"},
-    {"id": 20, "question": "Je ne sais pas quoi choisir parmi mes métiers, par où commencer ?", "attendu": "refus_conseil", "mots": ["Centre des Possibles"]}
-  ]
+ "_info": "30 questions de jeunes : 20 sur le modèle des 20 questions proposées par le Centre, plus 10 sur la durée des études (formulations variées, durées manquantes), mais avec les métiers du rapport FICTIF (aucun métier ni texte des vrais rapports). attendu : reponse | je_ne_sais_pas | comparaison | formations | refus_conseil | liste. mots : mots qui doivent apparaître dans la réponse. interdits : mots qui ne doivent PAS apparaître (réponse hors sujet). contexte : fiche déjà ouverte au moment de la question.",
+ "questions": [
+  {
+   "id": 1,
+   "question": "Boulanger, c'est quoi concrètement ?",
+   "attendu": "reponse"
+  },
+  {
+   "id": 2,
+   "question": "Quel diplôme faut-il pour être orthophoniste ?",
+   "attendu": "reponse",
+   "mots": [
+    "bac + 5"
+   ]
+  },
+  {
+   "id": 3,
+   "question": "Je peux devenir fleuriste sans le bac ?",
+   "attendu": "reponse",
+   "mots": [
+    "CAP"
+   ]
+  },
+  {
+   "id": 4,
+   "question": "Combien gagne un fauconnier ?",
+   "attendu": "je_ne_sais_pas",
+   "note": "pas de salaire dans les sources"
+  },
+  {
+   "id": 5,
+   "question": "Quelle formation pour devenir électricien près de Nice ?",
+   "attendu": "formations"
+  },
+  {
+   "id": 6,
+   "question": "C'est quoi la différence entre un boulanger et un fleuriste ?",
+   "attendu": "comparaison"
+  },
+  {
+   "id": 7,
+   "question": "Comptable ou technicien de laboratoire, lequel demande le moins de temps de formation ?",
+   "attendu": "comparaison"
+  },
+  {
+   "id": 8,
+   "question": "Le métier d'assistant dentaire est-il accessible sans le bac ?",
+   "attendu": "reponse",
+   "mots": [
+    "bac"
+   ]
+  },
+  {
+   "id": 9,
+   "question": "Combien de temps dure la formation d'orthophoniste ?",
+   "attendu": "reponse",
+   "mots": [
+    "5 ans"
+   ]
+  },
+  {
+   "id": 10,
+   "question": "Quelles formations mènent au métier d'éducateur spécialisé ?",
+   "attendu": "reponse",
+   "mots": [
+    "DE"
+   ]
+  },
+  {
+   "id": 11,
+   "question": "Est-ce que je peux devenir médecin urgentiste avec un CAP ?",
+   "attendu": "reponse",
+   "mots": [
+    "bac +"
+   ],
+   "note": "réponse attendue : non, avec la source"
+  },
+  {
+   "id": 12,
+   "question": "Quel est le salaire d'un toiletteur de chevaux de course ?",
+   "attendu": "je_ne_sais_pas",
+   "note": "métier absent des référentiels"
+  },
+  {
+   "id": 13,
+   "question": "Où se former à Marseille pour être comptable ?",
+   "attendu": "formations"
+  },
+  {
+   "id": 14,
+   "question": "Ouvrier viticole : quelles formations en alternance ?",
+   "attendu": "reponse",
+   "mots": [
+    "Carif-Oref"
+   ]
+  },
+  {
+   "id": 15,
+   "question": "Journaliste ou urbaniste, qu'est-ce qui change ?",
+   "attendu": "comparaison"
+  },
+  {
+   "id": 16,
+   "question": "Je n'ai pas le bac, quels métiers de ma liste restent possibles ?",
+   "attendu": "liste",
+   "mots": [
+    "Boulanger"
+   ]
+  },
+  {
+   "id": 17,
+   "question": "Combien coûte la formation d'orthophoniste ?",
+   "attendu": "je_ne_sais_pas",
+   "note": "aucune source ouverte sur le coût"
+  },
+  {
+   "id": 18,
+   "question": "Fauconnier, est-ce un métier reconnu et comment y arriver ?",
+   "attendu": "reponse",
+   "mots": [
+    "certificat de capacité"
+   ]
+  },
+  {
+   "id": 19,
+   "question": "Comment départager boulanger et fleuriste ?",
+   "attendu": "comparaison"
+  },
+  {
+   "id": 20,
+   "question": "Je ne sais pas quoi choisir parmi mes métiers, par où commencer ?",
+   "attendu": "refus_conseil",
+   "mots": [
+    "Centre des Possibles"
+   ]
+  },
+  {
+   "id": 21,
+   "question": "Combien de temps dure la formation de boulanger ?",
+   "attendu": "reponse",
+   "mots": [
+    "2 ans"
+   ]
+  },
+  {
+   "id": 22,
+   "question": "Quelle est la durée des études pour être orthophoniste ?",
+   "attendu": "reponse",
+   "mots": [
+    "5 ans"
+   ]
+  },
+  {
+   "id": 23,
+   "question": "Ça dure combien d'années pour devenir psychomotricien ?",
+   "attendu": "reponse",
+   "mots": [
+    "3 ans"
+   ]
+  },
+  {
+   "id": 24,
+   "question": "Ça dure combien de temps, la formation de comptable ?",
+   "attendu": "reponse",
+   "mots": [
+    "2 ans"
+   ]
+  },
+  {
+   "id": 25,
+   "question": "la formation prend combien de temps",
+   "contexte": "Fauconnier de spectacle",
+   "attendu": "je_ne_sais_pas",
+   "mots": [
+    "ne donne pas la durée"
+   ],
+   "interdits": [
+    "certificat de capacité"
+   ],
+   "note": "bug signalé : la fiche (Dresseur animalier) ne donne pas de durée"
+  },
+  {
+   "id": 26,
+   "question": "quel est la durée des études",
+   "contexte": "Fauconnier de spectacle",
+   "attendu": "je_ne_sais_pas",
+   "mots": [
+    "ne donne pas la durée"
+   ],
+   "interdits": [
+    "certificat de capacité"
+   ],
+   "note": "bug signalé, autre formulation"
+  },
+  {
+   "id": 27,
+   "question": "Combien d'années d'études pour être développeur web ?",
+   "attendu": "je_ne_sais_pas",
+   "mots": [
+    "ne donne pas la durée"
+   ],
+   "note": "fiche France Travail sans durée"
+  },
+  {
+   "id": 28,
+   "question": "La formation d'astrophysicien prend combien de temps ?",
+   "attendu": "reponse",
+   "mots": [
+    "8 ans",
+    "bac + 8"
+   ],
+   "note": "pas de diplôme listé, mais le niveau bac + 8 donne la durée après le bac"
+  },
+  {
+   "id": 29,
+   "question": "C'est long comme études pour être urbaniste ?",
+   "attendu": "reponse",
+   "mots": [
+    "5 ans"
+   ],
+   "interdits": [
+    "double cursus"
+   ],
+   "note": "une formation de spécialisation ne doit pas passer pour le premier diplôme"
+  },
+  {
+   "id": 30,
+   "question": "Durée de la formation de peintre en bâtiment ?",
+   "attendu": "reponse",
+   "mots": [
+    "2 ans",
+    "CAP"
+   ],
+   "interdits": [
+    "TP peintre"
+   ],
+   "note": "le diplôme de l'école (CAP) avant le titre pour adultes"
+  }
+ ]
 }

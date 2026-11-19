@@ -21,6 +21,7 @@ const INTENTIONS = [
   ["perso", /\b(quoi choisir|que choisir|par ou commencer|suis[- ]je|je suis (fait|faite|bon|bonne|nul|nulle)|mon profil|ma personnalite|mes resultats|mes aptitudes|quel metier (choisir|pour moi|me correspond)|dois[- ]je|tu me conseilles|que me conseilles|fait pour moi)\b/],
   ["comparer", /\b(compar\w*|differences?|lequel|plutot|departager|qu.?est.?ce qui change|qu.?est.?ce qui les differencie)\b/],
   ["cout", /\b(cout|coute|prix|cher|payant|payante|frais|gratuit|gratuite)\b/],
+  ["duree", /\b(combien de temps|duree|durees|dure|durent|ca dure|combien d.?annees?|combien d.?ans|combien de mois|prend combien|annees d.?etudes|ans d.?etudes|etudes longues|c.?est long)\b/],
   ["salaire", /\b(salaire|salaires|gagne|gagner|gagnent|paye|paie|payes|remuneration|euros|smic|combien.*gagn)\b/],
   ["sans_bac", /\bsans (le |mon |un )?bac\b|\bpas (le|de|mon) bac\b|\bsans diplome\b|\bsans le brevet\b/],
   ["selection", /\b(selecti\w*|selection|difficile d.?entrer|taux|places|admis|admission|concours)\b/],
@@ -140,6 +141,38 @@ function jeNeSaisPas(raison, sources = []) {
   return { texte: `Je ne sais pas : ${raison} ${CONSEILLER}`, sources: [...sources, LIEN_CENTRE], inconnu: true, extraits: "" };
 }
 
+// Premier diplôme : le niveau de sortie le plus bas, sans les formations complémentaires
+// (CS, MC, FCIL : elles se font APRÈS un premier diplôme), puis la plus courte
+function rangNiveau(n) {
+  if (!n) return 99;
+  if (/CAP|BEP/i.test(n)) return 0;
+  if (/^bac( ou|$)/.test(n)) return 1;
+  return parseInt((n.match(/\+ ?(\d+)/) || [0, 9])[1]) + 1;
+}
+// À niveau égal, on préfère les diplômes de l'école (CAP, bac pro, BTS...) aux titres pour adultes (TP)
+const titreAdulte = (x) => (/^TP\b/.test(x.libelle) ? 1 : 0);
+export function premierDiplome(g) {
+  return (g.formations || []).filter((x) => x.duree && !/^(CS|MC|FCIL)\b/.test(x.libelle))
+    .sort((a, b) => rangNiveau(a.niveau_sortie) - rangNiveau(b.niveau_sortie)
+      || titreAdulte(a) - titreAdulte(b) || parseInt(a.duree) - parseInt(b.duree))[0] || null;
+}
+
+// Durée des études d'après la fiche :
+//  - niveau minimum « bac + N » -> N ans d'études après le bac (c'est le sens de ce niveau)
+//  - sinon (niveau CAP ou bac) -> durée du premier diplôme listé par la fiche
+//  - sinon -> null (« je ne sais pas »)
+export function dureeEtudes(g) {
+  const niv = (g.niveau_min || "").match(/^bac \+ (\d+)( et plus)?$/);
+  if (niv) {
+    const n = Number(niv[1]), plus = niv[2] ? "au moins " : "";
+    return { court: `${plus}${n} an${n > 1 ? "s" : ""} après le bac`,
+      phrase: `il faut au minimum un niveau « ${g.niveau_min} », soit ${plus}${n} an${n > 1 ? "s" : ""} d'études après le bac` };
+  }
+  const p = premierDiplome(g);
+  if (p) return { court: `${p.duree} (${p.libelle})`, phrase: `le premier diplôme se prépare en ${p.duree} : ${p.libelle}` };
+  return null;
+}
+
 export function repondreDepuisDonnees(type, f, ctx = {}) {
   const nom = f && f.nom;
   switch (type) {
@@ -148,6 +181,19 @@ export function repondreDepuisDonnees(type, f, ctx = {}) {
       const jour = f.journee ? premierParagraphe(f.journee, 300) : "";
       if (!resume && !jour) return jeNeSaisPas(`je n'ai pas de description pour « ${nom} ».`, src(f));
       return { texte: [resume, jour && `Au quotidien : ${jour}`].filter(Boolean).join("\n\n"), sources: src(f), extraits: [resume, jour].join("\n") };
+    }
+    case "duree": {
+      const g = enrichie(f);
+      const duree = dureeEtudes(g);
+      if (!duree) {
+        return {
+          texte: `Je ne sais pas, cette fiche ne donne pas la durée des études pour « ${g.nom} ».` +
+            (g.niveau_min ? ` Elle indique seulement le niveau minimum : ${lisible(g.niveau_min)}.` : "") + ` ${CONSEILLER}`,
+          sources: [...src(g), LIEN_CENTRE], inconnu: true, extraits: "",
+        };
+      }
+      const t = `D'après l'ONISEP${via(f, g)}, pour être ${g.nom}, ${duree.phrase}.`;
+      return { texte: t, sources: src(g), extraits: t };
     }
     case "salaire": {
       const g = enrichie(f);
@@ -228,16 +274,12 @@ export function comparer(f1, f2, formations) {
   const ligne = (f) => {
     const g = enrichie(f);
     const sel = formations && selectionParcoursup(g, formations);
-    // Diplôme d'entrée : le niveau de sortie le plus bas, sans les formations complémentaires
-    // (CS, MC : elles se font APRÈS un premier diplôme), puis la plus courte
-    const rangNiveau = (n) => (!n ? 99 : /CAP|BEP/i.test(n) ? 0 : /^bac( ou|$)/.test(n) ? 1 : parseInt((n.match(/\+ ?(\d+)/) || [0, 9])[1]) + 1);
-    const courte = (g.formations || []).filter((x) => x.duree && !/^(CS|MC|FCIL)\b/.test(x.libelle))
-      .sort((a, b) => rangNiveau(a.niveau_sortie) - rangNiveau(b.niveau_sortie) || parseInt(a.duree) - parseInt(b.duree))[0];
+    const duree = dureeEtudes(g);
     return {
       nom: f.nom,
       niveau: g.niveau_min ? lisible(g.niveau_min) : "inconnu",
       sansBac: { oui: "oui", non: "non", comment: "non, bac requis", inconnu: "inconnu" }[g.sans_bac || "inconnu"],
-      duree: courte ? `${courte.duree} (${courte.libelle})` : "inconnu",
+      duree: duree ? duree.court : "inconnu",
       salaire: g.salaire_debutant ? g.salaire_debutant.replace(/^A partir/, "À partir") : "inconnu",
       selection: sel ? (sel.min === sel.max ? `${sel.min} %` : `${sel.min} à ${sel.max} %`) + " (Parcoursup, Région Sud)" : "inconnu",
       cout: "inconnu (aucune source ouverte)",
@@ -325,6 +367,23 @@ export async function reformuler(question, reponse, metier) {
   }
 }
 
+// ---------- Contrôle de pertinence ----------
+// Une réponse doit contenir ce que la question demande. Sinon : « je ne sais pas ».
+const CE_QUI_EST_DEMANDE = {
+  duree: /\b\d+\s*(ans?|mois|semaines)\b/i,
+  salaire: /\beuros?\b|€/i,
+  sans_bac: /\b(bac|CAP|niveau|diplôme|qualification|brevet)\b/i,
+  selection: /taux d.accès|\d+\s*%/i,
+  diplome: /\b(diplôme|formation|CAP|BEP|BTS|BUT|bac|licence|master|certificat|niveau|qualification|DE)\b/i,
+  journee: /\S{3,}/,
+};
+export function estPertinente(type, r) {
+  if (!r || r.inconnu || r.demandeLieu || r.comparaison || r.liste) return true;
+  if (type === "pres") return Boolean(r.formations && r.formations.length);
+  const motif = CE_QUI_EST_DEMANDE[type];
+  return motif ? motif.test(r.texte || "") : true;
+}
+
 // ---------- 4. Point d'entrée : une question -> une réponse ----------
 
 export async function repondre(question, ctx) {
@@ -384,8 +443,19 @@ export async function repondre(question, ctx) {
     (question.match(/(?:pr[èe]s de|autour de|vers|sur|à)\s+([A-ZÀ-Ý][\wÀ-ÿ'-]*(?:[ -](?:sur|en|de|la|le|[A-ZÀ-Ý][\wÀ-ÿ'-]*))*)/) || [])[1] || ctx.lieu;
   if (lieu && type === "pres") ctx.lieu = lieu.trim();
   const alternance = /altern|apprenti/i.test(question);
-  const r = repondreDepuisDonnees(type, f, { ...ctx, alternance, lieu: type === "pres" ? lieu && lieu.trim() : ctx.lieu });
-  return { ...(await reformuler(question, r, f)), metier: f };
+  let r = repondreDepuisDonnees(type, f, { ...ctx, alternance, lieu: type === "pres" ? lieu && lieu.trim() : ctx.lieu });
+  if (!estPertinente(type, r)) {
+    // La fiche ne contient pas ce qui est demandé : on ne répond pas à côté
+    const g = enrichie(f);
+    r = { texte: `Je ne sais pas : la fiche « ${g.nom} » ne répond pas à cette question. ${CONSEILLER}`,
+      sources: [...src(g), LIEN_CENTRE], inconnu: true, extraits: "" };
+  }
+  const reformulee = await reformuler(question, r, f);
+  // La version de l'IA doit, elle aussi, traiter la question ; sinon on garde celle des fiches
+  if (reformulee.reformule && !estPertinente(type, reformulee)) {
+    return { ...r, controle: "Reformulation ignorée (elle ne traitait pas la question).", metier: f };
+  }
+  return { ...reformulee, metier: f };
 }
 
 export { relier };
