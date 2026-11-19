@@ -26,7 +26,7 @@ L, H = A4
 # Données personnelles FICTIVES : elles ne doivent apparaître nulle part après la lecture
 PERSONNEL = {
     "prenom_nom": "Lina Exemple",
-    "rdv": "4242",
+    "rdv": "9999",
     "date": "03/02/2026",
     "adresse": "12 rue Imaginaire, 06000 Nice",
     "email": "lina.exemple@example.org",
