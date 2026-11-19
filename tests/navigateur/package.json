@@ -1,0 +1,8 @@
+{
+  "private": true,
+  "description": "Tests de l'interface de Luciole dans Chrome (sans interface). Voir README.md.",
+  "type": "module",
+  "devDependencies": {
+    "puppeteer-core": "23.11.1"
+  }
+}

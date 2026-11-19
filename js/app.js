@@ -624,13 +624,21 @@ function majBoutonTheme() {
   b.title = sombre ? "Mode clair" : "Mode sombre";
 }
 
+// Coupe les transitions le temps de la bascule (sinon les fonds glissent et le texte devient illisible)
+function sansTransition() {
+  const html = document.documentElement;
+  html.classList.add("sans-transition");
+  requestAnimationFrame(() => requestAnimationFrame(() => html.classList.remove("sans-transition")));
+}
+
 $("#theme").addEventListener("click", () => {
   const nouveau = themeActuel() === "dark" ? "light" : "dark";
+  sansTransition();
   document.documentElement.setAttribute("data-theme", nouveau);
   try { localStorage.setItem("luciole-theme", nouveau); } catch { /* stockage indisponible : le choix vaut pour cette visite */ }
   majBoutonTheme();
 });
-window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", majBoutonTheme);
+window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => { sansTransition(); majBoutonTheme(); });
 majBoutonTheme();
 
 // ---------- Démarrage ----------

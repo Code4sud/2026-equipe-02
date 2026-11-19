@@ -768,3 +768,22 @@ body:not(.etat-accueil) #vue-rapport {
   .montee .luciole { transform: translateY(calc(var(--decalage, 0px) * 1.5)); }
   .montee .luciole:active { transform: translateY(calc(var(--decalage, 0px) * 1.5)); }
 }
+
+/* ================= Thème : bascule propre ================= */
+/* Pendant la bascule clair / sombre, aucune transition : sinon les fonds glissent pendant 0,2 s
+   alors que le texte a déjà changé (texte illisible, effet de flash) */
+html.sans-transition *, html.sans-transition *::before, html.sans-transition *::after { transition: none !important; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 0s !important; }
+}
+/* Le logo de nuit seulement sur l'écran de nuit de l'accueil (pas dans le pied de page) */
+body.etat-accueil footer .logo-clair { display: inline; }
+body.etat-accueil footer .logo-sombre { display: none; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) body.etat-accueil footer .logo-clair { display: none; }
+  :root:not([data-theme="light"]) body.etat-accueil footer .logo-sombre { display: inline; }
+}
+:root[data-theme="dark"] body.etat-accueil footer .logo-clair { display: none; }
+:root[data-theme="dark"] body.etat-accueil footer .logo-sombre { display: inline; }
+body.etat-accueil .ecran .logo-clair { display: none; }
+body.etat-accueil .ecran .logo-sombre { display: block; }
