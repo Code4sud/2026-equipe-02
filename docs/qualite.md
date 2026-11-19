@@ -38,6 +38,9 @@ ne reçoit jamais le texte du PDF : seulement la consigne fixe, la fiche officie
 Les titres ambigus ou non reconnus restent affichés tels quels avec « je ne sais pas ».
 La normalisation des titres est vérifiée par tests/test_similarite.py (variantes réelles :
 accents, majuscules, retours à la ligne, espaces, formes féminines, caractères invisibles, ligatures).
+Le chargement est vérifié par tests/test_chargement.mjs et tests/navigateur/test_chargement.mjs,
+avec des PDF entièrement fictifs (data/sample/tests/) : données personnelles, scores, injection,
+fichiers vides, scannés, protégés, trop gros ou qui ne sont pas des rapports.
 
 Coût des formations : **aucune source ouverte ne le publie**. Le site affiche « inconnu » et le statut
 public / privé de l'établissement (qui n'est pas un coût).

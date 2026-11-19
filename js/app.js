@@ -80,14 +80,14 @@ const fiable = (t) => Boolean(t.fiche);
 
 // Messages simples, sans détail technique, pour chaque problème de fichier
 const MESSAGES_FICHIER = {
-  "vide": "Ce fichier est vide. Choisis le PDF de ton Rapport des Possibles.",
-  "trop-lourd": "Ce fichier est trop lourd pour être un Rapport des Possibles. Choisis le PDF envoyé par le Centre.",
-  "pas-pdf": "Ce fichier n'est pas un PDF. Choisis le PDF de ton Rapport des Possibles.",
-  "protege": "Ce PDF est protégé par un mot de passe. Utilise la version sans mot de passe de ton rapport.",
-  "illisible": "Je n'arrive pas à lire ce PDF. Il est peut-être abîmé : essaie de le télécharger à nouveau.",
-  "trop-long": "Ce PDF est trop long pour être un Rapport des Possibles.",
-  "sans-texte": "Ce PDF ne contient pas de texte (c'est peut-être une photo ou un scan). Utilise le PDF envoyé par le Centre des Possibles.",
-  "pas-rapport": "Je ne trouve pas de métiers dans ce PDF. Est-ce bien ton Rapport des Possibles ?",
+  "vide": "Ce fichier est vide. Essaie avec le PDF du Centre.",
+  "trop-lourd": "Ce fichier est trop gros pour être un Rapport des Possibles. Essaie avec le PDF du Centre.",
+  "pas-pdf": "Ce fichier n'est pas un PDF. Essaie avec le PDF du Centre.",
+  "protege": "Ce PDF est protégé par un mot de passe. Essaie avec le PDF du Centre, sans mot de passe.",
+  "illisible": "Je n'arrive pas à ouvrir ce PDF. Télécharge-le à nouveau, puis réessaie.",
+  "trop-long": "Ce fichier ne ressemble pas à un Rapport des Possibles. Essaie avec le PDF du Centre.",
+  "sans-texte": "Ce PDF n'a pas de texte, il est peut-être scanné. Essaie avec le PDF du Centre.",
+  "pas-rapport": "Ce fichier ne ressemble pas à un Rapport des Possibles. Essaie avec le PDF du Centre.",
 };
 
 async function chargerRapport(donnees) {

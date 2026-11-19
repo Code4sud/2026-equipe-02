@@ -64,10 +64,10 @@ fs.writeFileSync(gros, Buffer.concat([Buffer.from("%PDF-1.4\n"), Buffer.alloc(16
 const invalides = [
   ["vide.pdf", /vide/],
   ["pas_un_pdf.pdf", /n'est pas un PDF/],
-  ["pas_un_rapport.pdf", /pas de métiers/],
-  ["scan.pdf", /pas de texte/],
+  ["pas_un_rapport.pdf", /ne ressemble pas à un Rapport des Possibles/],
+  ["scan.pdf", /n'a pas de texte, il est peut-être scanné/],
   ["protege.pdf", /mot de passe/],
-  [gros, /trop lourd/],
+  [gros, /trop gros/],
 ];
 {
   const { p, erreurs } = await nouvellePage();
