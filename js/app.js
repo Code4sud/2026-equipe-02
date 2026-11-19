@@ -102,6 +102,9 @@ async function chargerRapport(donnees) {
 
 function afficherVueRapport(r) {
   $("#accueil").hidden = true;
+  // L'écran de nuit de l'accueil redevient un en-tête simple ; ses animations s'arrêtent
+  document.body.classList.remove("etat-accueil");
+  if (window.lucioleAccueil) window.lucioleAccueil.arreter();
   for (const id of ["#vue-rapport", "#bloc-chat", "#bloc-recherche", "#bloc-recap"]) $(id).hidden = false;
   const nbZones = Object.values(r.zones).filter((z) => z.length).length;
   $("#resume-rapport").textContent = `${r.total} métiers dans ${nbZones} zones${r.date ? `, rapport du ${r.date}` : ""}.`;

@@ -37,6 +37,10 @@
   --comment: #5e4210; --comment-fond: #f5e6c6;
   --non: #7e3012;  --non-fond: #f6dfd2;
   --inconnu: #3d4224; --inconnu-fond: #eeeadc;
+  --nuit-haut: #131a2a;       /* accueil : nuit bleue en haut... */
+  --nuit-bas: #2f3a15;        /* ...olive profond en bas (dans les deux modes) */
+  --pastille-fond: #263021;
+  --lien-nuit: #e2b462;
   --ciel-fond: #232b10;       /* ciel de nuit, dans les deux modes */
   --ciel-anneau: #56652b;
   --ciel-texte: #f7f0df;
@@ -380,15 +384,15 @@ footer { font-size: .9rem; color: var(--doux); margin-top: 32px; max-width: 65ch
 }
 .luciole:hover { background: rgba(247, 240, 223, .08); border: 0; }
 .luciole:active { transform: translate(-50%, -50%); }
+/* La lueur est un dégradé (pas une ombre colorée) : coeur doré, halo qui s'estompe */
 .luciole .point {
-  width: 16px; height: 16px; border-radius: 50%;
-  background: var(--luciole);
-  box-shadow: 0 0 10px 3px rgba(226, 180, 98, .55);
-  transition: transform .2s ease, box-shadow .2s ease;
+  width: 30px; height: 30px; border-radius: 50%;
+  background: radial-gradient(circle, var(--luciole) 0 26%, rgba(226, 180, 98, .42) 34%, rgba(226, 180, 98, 0) 70%);
+  transition: transform .2s ease;
 }
-.luciole.incertaine .point { background: transparent; border: 2px dashed var(--luciole-eteinte); box-shadow: none; }
+.luciole.incertaine .point { width: 16px; height: 16px; background: transparent; border: 2px dashed var(--luciole-eteinte); }
 .luciole.hors-filtre { opacity: .3; }
-.luciole.allumee .point { transform: scale(1.5); box-shadow: 0 0 18px 8px rgba(226, 180, 98, .75); }
+.luciole.allumee .point { transform: scale(1.6); }
 .luciole:focus-visible { outline: 3px solid var(--ciel-texte); outline-offset: 0; border-radius: 50%; }
 .ciel-legende {
   margin: 0 -18px; padding: 12px 18px; min-height: 48px;
@@ -444,3 +448,102 @@ table.duel td.jnsp { color: var(--doux); font-weight: 400; font-style: italic; }
 .reponse-plus { margin-top: 8px; white-space: pre-wrap; }
 .en-savoir-plus { margin-top: 10px; min-height: 48px; }
 .titre-sources { font-size: 1.1rem; margin-top: 8px; }
+
+/* ================= Chantier 2 : accueil plein écran de nuit ================= */
+[hidden] { display: none !important; }
+.ecran { position: relative; }
+.ecran-int { position: relative; z-index: 1; max-width: 720px; margin: 0 auto; padding: 20px 16px 0; }
+main { padding-top: 0; }
+.lucioles-fond { display: none; }
+body.etat-accueil .ecran {
+  min-height: 100svh;
+  background: linear-gradient(165deg, var(--nuit-haut) 0%, #1a2318 48%, var(--nuit-bas) 100%);
+  color: var(--ciel-texte);
+  overflow: hidden;
+}
+body.etat-accueil .lucioles-fond {
+  display: block; position: absolute; inset: 0; width: 100%; height: 100%;
+  pointer-events: none; z-index: 0;
+}
+body.etat-accueil .ecran-int {
+  max-width: 1160px; min-height: 100svh;
+  padding: 64px 20px 40px; display: flex; flex-direction: column;
+}
+body.etat-accueil .accroche { display: none; }
+body.etat-accueil h1 { color: var(--ciel-texte); }
+body.etat-accueil .signature { color: var(--lien-nuit); }
+body.etat-accueil .logo { width: 72px; height: 72px; }
+body.etat-accueil .logo-clair { display: none; }
+body.etat-accueil .logo-sombre { display: block; }
+body.etat-accueil .bouton-theme { background: rgba(247, 240, 223, .08); border-color: rgba(247, 240, 223, .3); }
+body.etat-accueil .bouton-theme svg { stroke: var(--ciel-texte); }
+body.etat-accueil .bouton-theme .icone-lune { fill: var(--ciel-texte); stroke: none; }
+body.etat-accueil :focus-visible { outline-color: var(--lien-nuit); }
+
+/* Le contenu : texte + une action, et l'aperçu du ciel */
+.accueil { display: grid; gap: 36px; flex: 1; align-content: center; padding: 28px 0 8px; }
+.accueil .hero-titre {
+  font: 400 clamp(2.4rem, 9vw, 4.4rem)/1.04 var(--titre); letter-spacing: -0.02em;
+  color: var(--ciel-texte); margin: 0 0 18px; max-width: 13ch; text-wrap: balance;
+}
+.hero-sous { font-size: clamp(1.12rem, 2.6vw, 1.35rem); line-height: 1.5; color: var(--ciel-doux); max-width: 30ch; margin: 0 0 30px; }
+.hero-actions { display: flex; flex-direction: column; align-items: stretch; gap: 8px; }
+.hero-actions .gros { min-height: 60px; font-size: 1.15rem; border-radius: 999px; padding: 0 34px; }
+.lien-secondaire {
+  background: none; border: 0; border-radius: 12px; padding: 0 6px; min-height: 48px;
+  color: var(--lien-nuit); font-weight: 700; text-decoration: underline; text-underline-offset: 5px;
+  white-space: nowrap;
+}
+.lien-secondaire:hover { background: none; color: var(--ciel-texte); }
+.pastille {
+  display: inline-flex; align-items: center; gap: 8px; margin: 26px 0 0;
+  padding: 6px 14px 6px 10px; border-radius: 999px;
+  background: var(--pastille-fond); border: 1px solid rgba(247, 240, 223, .18);
+  font-size: .88rem; font-weight: 700; color: var(--ciel-texte);
+}
+.pastille svg { width: 16px; height: 16px; fill: none; stroke: var(--lien-nuit); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.etat { color: var(--ciel-doux); margin: 14px 0 0; min-height: 1.5em; }
+.etat:empty { display: none; }
+
+/* Le mini ciel animé */
+.hero-apercu { margin: 0; justify-self: center; width: min(100%, 380px); }
+.hero-apercu svg { width: 100%; height: auto; display: block; }
+.hero-apercu figcaption { text-align: center; font-size: .92rem; color: var(--ciel-doux); margin-top: 6px; }
+.ap-anneau { fill: none; stroke: #56652b; stroke-width: 1.1; stroke-dasharray: 3 5; }
+.ap-point { fill: #e2b462; opacity: .45; }
+.ap-halo { fill: rgba(226, 180, 98, 0); transition: fill .5s ease; }
+.ap-coeur { fill: #e2b462; transition: r .4s ease; }
+.ap-metier.allume .ap-halo { fill: rgba(226, 180, 98, .3); }
+.ap-metier.allume .ap-coeur { r: 8px; }
+.ap-metier.gris .ap-coeur { fill: none; stroke: #a3a58f; stroke-width: 2; stroke-dasharray: 3 3; }
+.ap-metier.gris.allume .ap-halo { fill: rgba(163, 165, 143, .18); }
+.ap-etiquette { opacity: 0; transition: opacity .45s ease; }
+.ap-metier.allume .ap-etiquette { opacity: 1; }
+.ap-etiquette rect { fill: #12160a; stroke: #56652b; }
+.ap-nom { fill: #f7f0df; font: 700 13px var(--corps); }
+.ap-info { fill: #e2b462; font: 700 12px var(--corps); }
+.ap-metier.gris .ap-info { fill: #e0d4b4; }
+.ap-chemin { stroke: #e2b462; stroke-width: 2.5; stroke-linecap: round; }
+.ap-chemin.gris { stroke: #a3a58f; stroke-dasharray: 4 5; }
+.ap-chemin.trace:not(.gris) { stroke-dasharray: 220; animation: tracer .9s cubic-bezier(.16, 1, .3, 1) both; }
+@keyframes tracer { from { stroke-dashoffset: 220; } to { stroke-dashoffset: 0; } }
+.ap-toi-cercle { fill: #3a4719; stroke: #e2b462; stroke-width: 1.5; }
+.ap-toi { fill: #f7f0df; font: 400 15px var(--titre); }
+@media (prefers-reduced-motion: reduce) {
+  .ap-chemin.trace:not(.gris) { animation: none; stroke-dasharray: none; }
+  .ap-halo, .ap-coeur, .ap-etiquette { transition: none; }
+}
+
+/* Ordinateur : deux colonnes, le texte à gauche, le ciel à droite */
+@media (min-width: 900px) {
+  body.etat-accueil .ecran-int { padding: 72px 40px 48px; }
+  body.etat-accueil .logo { width: 88px; height: 88px; }
+  .accueil { grid-template-columns: 1.1fr .9fr; align-items: center; gap: 56px; }
+  .hero-actions { flex-direction: row; align-items: center; gap: 22px; }
+  .hero-apercu { width: min(100%, 440px); }
+}
+
+/* Sources et pied de page, plus discrets */
+footer { font-size: .8rem; }
+footer p { margin: 8px 0; }
+.titre-sources { font-size: .95rem; }

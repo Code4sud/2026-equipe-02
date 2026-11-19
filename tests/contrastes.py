@@ -44,6 +44,13 @@ PAIRES = [
     ("luciole-eteinte", "ciel-fond", 3.0, "luciole grise (je ne sais pas)"),
     ("ciel-texte", "ciel-fond", 3.0, "anneau de focus d'une luciole"),
     ("fond", "texte", 4.5, "bouton à bascule actif (Ciel, Voir en liste, filtres)"),
+    ("ciel-texte", "nuit-haut", 4.5, "accueil : titre et texte (haut de l'écran)"),
+    ("ciel-texte", "nuit-bas", 4.5, "accueil : texte (bas de l'écran)"),
+    ("ciel-doux", "nuit-haut", 4.5, "accueil : sous-titre"),
+    ("ciel-doux", "nuit-bas", 4.5, "accueil : légende du mini ciel"),
+    ("lien-nuit", "nuit-haut", 4.5, "accueil : lien « Essayer avec un exemple »"),
+    ("lien-nuit", "nuit-bas", 4.5, "accueil : signature « Éclaire tes possibles »"),
+    ("ciel-texte", "pastille-fond", 4.5, "accueil : pastille « Ton PDF reste sur ton appareil »"),
 ]
 
 # Contour du corps de la luciole (logo) sur le fond de page, lu dans les fichiers SVG
