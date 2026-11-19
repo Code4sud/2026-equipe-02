@@ -25,6 +25,25 @@
         y: 14, autoAlpha: 0, duration: 0.55, ease: "power3.out", stagger: 0.07, clearProps: "all",
       });
     },
+    // Les lucioles apparaissent zone par zone, du centre vers le bord
+    cielAffiche(el) {
+      if (!actif()) return;
+      gsap.from(el.querySelectorAll(".luciole .point"), {
+        scale: 0, autoAlpha: 0, duration: 0.5, ease: "back.out(2)", stagger: 0.03, clearProps: "all",
+      });
+    },
+    // Le chemin lumineux se trace de la luciole jusqu'à toi
+    chemin(ligne) {
+      if (!actif()) return;
+      const longueur = Math.hypot(ligne.x2.baseVal.value - ligne.x1.baseVal.value, ligne.y2.baseVal.value - ligne.y1.baseVal.value);
+      gsap.fromTo(ligne, { strokeDasharray: longueur, strokeDashoffset: longueur },
+        { strokeDashoffset: 0, duration: 0.45, ease: "expo.out" });
+    },
+    // La fiche monte du bas de l'écran
+    feuilleOuverte(el) {
+      if (!actif()) return;
+      gsap.fromTo(el, { yPercent: 100 }, { yPercent: 0, duration: 0.45, ease: "expo.out", clearProps: "transform" });
+    },
     // Une bulle de chat glisse doucement
     message(el) {
       if (!actif()) return;
@@ -35,7 +54,7 @@
   // Apparition des blocs au chargement de la page
   document.addEventListener("DOMContentLoaded", () => {
     if (!actif()) return;
-    gsap.from("header, main > .carte:not([hidden])", {
+    gsap.from("header, main > .carte:not([hidden])", { // (seulement les blocs visibles)
       y: 16, autoAlpha: 0, duration: 0.6, ease: "expo.out", stagger: 0.08, clearProps: "all",
     });
   });

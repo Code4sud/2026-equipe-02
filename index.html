@@ -35,49 +35,74 @@
         <p class="signature">Éclaire tes possibles</p>
       </div>
     </div>
-    <p class="accroche">Luciole, avec <strong>Éclaireur</strong>, ton assistant : les métiers de ton rapport, expliqués simplement, avec les sources officielles.</p>
+    <p class="accroche">Les métiers de ton rapport, expliqués simplement. Avec <strong>Éclaireur</strong>, ton assistant.</p>
   </header>
 
-  <section class="carte" id="bloc-rapport" aria-labelledby="t-rapport">
-    <h2 id="t-rapport">Ton rapport</h2>
+  <!-- ÉCRAN D'ACCUEIL : une seule chose à faire -->
+  <section class="carte accueil" id="accueil" aria-labelledby="t-accueil">
+    <h2 id="t-accueil">Commence ici</h2>
     <p class="promesse">
       <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
-      <span>Ton PDF est lu sur ton appareil. Il n'est envoyé nulle part. Pas de compte, rien n'est enregistré.</span>
+      <span>Ton PDF reste sur ton appareil. Il n'est envoyé nulle part.</span>
     </p>
-    <div class="rangee">
-      <label class="bouton principal" for="fichier">Charger mon rapport (PDF)</label>
+    <div class="gros-boutons">
+      <label class="bouton principal gros" for="fichier">Charger mon rapport</label>
       <input type="file" id="fichier" accept="application/pdf" class="cache">
-      <button type="button" id="essai">Essayer avec un rapport fictif</button>
+      <button type="button" id="essai" class="gros">Essayer avec un exemple</button>
     </div>
     <p id="etat-rapport" class="doux" role="status"></p>
-    <div id="zones"></div>
   </section>
 
-  <section class="carte" id="fiche" hidden aria-live="polite"></section>
+  <!-- APRÈS LE CHARGEMENT -->
+  <section class="carte" id="vue-rapport" hidden aria-labelledby="t-vue">
+    <h2 id="t-vue" tabindex="-1">Ton ciel de métiers</h2>
+    <p id="resume-rapport" class="doux"></p>
+    <p class="promesse petite">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+      <span>Ton rapport reste sur ton appareil. Il n'est envoyé nulle part.</span>
+    </p>
+    <div class="bascule-vue" role="group" aria-label="Affichage">
+      <button type="button" id="vue-ciel" aria-pressed="true">Ciel</button>
+      <button type="button" id="vue-liste" aria-pressed="false">Voir en liste</button>
+    </div>
+    <div class="filtres" role="group" aria-label="Filtrer les métiers">
+      <button type="button" data-filtre="tous" aria-pressed="true">Tous</button>
+      <button type="button" data-filtre="sansbac" aria-pressed="false">Sans bac</button>
+      <button type="button" data-filtre="proche" aria-pressed="false">Formation à moins de 30 km de Nice</button>
+    </div>
+    <p id="filtre-info" class="doux" role="status"></p>
+    <div id="bloc-ciel">
+      <div class="ciel" id="ciel" role="group" aria-label="Ciel de tes métiers. Toi au centre. Zone 1, la plus proche : métiers rapides à atteindre. Zone 5, la plus loin : études longues."></div>
+      <p id="ciel-legende" class="ciel-legende" aria-live="polite">Touche une luciole pour découvrir le métier.</p>
+      <p class="doux petite">Plus une luciole est proche du centre, plus le métier est rapide à atteindre. Une luciole grise : je ne sais pas, pas de fiche fiable.</p>
+    </div>
+    <div id="zones" hidden></div>
+    <p class="changer"><label for="fichier" class="lien-bouton">Changer de rapport</label></p>
+  </section>
 
-  <section class="carte" aria-labelledby="t-recherche">
-    <h2 id="t-recherche">Chercher un métier</h2>
-    <input type="search" id="recherche" placeholder="Ex. : boulanger, urbaniste, développeur web" autocomplete="off" aria-label="Nom d'un métier">
+  <section class="carte" id="bloc-chat" hidden aria-labelledby="t-chat">
+    <h2 id="t-chat">Pose ta question à Éclaireur</h2>
+    <div class="suggestions" id="suggestions"></div>
+    <div id="fil" aria-live="polite"></div>
+    <form class="question" id="form-question">
+      <input type="text" id="question" placeholder="Ta question…" aria-label="Ta question" autocomplete="off">
+      <button class="principal" type="submit">Envoyer</button>
+    </form>
+    <p class="doux petite" id="mode-ia"></p>
+    <button type="button" id="activer-webllm" class="cache">Activer l'IA dans le navigateur (gros téléchargement, ordinateur conseillé)</button>
+  </section>
+
+  <section class="carte" id="bloc-recherche" hidden aria-labelledby="t-recherche">
+    <h2 id="t-recherche">Chercher un autre métier</h2>
+    <input type="search" id="recherche" placeholder="Ex. : boulanger, urbaniste" autocomplete="off" aria-label="Nom d'un métier">
     <ul id="resultats"></ul>
   </section>
 
-  <section class="carte" aria-labelledby="t-chat">
-    <h2 id="t-chat">Pose ta question à Éclaireur</h2>
-    <div id="fil" aria-live="polite"></div>
-    <div class="suggestions" id="suggestions"></div>
-    <form class="question" id="form-question">
-      <input type="text" id="question" placeholder="Ex. : je peux le faire sans le bac ?" aria-label="Ta question" autocomplete="off">
-      <button class="principal" type="submit">Envoyer</button>
-    </form>
-    <p class="doux" id="mode-ia"></p>
-    <button type="button" id="activer-webllm" class="cache">Activer l'IA dans le navigateur (téléchargement d'environ 1 Go, ordinateur conseillé)</button>
-  </section>
-
-  <section class="carte" aria-labelledby="t-recap">
+  <section class="carte" id="bloc-recap" hidden aria-labelledby="t-recap">
     <h2 id="t-recap">Mon récap</h2>
-    <p class="doux">Ajoute des métiers avec le bouton « Garder ». Tu peux copier ce texte et l'apporter au Centre des Possibles.</p>
+    <p class="doux">Garde des métiers avec le bouton « Garder ». Copie ce texte pour l'apporter au Centre des Possibles.</p>
     <textarea id="recap-texte" readonly aria-label="Récapitulatif à copier"></textarea>
-    <div class="rangee" style="margin-top:8px">
+    <div class="rangee" style="margin-top:10px">
       <button type="button" id="copier">Copier mon récap</button>
       <a class="bouton" href="https://centredespossibles.org/" target="_blank" rel="noopener">Centre des Possibles</a>
     </div>
@@ -86,13 +111,28 @@
   <footer>
     <p>Les résultats du Rapport des Possibles sont des pistes de réflexion, pas un verdict. Tu restes l'expert de ta propre vie.</p>
     <p class="pied-nom"><img class="logo-clair" src="assets/luciole.svg" alt="" width="20" height="20"><img class="logo-sombre" src="assets/luciole-sombre.svg" alt="" width="20" height="20"> Luciole, projet Code4Sud Hackathon Azuréen #3, équipe 02</p>
-    <p>Sources : <a href="https://www.onisep.fr/" target="_blank" rel="noopener">ONISEP</a> (licence ODbL) ·
+    <h2 class="titre-sources">Sources</h2>
+    <p>Données ouvertes : <a href="https://www.onisep.fr/" target="_blank" rel="noopener">ONISEP</a> (licence ODbL) ·
       <a href="https://www.data.gouv.fr/datasets/repertoire-operationnel-des-metiers-et-des-emplois-rome" target="_blank" rel="noopener">ROME 4.0, France Travail</a> (Licence Ouverte) ·
       <a href="https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-parcoursup/" target="_blank" rel="noopener">Parcoursup 2025</a> (Licence Ouverte).
       Pour aller plus loin : <a href="https://www.orientation-regionsud.fr/" target="_blank" rel="noopener">orientation-regionsud.fr</a>.
       <a href="https://github.com/Code4sud/2026-equipe-02" target="_blank" rel="noopener">Code source</a> sous licence MIT.</p>
   </footer>
 </main>
+
+<!-- FICHE : panneau qui monte du bas de l'écran -->
+<div id="voile" class="voile" hidden></div>
+<section id="fiche" class="feuille" role="dialog" aria-modal="true" aria-labelledby="fiche-titre" hidden>
+  <div class="feuille-haut">
+    <span class="poignee" aria-hidden="true"></span>
+    <button type="button" id="fermer-fiche" class="fermer">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      Fermer
+    </button>
+  </div>
+  <div id="fiche-contenu"></div>
+</section>
+
 <!-- GSAP copié dans le dépôt (licence standard gratuite) : animations sans internet -->
 <script src="vendor/gsap/gsap.min.js" defer></script>
 <script src="js/animations.js" defer></script>

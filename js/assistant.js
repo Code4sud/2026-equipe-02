@@ -128,7 +128,8 @@ function premierParagraphe(texte, max = 320) {
   return couper(p.replace(/^[^:]{0,60} : /, ""), max);
 }
 
-const src = (f) => [{ nom: f.source.nom + (f.ref === "onisep" ? ` : ${f.nom}` : ` : ${f.id} ${f.nom}`), url: f.source.url }];
+// Nom de source en mots simples (le détail technique est dans la section « Sources » du site)
+const src = (f) => [{ nom: (f.ref === "onisep" ? "Fiche ONISEP : " : "Fiche France Travail : ") + f.nom, url: f.source.url }];
 // Quand on complète une fiche ROME avec la fiche ONISEP du même code, on le dit
 const via = (f, g) => (g !== f ? ` (fiche ONISEP la plus proche : « ${g.nom} »)` : "");
 
@@ -193,7 +194,7 @@ export function repondreDepuisDonnees(type, f, ctx = {}) {
       const t = s.min === s.max
         ? `En Région Sud, ${s.nb} formation(s) après le bac liée(s) à ce métier sont sur Parcoursup. Taux d'accès 2025 : ${s.min} %.`
         : `En Région Sud, ${s.nb} formations après le bac liées à ce métier sont sur Parcoursup. Taux d'accès 2025 : de ${s.min} % à ${s.max} % selon l'établissement.`;
-      return { texte: t + "\nLe taux d'accès est la part des candidats qui ont reçu une proposition.", sources: [...src(f), { nom: s.exemple.parcoursup.source.nom, url: s.exemple.parcoursup.source.url }], extraits: t, sansModele: true };
+      return { texte: t + "\nLe taux d'accès est la part des candidats qui ont reçu une proposition.", sources: [...src(f), { nom: "Parcoursup", url: s.exemple.parcoursup.source.url }], extraits: t, sansModele: true };
     }
     case "cout":
       return jeNeSaisPas("aucune source ouverte ne publie le coût des formations. " +
@@ -317,7 +318,8 @@ export async function reformuler(question, reponse, metier) {
     if (oubliees.length) return { ...reponse, controle: `Reformulation ignorée (information oubliée : ${oubliees.join(", ")}).` };
     // Un « je ne sais pas » du modèle ne doit jamais effacer une réponse trouvée dans les sources
     if (/je ne sais pas/i.test(sortie)) return { ...reponse, controle: "Reformulation ignorée (le modèle n'a pas su répondre)." };
-    return { ...reponse, texte: sortie.trim(), reformule: modele.nom };
+    // On garde aussi la réponse complète tirée des fiches (affichée par « En savoir plus »)
+    return { ...reponse, texte: sortie.trim(), texteSource: reponse.texte, reformule: modele.nom };
   } catch {
     return reponse; // modèle indisponible : on garde la réponse directe des sources
   }
@@ -366,7 +368,7 @@ export async function repondre(question, ctx) {
   const trouve = metierDansQuestion(question, titres);
   const inconnu = !trouve && metierInconnuCite(question);
   if (inconnu) {
-    return jeNeSaisPas(`je ne trouve pas ce métier (« ${inconnu} ») dans les référentiels publics (ONISEP, ROME). ` +
+    return jeNeSaisPas(`je ne trouve pas ce métier (« ${inconnu} ») dans les fiches officielles. ` +
       "Il vient peut-être d'une base étrangère et n'a pas d'équivalent exact en France.", [LIEN_REGION]);
   }
   const f = trouve || (type !== "general" ? ctx.metierCourant : null);

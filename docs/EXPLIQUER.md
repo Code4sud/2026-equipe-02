@@ -33,6 +33,16 @@ Un assistant sur téléphone qui explique les métiers du Rapport des Possibles 
  └──────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Le ciel de lucioles et le duel (branche « ciel »)
+
+* **Le ciel** : toi au centre, 5 cercles pour les 5 zones (zone 1 tout près, zone 5 au bord), une luciole par métier du rapport. Toucher une luciole l'allume, trace un chemin lumineux vers le centre et ouvre la fiche (sources ONISEP et France Travail). Une luciole grise = « je ne sais pas » (pas de fiche fiable).
+* **Filtres** : « Tous », « Sans bac » (niveau minimum ONISEP avant le bac), « Formation à moins de 30 km de Nice » (lieux de formation ONISEP, hors apprentissage).
+* **Le duel** : sur chaque fiche, « Comparer » met deux métiers côte à côte (niveau, durée du premier diplôme, sans bac, formations proches) ; « Je ne sais pas » quand la donnée manque.
+* **Placement des lucioles** (`js/ciel.js`) : chaque luciole reste dans la bande de sa zone ; un petit algorithme les écarte d'au moins 50 px et des noms de zones. Résultat : zones tactiles de 48 px sans chevauchement dès 360 px de large (`node tests/disposition_ciel.mjs`). Sur un écran plus petit, la liste s'affiche d'abord.
+* **Accessibilité** : chaque luciole est un vrai bouton (Tab, flèches, Entrée) avec un libellé lu par le lecteur d'écran (« Boulanger, zone 2. Sans bac : oui. Ouvrir la fiche. ») ; « Voir en liste » garde la liste d'origine ; la fiche s'ouvre en panneau par le bas (Échap ou « Fermer », le focus revient sur la luciole) ; aucune animation si « réduire les animations » est activé.
+* **Interface simplifiée** : un écran d'accueil avec deux gros boutons ; le reste apparaît après ; 3 questions suggérées toujours visibles ; une réponse courte puis « En savoir plus » ; les termes techniques (ROME, ODbL…) seulement dans la section « Sources ».
+* **Rien de nouveau n'est envoyé** : le ciel, les filtres et le duel sont calculés dans la page (vérifié par un test qui liste tous les sites contactés).
+
 ## Les choix et pourquoi
 
 | Choix | Pourquoi |

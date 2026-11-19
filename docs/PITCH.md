@@ -23,8 +23,10 @@
 
 Avant de monter sur scène : `python3 -m http.server 8000` et `ollama serve` lancés, page ouverte sur http://localhost:8000, mode téléphone (outils de développement, 390 × 844). Le site marche sans internet (pdf.js, GSAP et les polices sont dans le dépôt).
 
-1. **Charger le rapport** : « Essayer avec un rapport fictif ». Montrer la phrase « Ton PDF est lu sur ton appareil ». Les 5 zones apparaissent.
-2. **Ouvrir un métier** : zone 2, « Boulanger ». Montrer le badge « Sans bac : oui », le salaire débutant et la source ONISEP cliquable.
+1. **Charger le rapport** : « Essayer avec un exemple ». Montrer la phrase « Ton PDF reste sur ton appareil ». Le ciel de lucioles apparaît : toi au centre, les 5 zones autour.
+2. **Ouvrir un métier** : toucher la luciole « Boulanger » (zone 2). Le chemin lumineux se trace, la fiche monte du bas : badge « Sans bac : oui », salaire au début, source ONISEP cliquable.
+2 bis. **Le duel** : « Comparer » avec Fleuriste : niveau, durée, sans bac, formations proches, côte à côte.
+2 ter. **Les filtres** : « Sans bac », puis « Formation à moins de 30 km de Nice ». La luciole grise (toiletteur de chevaux) : « je ne sais pas ».
 3. **Question sourcée** : cliquer sur « Je peux le faire sans le bac ? ». Montrer la réponse et la source en dessous.
 4. **Formations proches** : « Où me former près de Nice ? ». Montrer la distance, public / privé, « coût : inconnu ».
 5. **Le « je ne sais pas »** : taper « Combien gagne un toiletteur de chevaux de course ? ». Réponse : « Je ne sais pas… », avec un renvoi vers le Centre.

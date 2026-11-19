@@ -38,6 +38,12 @@ PAIRES = [
     ("focus", "surface", 3.0, "anneau de focus clavier dans les cartes"),
     ("icone", "surface-2", 3.0, "cadenas de la promesse de confidentialité"),
     ("texte", "surface", 3.0, "icône soleil / lune du bouton de thème"),
+    ("ciel-texte", "ciel-fond", 4.5, "« Toi » et légende sous le ciel"),
+    ("ciel-doux", "ciel-fond", 4.5, "noms des zones dans le ciel"),
+    ("luciole", "ciel-fond", 3.0, "luciole allumée"),
+    ("luciole-eteinte", "ciel-fond", 3.0, "luciole grise (je ne sais pas)"),
+    ("ciel-texte", "ciel-fond", 3.0, "anneau de focus d'une luciole"),
+    ("fond", "texte", 4.5, "bouton à bascule actif (Ciel, Voir en liste, filtres)"),
 ]
 
 # Contour du corps de la luciole (logo) sur le fond de page, lu dans les fichiers SVG

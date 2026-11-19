@@ -37,6 +37,13 @@
   --comment: #5e4210; --comment-fond: #f5e6c6;
   --non: #7e3012;  --non-fond: #f6dfd2;
   --inconnu: #3d4224; --inconnu-fond: #eeeadc;
+  --ciel-fond: #232b10;       /* ciel de nuit, dans les deux modes */
+  --ciel-anneau: #56652b;
+  --ciel-texte: #f7f0df;
+  --ciel-doux: #e0d4b4;
+  --luciole: #e2b462;
+  --luciole-eteinte: #a3a58f;
+  --voile: rgba(29, 35, 13, .55);
   --ombre: 0 1px 2px rgba(29, 35, 13, .06), 0 8px 24px -14px rgba(29, 35, 13, .18);
   --rayon: 18px;
   --titre: "Young Serif", Georgia, serif;
@@ -68,6 +75,13 @@
     --comment: #f1cf8b; --comment-fond: #4d3f14;
     --non: #f3c3ab;  --non-fond: #5a2a12;
     --inconnu: #e0d4b4; --inconnu-fond: #3a4719;
+    --ciel-fond: #12160a;
+    --ciel-anneau: #4c5a27;
+    --ciel-texte: #f7f0df;
+    --ciel-doux: #e0d4b4;
+    --luciole: #e2b462;
+    --luciole-eteinte: #a3a58f;
+    --voile: rgba(0, 0, 0, .6);
     --ombre: 0 1px 2px rgba(0, 0, 0, .3), 0 10px 28px -14px rgba(0, 0, 0, .6);
     color-scheme: dark;
   }
@@ -96,6 +110,13 @@
   --comment: #f1cf8b; --comment-fond: #4d3f14;
   --non: #f3c3ab;  --non-fond: #5a2a12;
   --inconnu: #e0d4b4; --inconnu-fond: #3a4719;
+  --ciel-fond: #12160a;
+  --ciel-anneau: #4c5a27;
+  --ciel-texte: #f7f0df;
+  --ciel-doux: #e0d4b4;
+  --luciole: #e2b462;
+  --luciole-eteinte: #a3a58f;
+  --voile: rgba(0, 0, 0, .6);
   --ombre: 0 1px 2px rgba(0, 0, 0, .3), 0 10px 28px -14px rgba(0, 0, 0, .6);
   color-scheme: dark;
 }
@@ -105,7 +126,7 @@ html { -webkit-text-size-adjust: 100%; }
 body {
   margin: 0;
   color: var(--texte);
-  font: 17px/1.55 var(--corps);
+  font: 18px/1.6 var(--corps);
   background-color: var(--fond);
   /* La lueur de la luciole : un halo safran en haut de page, qui s'estompe */
   background-image: radial-gradient(120% 60% at 50% -10%, var(--fond-halo) 0%, transparent 60%);
@@ -293,8 +314,9 @@ details.zone summary .doux {
 .message .sources { margin-top: 10px; padding-top: 8px; border-top: 1px dashed var(--trait); font-size: .9rem; white-space: normal; }
 .message .sources a { display: block; padding: 4px 0; }
 .message .mode { margin-top: 6px; font-size: .8rem; color: var(--doux); white-space: normal; }
-.suggestions { display: flex; gap: 8px; overflow-x: auto; padding: 2px 2px 8px; scrollbar-width: thin; scrollbar-color: var(--trait) transparent; }
-.suggestions button { white-space: nowrap; font-size: .95rem; font-weight: 400; background: var(--fond); }
+/* 3 questions suggérées, toujours visibles, l'une sous l'autre (pas de rangée qui défile) */
+.suggestions { display: grid; gap: 8px; margin-bottom: 14px; }
+.suggestions button { justify-content: flex-start; text-align: left; font-weight: 400; background: var(--fond); border-radius: 16px; }
 form.question { display: flex; gap: 8px; margin-top: 6px; }
 form.question input { flex: 1; }
 #mode-ia { margin-top: 12px; }
@@ -317,3 +339,108 @@ footer { font-size: .9rem; color: var(--doux); margin-top: 32px; max-width: 65ch
   .carte { padding: 24px; }
   .rangee > .bouton, .rangee > button { flex: 0 0 auto; }
 }
+
+/* ================= Interface simplifiée (branche ciel) ================= */
+.carte { padding: 22px 18px; margin: 20px 0; }
+.petite { font-size: .9rem; }
+.accroche { font-size: 1.1rem; }
+
+/* Accueil : deux gros boutons, rien d'autre */
+.accueil h2 { font-size: 1.6rem; }
+.gros-boutons { display: grid; gap: 14px; margin-top: 6px; }
+.gros { min-height: 64px; font-size: 1.15rem; border-radius: 20px; width: 100%; }
+
+/* Ciel / liste et filtres : boutons à bascule de 48 px */
+.bascule-vue, .filtres { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 6px; }
+.bascule-vue button, .filtres button { min-height: 48px; font-weight: 700; }
+.bascule-vue button[aria-pressed="true"], .filtres button[aria-pressed="true"] {
+  background: var(--texte); color: var(--fond); border-color: var(--texte);
+}
+#filtre-info:empty { display: none; }
+
+/* Le ciel de lucioles (ciel de nuit dans les deux modes) */
+.ciel {
+  position: relative;
+  margin: 12px -18px 0;   /* le ciel prend toute la largeur de la carte */
+  background: radial-gradient(70% 55% at 50% 50%, #2f3a15 0%, var(--ciel-fond) 70%);
+  background-color: var(--ciel-fond);
+  overflow: hidden;
+}
+.ciel-dessin { position: absolute; inset: 0; }
+.ciel-anneau { fill: none; stroke: var(--ciel-anneau); stroke-width: 1.2; stroke-dasharray: 3 5; }
+.ciel-zone { fill: var(--ciel-doux); font: 700 12px/1 var(--corps); letter-spacing: .02em; }
+.ciel-centre { fill: #3a4719; stroke: var(--luciole); stroke-width: 1.5; }
+.ciel-toi { fill: var(--ciel-texte); font: 400 17px/1 var(--titre); }
+.ciel-chemin { stroke: var(--luciole); stroke-width: 3; stroke-linecap: round; filter: drop-shadow(0 0 4px var(--luciole)); }
+.luciole {
+  position: absolute; width: 48px; height: 48px; min-height: 48px; padding: 0;
+  transform: translate(-50%, -50%);
+  border: 0; border-radius: 50%; background: transparent;
+  display: grid; place-items: center;
+}
+.luciole:hover { background: rgba(247, 240, 223, .08); border: 0; }
+.luciole:active { transform: translate(-50%, -50%); }
+.luciole .point {
+  width: 16px; height: 16px; border-radius: 50%;
+  background: var(--luciole);
+  box-shadow: 0 0 10px 3px rgba(226, 180, 98, .55);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.luciole.incertaine .point { background: transparent; border: 2px dashed var(--luciole-eteinte); box-shadow: none; }
+.luciole.hors-filtre { opacity: .3; }
+.luciole.allumee .point { transform: scale(1.5); box-shadow: 0 0 18px 8px rgba(226, 180, 98, .75); }
+.luciole:focus-visible { outline: 3px solid var(--ciel-texte); outline-offset: 0; border-radius: 50%; }
+.ciel-legende {
+  margin: 0 -18px; padding: 12px 18px; min-height: 48px;
+  background: var(--ciel-fond); color: var(--ciel-texte); font-weight: 700;
+}
+#bloc-ciel .doux.petite { margin-top: 10px; }
+.metiers button.hors-filtre { opacity: .45; }
+.changer { margin: 16px 0 0; }
+.lien-bouton { color: var(--lien); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; display: inline-flex; min-height: 48px; align-items: center; }
+
+/* La fiche : panneau qui monte du bas de l'écran */
+.voile { position: fixed; inset: 0; background: var(--voile); z-index: 40; }
+.feuille {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 50;
+  max-height: 88vh; overflow-y: auto; overscroll-behavior: contain;
+  background: var(--surface); color: var(--texte);
+  border-radius: 24px 24px 0 0; border: 1px solid var(--trait); border-bottom: 0;
+  box-shadow: 0 -12px 40px -12px rgba(0, 0, 0, .35);
+  padding: 0 18px 28px;
+}
+.feuille[hidden], .voile[hidden] { display: none; }
+.feuille-haut {
+  position: sticky; top: 0; z-index: 1; background: var(--surface);
+  display: flex; justify-content: space-between; align-items: center; padding: 10px 0;
+}
+.poignee { width: 44px; height: 5px; border-radius: 3px; background: var(--trait); margin-left: calc(50% - 22px); }
+.fermer { min-height: 48px; font-weight: 700; }
+.fermer svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; }
+body.panneau-ouvert { overflow: hidden; }
+#fiche-titre { font-size: 1.7rem; outline: none; }
+.resume { font-size: 1.08rem; }
+.je-ne-sais-pas { font-weight: 700; font-size: 1.1rem; }
+.actions-fiche { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 16px 0 8px; }
+.actions-fiche .principal { grid-column: 1 / -1; }
+.actions-fiche button { width: 100%; }
+button svg.plein { fill: var(--accent); }
+.source-fiche { margin-top: 14px; }
+@media (min-width: 720px) {
+  .feuille { left: 50%; right: auto; width: 640px; transform: translateX(-50%); padding: 0 28px 32px; }
+}
+
+/* Duel : deux métiers côte à côte */
+.choix-duel { list-style: none; padding: 0; margin: 10px 0 16px; display: grid; gap: 8px; }
+.choix-duel button { width: 100%; justify-content: space-between; text-align: left; border-radius: 16px; }
+table.duel { width: 100%; border-collapse: collapse; table-layout: fixed; margin: 6px 0 10px; }
+table.duel thead th { font: 400 1.05rem/1.25 var(--titre); text-align: left; padding: 6px 8px 10px; vertical-align: bottom; }
+table.duel .duel-critere { text-align: left; font-size: .85rem; color: var(--doux); padding: 12px 8px 2px; border-top: 1px solid var(--trait); }
+table.duel td { padding: 2px 8px 10px; vertical-align: top; font-weight: 700; font-variant-numeric: tabular-nums; }
+table.duel td.jnsp { color: var(--doux); font-weight: 400; font-style: italic; }
+
+/* Chat : réponse courte, puis « En savoir plus » */
+.reponse-courte { margin: 0; }
+.reponse-plus { margin-top: 8px; white-space: pre-wrap; }
+.en-savoir-plus { margin-top: 10px; min-height: 48px; }
+.titre-sources { font-size: 1.1rem; margin-top: 8px; }

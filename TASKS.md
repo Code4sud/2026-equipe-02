@@ -34,6 +34,7 @@
 - [x] Page 404 autonome (src/make_404.py)
 - [x] Nom de projet « Luciole » (signature « Éclaire tes possibles »), assistant « Éclaireur », logo SVG, pied de page
 - [x] Mode clair sur fond blanc, bouton soleil/lune (clavier, 48 px, choix mémorisé, sans flash), 6 captures dont une en sombre
+- [x] Branche « ciel » : ciel de lucioles (clavier, lecteur d'écran, 48 px, filtres), duel, fiche en panneau, interface simplifiée
 
 ## Vendredi 20/11
 
