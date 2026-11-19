@@ -6,6 +6,9 @@
 # Tous les PDF sont ignorés. Seul le faux rapport fictif est autorisé (exception ci-dessous).
 *.pdf
 !data/sample/rapport_fictif.pdf
+# PDF de test entièrement fictifs (src/make_test_pdfs.py)
+!data/sample/tests/
+!data/sample/tests/*.pdf
 # Dossier de travail local (titres extraits des vrais rapports, essais...)
 data_local/
 

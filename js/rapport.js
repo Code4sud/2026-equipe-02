@@ -12,6 +12,14 @@ const HAUTEUR_TITRE_MAX = 18.5;
 const RE_ZONE = /ZONE\s+DE\s+M[ÉE]TIERS/i;
 const RE_PAGE = /^\s*\d+\s*\/\s*\d+\s*$/;
 
+// Un titre ne doit jamais contenir de donnée personnelle : on écarte tout ce qui y ressemble
+const RE_PERSONNEL = /@|\d{4,}|\brdv\b|(?:\+33\s?|\b0)[1-9](?:[\s.-]?\d{2}){4}\b/i;
+function nettoyerTitre(t) {
+  const propre = t.normalize("NFC").replace(/[\u00ad\u200b\u200c\u200d\u2060\ufeff]/g, "").replace(/\s+/g, " ").trim();
+  if (!propre || propre.length > 120 || RE_PERSONNEL.test(propre)) return null;
+  return propre;
+}
+
 // pages : liste de pages ; chaque page est une liste d'éléments { str, x, y, h }
 // (c'est ce que renvoie pdf.js, simplifié par lirePDF ci-dessous)
 export function analyserPages(pages) {
@@ -65,6 +73,10 @@ export function analyserPages(pages) {
       }
       precedente = { ...l, estTitre };
     }
+  }
+  // On ne garde que des titres propres (sans caractère invisible ni donnée personnelle)
+  for (const z of Object.keys(zones)) {
+    zones[z] = zones[z].map((m) => nettoyerTitre(m.titre)).filter(Boolean).map((titre) => ({ titre }));
   }
   const total = Object.values(zones).reduce((n, z) => n + z.length, 0);
   return { zones, total };
