@@ -12,6 +12,14 @@ const HAUTEUR_TITRE_MAX = 18.5;
 const RE_ZONE = /ZONE\s+DE\s+M[ÉE]TIERS/i;
 const RE_PAGE = /^\s*\d+\s*\/\s*\d+\s*$/;
 
+// Limites : au-delà, ce n'est pas un Rapport des Possibles (on ne bloque pas le téléphone)
+export const LIMITES = { octets: 15 * 1024 * 1024, pages: 60 };
+
+// Erreur « métier » : un code simple que l'interface traduit en phrase claire
+export class ErreurRapport extends Error {
+  constructor(code) { super(code); this.code = code; }
+}
+
 // Un titre ne doit jamais contenir de donnée personnelle : on écarte tout ce qui y ressemble
 const RE_PERSONNEL = /@|\d{4,}|\brdv\b|(?:\+33\s?|\b0)[1-9](?:[\s.-]?\d{2}){4}\b/i;
 function nettoyerTitre(t) {
@@ -82,15 +90,32 @@ export function analyserPages(pages) {
   return { zones, total };
 }
 
-// Lit un fichier PDF (objet File du navigateur, ou tableau d'octets) avec pdf.js
+// Lit un fichier PDF (tableau d'octets) avec pdf.js, en vérifiant d'abord que c'est bien un rapport lisible.
+// En cas de problème : ErreurRapport avec un code (vide, trop-lourd, pas-pdf, protege, illisible,
+// trop-long, sans-texte, pas-rapport). Rien n'est envoyé : tout se passe dans le navigateur.
 export async function lirePDF(donnees, pdfjs) {
-  const doc = await pdfjs.getDocument({ data: donnees, verbosity: 0 }).promise;
+  if (!donnees || !donnees.length) throw new ErreurRapport("vide");
+  if (donnees.length > LIMITES.octets) throw new ErreurRapport("trop-lourd");
+  const debut = Array.from(donnees.slice(0, 1024), (o) => String.fromCharCode(o)).join("");
+  if (!debut.includes("%PDF-")) throw new ErreurRapport("pas-pdf");
+  let doc;
+  try {
+    doc = await pdfjs.getDocument({ data: donnees, verbosity: 0 }).promise;
+  } catch (e) {
+    throw new ErreurRapport(e && e.name === "PasswordException" ? "protege" : "illisible");
+  }
+  if (doc.numPages > LIMITES.pages) throw new ErreurRapport("trop-long");
   const pages = [];
+  let caracteres = 0;
   for (let p = 1; p <= doc.numPages; p++) {
     const contenu = await (await doc.getPage(p)).getTextContent();
-    pages.push(contenu.items.map((it) => ({
-      str: it.str, x: it.transform[4], y: it.transform[5], h: it.height,
-    })));
+    pages.push(contenu.items.map((it) => {
+      caracteres += it.str.trim().length;
+      return { str: it.str, x: it.transform[4], y: it.transform[5], h: it.height };
+    }));
   }
-  return analyserPages(pages);
+  if (!caracteres) throw new ErreurRapport("sans-texte");
+  const r = analyserPages(pages);
+  if (!r.total) throw new ErreurRapport("pas-rapport");
+  return r;
 }

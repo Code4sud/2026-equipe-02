@@ -78,16 +78,24 @@ const fiable = (t) => Boolean(t.fiche);
 
 // ---------- Rapport ----------
 
+// Messages simples, sans détail technique, pour chaque problème de fichier
+const MESSAGES_FICHIER = {
+  "vide": "Ce fichier est vide. Choisis le PDF de ton Rapport des Possibles.",
+  "trop-lourd": "Ce fichier est trop lourd pour être un Rapport des Possibles. Choisis le PDF envoyé par le Centre.",
+  "pas-pdf": "Ce fichier n'est pas un PDF. Choisis le PDF de ton Rapport des Possibles.",
+  "protege": "Ce PDF est protégé par un mot de passe. Utilise la version sans mot de passe de ton rapport.",
+  "illisible": "Je n'arrive pas à lire ce PDF. Il est peut-être abîmé : essaie de le télécharger à nouveau.",
+  "trop-long": "Ce PDF est trop long pour être un Rapport des Possibles.",
+  "sans-texte": "Ce PDF ne contient pas de texte (c'est peut-être une photo ou un scan). Utilise le PDF envoyé par le Centre des Possibles.",
+  "pas-rapport": "Je ne trouve pas de métiers dans ce PDF. Est-ce bien ton Rapport des Possibles ?",
+};
+
 async function chargerRapport(donnees) {
   $("#etat-rapport").textContent = "Je lis ton rapport…";
   try {
     const pdfjs = await import(PDFJS);
     pdfjs.GlobalWorkerOptions.workerSrc = PDFJS_WORKER;
     const r = await lirePDF(donnees, pdfjs);
-    if (!r.total) {
-      $("#etat-rapport").textContent = "Je ne trouve pas de métiers dans ce PDF. Est-ce bien un Rapport des Possibles ?";
-      return;
-    }
     ctx.titresRapport = [];
     for (const [z, liste] of Object.entries(r.zones)) {
       for (const m of liste) ctx.titresRapport.push({ ...relier(m.titre), zone: Number(z) });
@@ -95,8 +103,8 @@ async function chargerRapport(donnees) {
     $("#etat-rapport").textContent = "";
     afficherVueRapport(r);
   } catch (e) {
-    console.error(e);
-    $("#etat-rapport").textContent = "Je n'arrive pas à lire ce PDF. Essaie un autre fichier.";
+    $("#etat-rapport").textContent = MESSAGES_FICHIER[e && e.code] || MESSAGES_FICHIER.illisible;
+    $("#fichier").value = ""; // pour pouvoir choisir un autre fichier (ou le même, corrigé)
   }
 }
 
