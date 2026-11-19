@@ -35,9 +35,9 @@
     // Le chemin lumineux se trace de la luciole jusqu'à toi
     chemin(ligne) {
       if (!actif()) return;
-      const longueur = Math.hypot(ligne.x2.baseVal.value - ligne.x1.baseVal.value, ligne.y2.baseVal.value - ligne.y1.baseVal.value);
+      const longueur = ligne.getTotalLength ? ligne.getTotalLength() : 600; // ligne ou courbe
       gsap.fromTo(ligne, { strokeDasharray: longueur, strokeDashoffset: longueur },
-        { strokeDashoffset: 0, duration: 0.45, ease: "expo.out" });
+        { strokeDashoffset: 0, duration: 0.55, ease: "expo.out", clearProps: "strokeDasharray,strokeDashoffset" });
     },
     // La fiche monte du bas de l'écran
     feuilleOuverte(el) {

@@ -23,8 +23,8 @@
 
 Avant de monter sur scène : `python3 -m http.server 8000` et `ollama serve` lancés, page ouverte sur http://localhost:8000, mode téléphone (outils de développement, 390 × 844). Le site marche sans internet (pdf.js, GSAP et les polices sont dans le dépôt).
 
-1. **Charger le rapport** : « Essayer avec un exemple ». Montrer la phrase « Ton PDF reste sur ton appareil ». Le ciel de lucioles apparaît : toi au centre, les 5 zones autour.
-2. **Ouvrir un métier** : toucher la luciole « Boulanger » (zone 2). Le chemin lumineux se trace, la fiche monte du bas : badge « Sans bac : oui », salaire au début, source ONISEP cliquable.
+1. **Charger le rapport** : « Essayer avec un exemple ». Montrer la phrase « Ton PDF reste sur ton appareil ». La montée apparaît : Toi en bas, 5 étages de ciel au-dessus, chaque métier est une luciole avec son nom.
+2. **Ouvrir un métier** : toucher la luciole « Boulanger » (étage « En 1 à 2 ans »). Le chemin lumineux se trace jusqu'à Toi, la fiche monte du bas : badge « Sans bac : oui », salaire au début, source ONISEP cliquable.
 2 bis. **Le duel** : « Comparer » avec Fleuriste : niveau, durée, sans bac, formations proches, côte à côte.
 2 ter. **Les filtres** : « Sans bac », puis « Formation à moins de 30 km de Nice ». La luciole grise (toiletteur de chevaux) : « je ne sais pas ».
 3. **Question sourcée** : cliquer sur « Je peux le faire sans le bac ? ». Montrer la réponse et la source en dessous.

@@ -87,26 +87,33 @@ const svg = (tag, attrs = {}, texte) => {
   return e;
 };
 // Métiers du rapport FICTIF, avec ce que dit vraiment leur fiche
+// La montée en miniature : Toi en bas, 5 étages de nuit au-dessus
+const TOI = { x: 160, y: 296 };
+const ETAGES_Y = [262, 210, 158, 106, 54]; // milieu de chaque étage, zone 1 en bas
 const EXEMPLES = [
-  { x: 108, y: 128, nom: "Boulanger", info: "Sans bac : oui" },
-  { x: 236, y: 104, nom: "Orthophoniste", info: "5 ans après le bac" },
-  { x: 222, y: 236, nom: "Fleuriste", info: "CAP en 2 ans" },
-  { x: 74, y: 230, nom: "Toiletteur de chevaux", info: "Je ne sais pas", gris: true },
+  { x: 96, y: ETAGES_Y[1], nom: "Boulanger", info: "Sans bac : oui" },
+  { x: 232, y: ETAGES_Y[3], nom: "Orthophoniste", info: "5 ans après le bac" },
+  { x: 236, y: ETAGES_Y[1], nom: "Fleuriste", info: "CAP en 2 ans" },
+  { x: 84, y: ETAGES_Y[4], nom: "Toiletteur de chevaux", info: "Je ne sais pas", gris: true },
 ];
-const DECOR = [[160, 88], [270, 170], [52, 160], [150, 262], [200, 150], [120, 190], [262, 268], [40, 92]];
+const DECOR = [[60, 262], [250, 262], [150, 210], [70, 158], [180, 158], [270, 158], [130, 106], [250, 54], [160, 54]];
+const FONDS_ETAGES = ["#2f3a15", "#29331a", "#222c1d", "#1b2420", "#161d25"];
 let pointsApercu = [];
 
 function construireApercu() {
   apercu.replaceChildren();
-  for (const r of [42, 72, 102, 132, 156]) apercu.append(svg("circle", { class: "ap-anneau", cx: 160, cy: 170, r }));
-  apercu.append(svg("line", { class: "ap-chemin", x1: 160, y1: 170, x2: 160, y2: 170 }));
+  ETAGES_Y.forEach((y, k) => {
+    apercu.append(svg("rect", { x: 0, y: y - 26, width: 320, height: 52, fill: FONDS_ETAGES[k] }),
+      svg("line", { class: "ap-anneau", x1: 0, y1: y - 26, x2: 320, y2: y - 26 }));
+  });
+  apercu.append(svg("line", { class: "ap-chemin", x1: TOI.x, y1: TOI.y - 18, x2: TOI.x, y2: TOI.y - 18 }));
   for (const [x, y] of DECOR) apercu.append(svg("circle", { class: "ap-point", cx: x, cy: y, r: 4 }));
   pointsApercu = EXEMPLES.map((e) => {
     const g = svg("g", { class: "ap-metier" + (e.gris ? " gris" : "") });
     g.append(svg("circle", { class: "ap-halo", cx: e.x, cy: e.y, r: 14 }), svg("circle", { class: "ap-coeur", cx: e.x, cy: e.y, r: 6 }));
     const largeurEtiquette = Math.max(e.nom.length, e.info.length) * 7.2 + 20;
     const ex = Math.min(Math.max(e.x - largeurEtiquette / 2, 4), 316 - largeurEtiquette);
-    const ey = e.y > 160 ? e.y + 16 : e.y - 58;
+    const ey = e.y < 80 ? e.y + 14 : e.y - 56;
     const etiquette = svg("g", { class: "ap-etiquette" });
     etiquette.append(svg("rect", { x: ex, y: ey, width: largeurEtiquette, height: 42, rx: 10 }),
       svg("text", { x: ex + 10, y: ey + 18, class: "ap-nom" }, e.nom),
@@ -115,7 +122,9 @@ function construireApercu() {
     apercu.append(g);
     return { g, e };
   });
-  apercu.append(svg("circle", { class: "ap-toi-cercle", cx: 160, cy: 170, r: 22 }), svg("text", { class: "ap-toi", x: 160, y: 176, "text-anchor": "middle" }, "Toi"));
+  apercu.append(svg("rect", { x: 0, y: 288 - 4, width: 320, height: 40, fill: "#2f3a15" }),
+    svg("circle", { class: "ap-toi-cercle", cx: TOI.x, cy: TOI.y, r: 18 }),
+    svg("text", { class: "ap-toi", x: TOI.x, y: TOI.y + 5, "text-anchor": "middle" }, "Toi"));
 }
 
 let minuteur = null, courant = -1;

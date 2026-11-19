@@ -111,13 +111,14 @@ function afficherVueRapport(r) {
   dessiner();
   afficherZones();
   appliquerFiltre(filtreActuel);
-  // Très petit écran (moins de 360 px) : les lucioles seraient trop serrées pour le doigt,
-  // on commence par la liste (le ciel reste accessible avec le bouton « Ciel »)
-  if ($("#ciel").clientWidth < 328) choisirVue("liste");
   suggestions();
   mesurerBandeau();
   $("#t-vue").focus({ preventScroll: true });
-  $("#vue-rapport").scrollIntoView({ block: "start" });
+  // La montée commence en bas : on montre « Toi » en bas de l'écran, il n'y a plus qu'à monter
+  requestAnimationFrame(() => {
+    const r = ciel.toi.getBoundingClientRect();
+    window.scrollTo(0, Math.max(0, window.scrollY + r.bottom - window.innerHeight + 12));
+  });
 }
 
 // ---------- Changer de rapport : retour à l'accueil, sans recharger la page ----------
@@ -135,7 +136,6 @@ function revenirAccueil() {
   $("#bloc-ciel").hidden = false; $("#zones").hidden = true;
   $("#vue-ciel").setAttribute("aria-pressed", "true"); $("#vue-liste").setAttribute("aria-pressed", "false");
   $("#t-vue").textContent = "Ton ciel de métiers";
-  largeurCiel = 0;
   for (const id of ["#ciel", "#zones", "#fil", "#resultats"]) $(id).replaceChildren();
   for (const id of ["#filtre-info", "#resume-rapport", "#etat-rapport"]) $(id).textContent = "";
   $("#question").value = ""; $("#recherche").value = "";
@@ -187,19 +187,17 @@ function dessiner() {
   anim("cielAffiche", $("#ciel"));
 }
 
-// Le bandeau du hackathon reste en haut (sticky) : la barre « Changer de rapport » se colle dessous
+// Le bandeau du hackathon reste en haut de l'écran (sticky). Dessous se collent la barre
+// « Changer de rapport », puis la barre « Ciel / liste / filtres » : on mesure leurs hauteurs
+// pour qu'aucune ne passe sous une autre
 function mesurerBandeau() {
   const b = document.getElementById("c4s-bandeau");
   const colle = b && ["sticky", "fixed"].includes(getComputedStyle(b).position);
   document.documentElement.style.setProperty("--haut-bandeau", colle ? `${Math.round(b.getBoundingClientRect().height)}px` : "0px");
+  const barre = $("#barre-rapport");
+  document.documentElement.style.setProperty("--haut-barre-rapport", barre && !barre.hidden ? `${Math.round(barre.getBoundingClientRect().height)}px` : "0px");
 }
 window.addEventListener("resize", mesurerBandeau);
-
-let largeurCiel = 0;
-window.addEventListener("resize", () => {
-  const w = $("#ciel").clientWidth;
-  if (ciel && w && w !== largeurCiel) { largeurCiel = w; dessiner(); appliquerFiltre(filtreActuel); }
-});
 
 function choisirVue(vue) {
   const estCiel = vue === "ciel";
@@ -208,7 +206,6 @@ function choisirVue(vue) {
   $("#vue-ciel").setAttribute("aria-pressed", String(estCiel));
   $("#vue-liste").setAttribute("aria-pressed", String(!estCiel));
   $("#t-vue").textContent = estCiel ? "Ton ciel de métiers" : "Tes métiers en liste";
-  if (estCiel && $("#ciel").clientWidth !== largeurCiel) { dessiner(); appliquerFiltre(filtreActuel); }
 }
 $("#vue-ciel").addEventListener("click", () => choisirVue("ciel"));
 $("#vue-liste").addEventListener("click", () => choisirVue("liste"));

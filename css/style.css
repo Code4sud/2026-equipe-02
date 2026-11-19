@@ -41,6 +41,9 @@
   --nuit-bas: #2f3a15;        /* ...olive profond en bas (dans les deux modes) */
   --pastille-fond: #263021;
   --lien-nuit: #e2b462;
+  --etage-bas: #2f3a15;       /* la montée : étage 1, le plus clair... */
+  --etage-haut: #111727;      /* ...étage 5, la nuit la plus profonde */
+  --luciole-fond: #3b4523;    /* fond d'une luciole (pastille) sur l'étage le plus clair */
   --ciel-fond: #232b10;       /* ciel de nuit, dans les deux modes */
   --ciel-anneau: #56652b;
   --ciel-texte: #f7f0df;
@@ -525,8 +528,9 @@ body.etat-accueil :focus-visible { outline-color: var(--lien-nuit); }
 .ap-metier.gris .ap-info { fill: #e0d4b4; }
 .ap-chemin { stroke: #e2b462; stroke-width: 2.5; stroke-linecap: round; }
 .ap-chemin.gris { stroke: #a3a58f; stroke-dasharray: 4 5; }
-.ap-chemin.trace:not(.gris) { stroke-dasharray: 220; animation: tracer .9s cubic-bezier(.16, 1, .3, 1) both; }
-@keyframes tracer { from { stroke-dashoffset: 220; } to { stroke-dashoffset: 0; } }
+.ap-chemin.trace:not(.gris) { stroke-dasharray: 320; animation: tracer .9s cubic-bezier(.16, 1, .3, 1) both; }
+@keyframes tracer { from { stroke-dashoffset: 320; } to { stroke-dashoffset: 0; } }
+.hero-apercu svg { border-radius: 20px; overflow: hidden; }
 .ap-toi-cercle { fill: #3a4719; stroke: #e2b462; stroke-width: 1.5; }
 .ap-toi { fill: #f7f0df; font: 400 15px var(--titre); }
 @media (prefers-reduced-motion: reduce) {
@@ -570,3 +574,115 @@ body.etat-accueil .logo-bouton { cursor: default; }
 .confirmer h2 { font-size: 1.3rem; margin: 0 0 8px; }
 .confirmer p { margin: 0 0 18px; }
 .confirmer-actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-end; }
+/* ================= Chantier 3 : « la montée » ================= */
+/* Barre collée en haut pendant qu'on monte (sous le bandeau du hackathon) */
+.barre-ciel {
+  position: sticky; top: calc(var(--haut-bandeau, 0px) + var(--haut-barre-rapport, 0px)); z-index: 6;
+  background: var(--surface); margin: 0 -18px; padding: 8px 18px 4px;
+  border-bottom: 1px solid var(--trait);
+}
+.barre-ciel .bascule-vue, .barre-ciel .filtres { margin: 6px 0; }
+
+.montee {
+  position: relative; margin: 0 -18px; height: auto !important;
+  background: none; overflow: hidden;
+}
+.montee-pile { display: flex; flex-direction: column-reverse; } /* Toi (premier dans le DOM) en bas */
+.montee-calque { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 2; }
+.montee .ciel-chemin { fill: none; stroke: var(--luciole); stroke-width: 3; stroke-linecap: round; filter: drop-shadow(0 0 5px rgba(226, 180, 98, .8)); }
+
+/* Les étages : de plus en plus de nuit en montant */
+.etage { position: relative; min-height: 34svh; padding: 26px 18px 30px; border-top: 1px dashed rgba(247, 240, 223, .14); }
+.etage-1 { background: linear-gradient(to top, var(--etage-bas), #29331a); }
+.etage-2 { background: linear-gradient(to top, #29331a, #222c1d); }
+.etage-3 { background: linear-gradient(to top, #222c1d, #1b2420); }
+.etage-4 { background: linear-gradient(to top, #1b2420, #161d25); }
+.etage-5 { background: linear-gradient(to top, #161d25, var(--etage-haut)); }
+.etage-titre { font: 400 1.4rem/1.2 var(--titre); color: var(--ciel-texte); margin: 0; text-wrap: balance; }
+.etage-sous { color: var(--ciel-doux); font-size: .92rem; margin: 6px 0 18px; }
+.etage-vide { color: var(--ciel-doux); font-style: italic; }
+.etage-lucioles { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 16px 12px; justify-content: center; }
+
+/* Une luciole : lueur + nom toujours visible ; 52 px de haut */
+.montee .luciole {
+  position: static; transform: translateY(var(--decalage, 0px));
+  width: auto; height: auto; min-height: 52px; padding: 6px 16px 6px 8px;
+  display: inline-flex; align-items: center; gap: 10px;
+  border-radius: 999px; background: var(--luciole-fond); border: 1px solid rgba(247, 240, 223, .16);
+  color: var(--ciel-texte); font-weight: 700; text-align: left;
+}
+.montee .luciole:hover { background: #46512a; border-color: rgba(247, 240, 223, .3); }
+.montee .luciole:active { transform: translateY(var(--decalage, 0px)); }
+.montee .luciole .point {
+  width: 34px; height: 34px; flex: none;
+  animation: respire 3.4s ease-in-out var(--retard, 0s) infinite alternate;
+}
+@keyframes respire { from { opacity: .72; transform: scale(.88); } to { opacity: 1; transform: scale(1.06); } }
+.montee .luciole.allumee { border-color: var(--luciole); background: #4a4a22; }
+.montee .luciole.allumee .point { animation: none; transform: scale(1.25); }
+.montee .luciole.incertaine .point { width: 18px; height: 18px; margin: 8px; animation: none; }
+.luciole-jnsp { font-weight: 400; font-style: italic; font-size: .82rem; color: var(--ciel-doux); }
+/* Hors filtre : la lueur s'éteint, le nom reste lisible (contraste conservé) */
+.montee .luciole.hors-filtre { opacity: 1; background: transparent; border-style: dashed; }
+.montee .luciole.hors-filtre .point { opacity: .18; animation: none; }
+.montee .luciole.hors-filtre .luciole-nom { color: var(--ciel-doux); font-weight: 400; }
+.montee .luciole:focus-visible { outline: 3px solid var(--ciel-texte); outline-offset: 2px; border-radius: 999px; }
+
+/* Toi, tout en bas */
+.montee-toi {
+  display: flex; align-items: center; justify-content: center; gap: 14px;
+  padding: 22px 18px 26px; background: var(--etage-bas); color: var(--ciel-texte);
+}
+.toi-cercle {
+  width: 64px; height: 64px; flex: none; border-radius: 50%; display: grid; place-items: center;
+  background: #3a4719; border: 2px solid var(--luciole); font: 400 1.25rem/1 var(--titre); color: var(--ciel-texte);
+}
+.toi-texte { font-weight: 700; max-width: 22ch; }
+.ciel-legende { margin: 0 -18px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .montee .luciole .point { animation: none; }
+}
+@media (min-width: 900px) {
+  .etage { min-height: 30vh; padding: 30px 40px 36px; }
+  .etage-titre { font-size: 1.7rem; }
+  .etage-lucioles { gap: 18px 16px; }
+}
+
+/* Le nom SOUS chaque luciole, toujours visible (pastille verticale) */
+.montee .luciole {
+  flex-direction: column; justify-content: flex-start; align-items: center;
+  width: 104px; min-height: 84px; padding: 8px 6px 10px; gap: 6px;
+  border-radius: 18px; text-align: center;
+}
+.montee .luciole .luciole-nom { font-size: .84rem; line-height: 1.2; hyphens: auto; -webkit-hyphens: auto; overflow-wrap: break-word; }
+.montee .luciole:focus-visible { border-radius: 18px; }
+.montee .luciole.incertaine .point { margin: 8px 0; }
+@media (min-width: 900px) { .montee .luciole { width: 124px; } }
+
+/* Après le chargement : en-tête compact et intro réduite, le ciel commence dans le premier écran */
+body:not(.etat-accueil) .ecran-int { padding-top: 8px; }
+body:not(.etat-accueil) .entete { margin: 0; gap: 10px; }
+body:not(.etat-accueil) .logo { width: 40px; height: 40px; }
+body:not(.etat-accueil) h1 { font-size: 1.35rem; }
+body:not(.etat-accueil) .signature { font-size: .85rem; margin-top: 0; }
+body:not(.etat-accueil) .accroche { display: none; }
+#vue-rapport { padding-top: 14px; }
+#vue-rapport > h2 { font-size: 1.25rem; margin-bottom: 2px; }
+#vue-rapport > #resume-rapport { margin: 0 0 6px; font-size: .9rem; }
+#vue-rapport > .promesse.petite { padding: 6px 10px; margin-bottom: 8px; font-size: .85rem; }
+
+/* Téléphone : 3 lucioles par ligne dans chaque étage */
+.etage { padding-left: 10px; padding-right: 10px; }
+.etage-titre, .etage-sous { padding: 0 8px; }
+.etage-lucioles { gap: 14px 8px; }
+/* Ordinateur : l'écran du rapport s'élargit, la montée aussi */
+@media (min-width: 900px) {
+  body:not(.etat-accueil) main, body:not(.etat-accueil) .ecran-int { max-width: 1080px; }
+  .etage { padding-left: 40px; padding-right: 40px; }
+  .montee .luciole { width: 132px; }
+  .montee .luciole .luciole-nom { font-size: .9rem; }
+}
+
+/* Le chemin lumineux passe ENTRE le fond des étages et le contenu : jamais par-dessus un nom */
+.montee .etage-titre, .montee .etage-sous, .montee .luciole, .montee .toi-cercle, .montee .toi-texte { position: relative; z-index: 3; }

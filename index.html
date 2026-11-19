@@ -85,6 +85,7 @@
       <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
       <span>Ton rapport reste sur ton appareil. Il n'est envoyé nulle part.</span>
     </p>
+    <div class="barre-ciel">
     <div class="bascule-vue" role="group" aria-label="Affichage">
       <button type="button" id="vue-ciel" aria-pressed="true">Ciel</button>
       <button type="button" id="vue-liste" aria-pressed="false">Voir en liste</button>
@@ -95,10 +96,11 @@
       <button type="button" data-filtre="proche" aria-pressed="false">Formation à moins de 30 km de Nice</button>
     </div>
     <p id="filtre-info" class="doux" role="status"></p>
+    </div>
     <div id="bloc-ciel">
-      <div class="ciel" id="ciel" role="group" aria-label="Ciel de tes métiers. Toi au centre. Zone 1, la plus proche : métiers rapides à atteindre. Zone 5, la plus loin : études longues."></div>
+      <div class="ciel" id="ciel" role="group" aria-label="La montée de tes métiers. Toi en bas. Zone 1, juste au-dessus : métiers rapides à atteindre. Zone 5, tout en haut : études longues."></div>
       <p id="ciel-legende" class="ciel-legende" aria-live="polite">Touche une luciole pour découvrir le métier.</p>
-      <p class="doux petite">Plus une luciole est proche du centre, plus le métier est rapide à atteindre. Une luciole grise : je ne sais pas, pas de fiche fiable.</p>
+      <p class="doux petite">Plus une luciole est basse, plus le métier est rapide à atteindre. Une luciole grise : je ne sais pas, pas de fiche fiable.</p>
     </div>
     <div id="zones" hidden></div>
   </section>

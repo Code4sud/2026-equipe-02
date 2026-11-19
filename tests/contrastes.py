@@ -51,6 +51,15 @@ PAIRES = [
     ("lien-nuit", "nuit-haut", 4.5, "accueil : lien « Essayer avec un exemple »"),
     ("lien-nuit", "nuit-bas", 4.5, "accueil : signature « Éclaire tes possibles »"),
     ("ciel-texte", "pastille-fond", 4.5, "accueil : pastille « Ton PDF reste sur ton appareil »"),
+    ("ciel-texte", "etage-bas", 4.5, "montée : titre d'étage, « Toi » (étage le plus clair)"),
+    ("ciel-texte", "etage-haut", 4.5, "montée : titre d'étage (étage le plus profond)"),
+    ("ciel-doux", "etage-bas", 4.5, "montée : sous-titre d'étage, luciole hors filtre"),
+    ("ciel-doux", "etage-haut", 4.5, "montée : sous-titre d'étage (haut)"),
+    ("ciel-texte", "luciole-fond", 4.5, "montée : nom d'une luciole"),
+    ("ciel-doux", "luciole-fond", 4.5, "montée : « je ne sais pas » sous une luciole grise"),
+    ("luciole", "etage-bas", 3.0, "montée : lueur d'une luciole (étage clair)"),
+    ("luciole", "etage-haut", 3.0, "montée : lueur d'une luciole (étage profond)"),
+    ("luciole-eteinte", "luciole-fond", 3.0, "montée : contour d'une luciole grise"),
 ]
 
 # Contour du corps de la luciole (logo) sur le fond de page, lu dans les fichiers SVG
