@@ -28,7 +28,7 @@ function el(tag, attrs = {}, ...enfants) {
 }
 
 // libelle(item) -> texte lu par le lecteur d'écran ; fiable(item) -> false = luciole grise
-export function dessinerCiel(conteneur, titres, { libelle, fiable, onChoisir, onSurvol }) {
+export function dessinerCiel(conteneur, titres, { libelle, fiable, onChoisir, onSurvol, texteToi }) {
   conteneur.replaceChildren();
   conteneur.classList.add("montee");
 
@@ -42,8 +42,14 @@ export function dessinerCiel(conteneur, titres, { libelle, fiable, onChoisir, on
   calque.append(chemin);
 
   // Toi (en bas) puis les étages : l'ordre du DOM suit la montée, le CSS l'affiche de bas en haut
-  const toi = el("div", { class: "montee-toi" }, el("span", { class: "toi-cercle", "aria-hidden": "true" }, "Toi"),
-    el("span", { class: "toi-texte" }, "Toi, aujourd'hui. Monte pour voir tes métiers."));
+  // Toi, en bas de la montée ; le cadenas en pastille discrète, au pied de l'écran
+  const cadenas = document.createElementNS(NS, "svg");
+  cadenas.setAttribute("viewBox", "0 0 24 24"); cadenas.setAttribute("aria-hidden", "true");
+  cadenas.innerHTML = '<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>';
+  const toi = el("div", { class: "montee-toi" },
+    el("div", { class: "toi-ligne" }, el("span", { class: "toi-cercle", "aria-hidden": "true" }, "Toi"),
+      el("span", { class: "toi-texte" }, texteToi || "Monte pour voir tes métiers.")),
+    el("p", { class: "pastille-toi" }, cadenas, "Ton rapport reste sur ton appareil"));
   const pile = el("div", { class: "montee-pile" }, toi);
   const boutons = [];
   const items = [];
@@ -61,7 +67,10 @@ export function dessinerCiel(conteneur, titres, { libelle, fiable, onChoisir, on
         el("span", { class: "point", "aria-hidden": "true" }),
         el("span", { class: "luciole-nom", "aria-hidden": "true" }, t.titre),
         ok ? "" : el("span", { class: "luciole-jnsp", "aria-hidden": "true" }, "je ne sais pas"));
-      b.style.setProperty("--decalage", `${((i * 37) % 5) * 3 - 6}px`); // léger désordre, sans chevauchement
+      // Positions légèrement décalées (comme un ciel, pas une grille) : décalages fixes,
+      // plus petits que l'espace entre les lignes, donc jamais de chevauchement
+      b.style.setProperty("--decalage", `${((i * 53 + z * 17) % 7) * 3 - 9}px`);
+      b.style.setProperty("--ecart-x", `${((i * 29 + z * 11) % 4) * 6}px`);
       b.style.setProperty("--retard", `${(i * 0.7 + z * 0.4) % 3}s`);    // les lueurs ne respirent pas ensemble
       b.addEventListener("click", () => { allumer(b); onChoisir(t, b); });
       b.addEventListener("focus", () => onSurvol && onSurvol(t));

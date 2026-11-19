@@ -5,7 +5,7 @@
 ## Le pitch en 2 minutes : « Lina, 23 h »
 
 > **(0:00 – 0:20) Le problème.**
-> Il est 23 h. Lina a 17 ans. Cet après-midi, elle était au Centre des Possibles. Elle est repartie avec son rapport : 25 métiers, rangés en 5 zones. « Psychomotricien », « fauconnier de spectacle »… elle n'en connaît pas la moitié. Ses questions sont simples : c'est quoi concrètement ? Il faut quel diplôme ? Je peux le faire sans le bac ? Le rapport ne le dit pas. Et à 23 h, personne n'est là pour lui répondre.
+> Il est 23 h. Lina a 17 ans. Cet après-midi, elle était au Centre des Possibles. Elle est repartie avec son rapport : une liste de métiers, rangés en 5 zones. « Psychomotricien », « fauconnier de spectacle »… elle n'en connaît pas la moitié. Ses questions sont simples : c'est quoi concrètement ? Il faut quel diplôme ? Je peux le faire sans le bac ? Le rapport ne le dit pas. Et à 23 h, personne n'est là pour lui répondre.
 
 > **(0:20 – 0:50) La solution.**
 > Luciole, c'est un site sur son téléphone, avec Éclaireur, son assistant. Lina charge son rapport. Il est lu **sur son téléphone** : il n'est envoyé nulle part, il n'y a pas de compte. Ses métiers apparaissent par zone, avec un badge « sans bac : oui ou non ». Elle touche un métier : 4 lignes pour comprendre, le niveau minimum, le salaire d'un débutant, et la source officielle juste en dessous.
@@ -41,7 +41,7 @@ Fichier `equipe-02.mp4`, enregistrement d'écran au format téléphone, **rappor
 
 | Temps | À l'écran | Sous-titre |
 |---|---|---|
-| 0:00 – 0:06 | Page d'accueil, logo luciole | Lina, 17 ans, 23 h. Son rapport du Centre des Possibles liste 25 métiers. |
+| 0:00 – 0:06 | Page d'accueil, logo luciole | Lina, 17 ans, 23 h. Son rapport du Centre des Possibles liste des métiers inconnus. |
 | 0:06 – 0:12 | Zoom sur le message de confidentialité | Son PDF est lu sur son téléphone. Rien n'est envoyé. |
 | 0:12 – 0:20 | Clic « Essayer avec un rapport fictif », zones qui apparaissent | Ses métiers, rangés en 5 zones, avec un badge « sans bac ». |
 | 0:20 – 0:32 | Ouverture de la fiche Boulanger | C'est quoi ? Quel niveau ? Quel salaire au début ? Avec la source officielle. |

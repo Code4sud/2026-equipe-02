@@ -32,11 +32,8 @@
       </button>
       <div class="entete">
         <!-- Deux variantes du logo : le CSS affiche celle du thème en cours (et la sombre sur la nuit de l'accueil) -->
-        <!-- Le logo ramène à l'accueil (comme « Changer de rapport ») -->
-        <button type="button" id="logo-accueil" class="logo-bouton" aria-label="Luciole : revenir à l'accueil">
-          <img class="logo logo-clair" src="assets/luciole.svg" alt="" width="64" height="64">
-          <img class="logo logo-sombre" src="assets/luciole-sombre.svg" alt="" width="64" height="64">
-        </button>
+        <img class="logo logo-clair" src="assets/luciole.svg" alt="" width="64" height="64">
+        <img class="logo logo-sombre" src="assets/luciole-sombre.svg" alt="" width="64" height="64">
         <div>
           <h1>Luciole</h1>
           <p class="signature">Éclaire tes possibles</p>
@@ -47,8 +44,8 @@
 
     <section class="accueil" id="accueil" aria-labelledby="t-accueil">
       <div class="hero-texte">
-        <h2 id="t-accueil" class="hero-titre">Ton rapport de 17 pages, enfin clair.</h2>
-        <p class="hero-sous">Luciole allume tes 25 métiers et te dit ce qu'ils sont vraiment.</p>
+        <h2 id="t-accueil" class="hero-titre">Ton rapport, enfin clair.</h2>
+        <p class="hero-sous">Luciole allume tes métiers et te dit ce qu'ils sont vraiment.</p>
         <div class="hero-actions">
           <label class="bouton principal gros" for="fichier">Charger mon rapport</label>
           <input type="file" id="fichier" accept="application/pdf" class="cache">
@@ -72,35 +69,37 @@
 <main>
   <!-- Toujours visible en haut de l'écran du rapport (collée sous le bandeau du hackathon) -->
   <div class="barre-rapport" id="barre-rapport" hidden>
+    <!-- Le logo ramène à l'accueil (comme « Changer de rapport ») -->
+    <button type="button" id="logo-accueil" class="logo-bouton petit" aria-label="Luciole : revenir à l'accueil">
+      <img class="logo-clair" src="assets/luciole.svg" alt="" width="32" height="32">
+      <img class="logo-sombre" src="assets/luciole-sombre.svg" alt="" width="32" height="32">
+    </button>
     <button type="button" id="changer-rapport" class="changer-rapport" aria-label="Changer de rapport : revenir à l'accueil">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
       Changer de rapport
     </button>
+    <span class="place-theme" id="place-theme"></span>
+    <!-- Sur téléphone : une ligne qui défile ; sur ordinateur : tout sur une ligne -->
+    <div class="barre-defile">
+      <div class="bascule-vue" role="group" aria-label="Affichage">
+        <button type="button" id="vue-ciel" aria-pressed="true">Ciel</button>
+        <button type="button" id="vue-liste" aria-pressed="false">Liste</button>
+      </div>
+      <div class="filtres" role="group" aria-label="Filtrer les métiers">
+        <button type="button" data-filtre="tous" aria-pressed="true">Tous</button>
+        <button type="button" data-filtre="sansbac" aria-pressed="false">Sans bac</button>
+        <button type="button" data-filtre="proche" aria-pressed="false">Formation à moins de 30 km de Nice</button>
+      </div>
+    </div>
   </div>
   <!-- APRÈS LE CHARGEMENT -->
   <section class="carte" id="vue-rapport" hidden aria-labelledby="t-vue">
-    <h2 id="t-vue" tabindex="-1">Ton ciel de métiers</h2>
-    <p id="resume-rapport" class="doux"></p>
-    <p class="promesse petite">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
-      <span>Ton rapport reste sur ton appareil. Il n'est envoyé nulle part.</span>
-    </p>
-    <div class="barre-ciel">
-    <div class="bascule-vue" role="group" aria-label="Affichage">
-      <button type="button" id="vue-ciel" aria-pressed="true">Ciel</button>
-      <button type="button" id="vue-liste" aria-pressed="false">Voir en liste</button>
-    </div>
-    <div class="filtres" role="group" aria-label="Filtrer les métiers">
-      <button type="button" data-filtre="tous" aria-pressed="true">Tous</button>
-      <button type="button" data-filtre="sansbac" aria-pressed="false">Sans bac</button>
-      <button type="button" data-filtre="proche" aria-pressed="false">Formation à moins de 30 km de Nice</button>
-    </div>
-    <p id="filtre-info" class="doux" role="status"></p>
-    </div>
+    <h2 id="t-vue" class="lecteur-seul" tabindex="-1">Ton ciel de métiers</h2>
+    <p id="resume-rapport" class="lecteur-seul"></p>
+    <p id="filtre-info" class="doux filtre-info" role="status"></p>
     <div id="bloc-ciel">
       <div class="ciel" id="ciel" role="group" aria-label="La montée de tes métiers. Toi en bas. Zone 1, juste au-dessus : métiers rapides à atteindre. Zone 5, tout en haut : études longues."></div>
-      <p id="ciel-legende" class="ciel-legende" aria-live="polite">Touche une luciole pour découvrir le métier.</p>
-      <p class="doux petite">Plus une luciole est basse, plus le métier est rapide à atteindre. Une luciole grise : je ne sais pas, pas de fiche fiable.</p>
+      <p id="ciel-legende" class="lecteur-seul" aria-live="polite"></p>
     </div>
     <div id="zones" hidden></div>
   </section>

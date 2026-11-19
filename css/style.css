@@ -686,3 +686,85 @@ body:not(.etat-accueil) .accroche { display: none; }
 
 /* Le chemin lumineux passe ENTRE le fond des étages et le contenu : jamais par-dessus un nom */
 .montee .etage-titre, .montee .etage-sous, .montee .luciole, .montee .toi-cercle, .montee .toi-texte { position: relative; z-index: 3; }
+
+/* ================= Passe finale : barre fine, lucioles libres, étages pleine largeur ================= */
+.lecteur-seul {
+  position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+/* Écran du rapport : plus de grande en-tête (la barre fine la remplace), le ciel prend toute la largeur */
+body:not(.etat-accueil) .ecran { display: none; }
+body:not(.etat-accueil) main { max-width: none; padding: 0 0 96px; }
+body:not(.etat-accueil) main > .carte:not(#vue-rapport) { margin: 20px 16px; }
+body:not(.etat-accueil) footer { padding: 0 16px; }
+@media (min-width: 900px) {
+  body:not(.etat-accueil) main > .carte:not(#vue-rapport), body:not(.etat-accueil) footer { max-width: 1048px; margin-left: auto; margin-right: auto; }
+}
+body:not(.etat-accueil) #vue-rapport {
+  background: none; border: 0; border-radius: 0; box-shadow: none; padding: 0; margin: 0;
+}
+.filtre-info { margin: 8px 16px; }
+
+/* La barre fine collée : logo, Changer de rapport, thème, puis Ciel/Liste + filtres */
+.barre-rapport {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px;
+  margin: 0; padding: 6px 12px;
+  background: var(--fond); border-bottom: 1px solid var(--trait);
+}
+.logo-bouton.petit img { width: 32px; height: 32px; }
+.logo-bouton.petit { min-height: 48px; min-width: 48px; justify-content: center; align-items: center; }
+.barre-rapport .changer-rapport { padding: 0 14px; }
+.place-theme { margin-left: auto; display: flex; }
+.place-theme .bouton-theme { position: static; }
+.barre-defile {
+  flex: 1 1 100%; display: flex; gap: 8px; align-items: center;
+  overflow-x: auto; scrollbar-width: none; padding-bottom: 2px;
+}
+.barre-defile::-webkit-scrollbar { display: none; }
+.barre-defile .bascule-vue, .barre-defile .filtres { flex-wrap: nowrap; margin: 0; flex: none; }
+.barre-defile button { white-space: nowrap; min-height: 48px; padding: 0 14px; }
+.barre-defile .filtres { padding-left: 8px; border-left: 1px solid var(--trait); }
+@media (min-width: 900px) {
+  .barre-rapport { flex-wrap: nowrap; padding: 6px 24px; }
+  .barre-defile { flex: 1 1 auto; order: 3; }
+  .place-theme { order: 4; }
+}
+
+/* Les étages : bandes pleine largeur, contenu centré sur ordinateur */
+.montee { margin: 0; }
+.etage { padding: 24px max(12px, calc((100% - 1048px) / 2)) 32px; }
+.etage-titre, .etage-sous { padding: 0 8px; }
+.etage-lucioles { justify-content: space-around; gap: 30px 4px; }
+
+/* Les lucioles flottent : plus de carte, juste la lueur qui respire et le nom dessous */
+.montee .luciole {
+  background: transparent; border: 0; border-radius: 16px;
+  width: 96px; min-height: 48px; padding: 4px 2px 6px; gap: 4px;
+  margin: 0 var(--ecart-x, 0px);
+}
+.montee .luciole:hover { background: rgba(247, 240, 223, .07); border: 0; }
+.montee .luciole.allumee { background: transparent; border: 0; }
+.montee .luciole.allumee .luciole-nom { text-decoration: underline; text-decoration-color: var(--luciole); text-underline-offset: 4px; }
+.montee .luciole.hors-filtre { background: transparent; border: 0; }
+.montee .luciole .point { width: 38px; height: 38px; }
+.montee .luciole .luciole-nom { color: var(--ciel-texte); text-shadow: 0 1px 2px rgba(0, 0, 0, .5); }
+@media (min-width: 900px) { .montee .luciole { width: 128px; } }
+
+/* Toi, et le cadenas en pastille discrète au pied de l'écran */
+.montee-toi { flex-direction: column; gap: 10px; padding: 18px 16px 20px; }
+.toi-ligne { display: flex; align-items: center; gap: 14px; }
+.pastille-toi {
+  display: inline-flex; align-items: center; gap: 6px; margin: 0;
+  padding: 4px 12px; border-radius: 999px; font-size: .82rem; font-weight: 700;
+  background: var(--pastille-fond); color: var(--ciel-texte); border: 1px solid rgba(247, 240, 223, .16);
+}
+.pastille-toi svg { width: 14px; height: 14px; fill: none; stroke: var(--lien-nuit); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+/* Survol seulement avec une souris (sur écran tactile, il resterait « collé » après le toucher) */
+.montee .luciole:hover { background: transparent; }
+@media (hover: hover) { .montee .luciole:hover { background: rgba(247, 240, 223, .07); } }
+/* Ordinateur : un peu plus de désordre vertical (reste sous l'espace entre les lignes : pas de chevauchement) */
+@media (min-width: 900px) {
+  .montee .luciole { transform: translateY(calc(var(--decalage, 0px) * 1.5)); }
+  .montee .luciole:active { transform: translateY(calc(var(--decalage, 0px) * 1.5)); }
+}

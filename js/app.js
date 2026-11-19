@@ -105,6 +105,7 @@ function afficherVueRapport(r) {
   // L'écran de nuit de l'accueil redevient un en-tête simple ; ses animations s'arrêtent
   document.body.classList.remove("etat-accueil");
   if (window.lucioleAccueil) window.lucioleAccueil.arreter();
+  $("#place-theme").append($("#theme")); // le bouton soleil/lune passe dans la barre fine
   for (const id of ["#barre-rapport", "#vue-rapport", "#bloc-chat", "#bloc-recherche", "#bloc-recap"]) $(id).hidden = false;
   const nbZones = Object.values(r.zones).filter((z) => z.length).length;
   $("#resume-rapport").textContent = `${r.total} métiers dans ${nbZones} zones${r.date ? `, rapport du ${r.date}` : ""}.`;
@@ -144,6 +145,7 @@ function revenirAccueil() {
   suggestions();
   for (const id of ["#barre-rapport", "#vue-rapport", "#bloc-chat", "#bloc-recherche", "#bloc-recap"]) $(id).hidden = true;
   $("#accueil").hidden = false;
+  $(".ecran-int header").prepend($("#theme")); // le bouton soleil/lune revient dans l'en-tête
   document.body.classList.add("etat-accueil");
   if (window.lucioleAccueil) window.lucioleAccueil.reprendre();
   window.scrollTo(0, 0);
@@ -183,6 +185,7 @@ function dessiner() {
       : `${t.titre} · zone ${t.zone} · je ne sais pas`),
     // Le chemin lumineux se trace, puis la fiche s'ouvre (tout de suite si animations réduites)
     onChoisir: (t, bouton) => setTimeout(() => ouvrirFiche(t, { declencheur: bouton }), calme() ? 0 : 420),
+    texteToi: `${ctx.titresRapport.length} métiers t'attendent. Monte pour les voir.`,
   });
   anim("cielAffiche", $("#ciel"));
 }
@@ -206,6 +209,8 @@ function choisirVue(vue) {
   $("#vue-ciel").setAttribute("aria-pressed", String(estCiel));
   $("#vue-liste").setAttribute("aria-pressed", String(!estCiel));
   $("#t-vue").textContent = estCiel ? "Ton ciel de métiers" : "Tes métiers en liste";
+  // Le ciel commence en bas, sur Toi
+  if (estCiel && ciel) requestAnimationFrame(() => ciel.toi.scrollIntoView({ block: "end" }));
 }
 $("#vue-ciel").addEventListener("click", () => choisirVue("ciel"));
 $("#vue-liste").addEventListener("click", () => choisirVue("liste"));
