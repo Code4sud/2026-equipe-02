@@ -72,7 +72,7 @@ def main():
     c.setFont("Helvetica-Bold", 22)
     c.drawString(71, 746, "Ton champ des possibles par zone de métiers")
     c.setFont("Helvetica", 11)
-    c.drawString(71, 700, "Jusqu'à 5 propositions par zone de métiers. Certaines zones peuvent apparaître vides.")
+    c.drawString(71, 700, "Rapport inventé pour la démo : cinq métiers fictifs dans chacune des cinq zones.")
     pied_de_page(c, 5)
     c.showPage()
 

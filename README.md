@@ -16,6 +16,10 @@ python src/download_data.py && cd src && python clean_data.py && python link_job
 python -m http.server 8000                       # puis ouvrir http://localhost:8000
 ```
 
+**IA locale facultative.** Le site marche sans IA : les réponses viennent directement des fiches officielles, et c'est ainsi que fonctionne le site en ligne.
+Pour que les réponses soient reformulées plus simplement, installe [Ollama](https://ollama.com) puis lance `ollama pull qwen2.5:7b`.
+Le site détecte alors le modèle tout seul sur `localhost:11434`, seulement quand tu l'ouvres en local (`http://localhost:8000`).
+
 ## Architecture
 
 ```
